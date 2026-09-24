@@ -43,7 +43,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
 
-    out["Date"] = pd.to_datetime(out["Date"], errors="coerce")
+    out["Date"] = pd.to_datetime(out["Date"], errors="coerce").dt.normalize()
     for c in ["Open", "High", "Low", "Close"]:
         out[c] = pd.to_numeric(out[c], errors="coerce")
     if "Volume" in out.columns:
