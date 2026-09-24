@@ -17,7 +17,7 @@ def main():
         "S3_rotation": f"{cfg['strategies']['rotation']['lookback_months']}m, top {cfg['strategies']['rotation']['top_n']}",
         "S4_moving_average": f"{cfg['strategies']['moving_average']['window_days']}d SMA",
         "S5_dynamic_allocation": f"positive return score, cap {cfg['strategies']['dynamic_allocation']['max_weight']}",
-        "S6_risk_parity": f"{cfg['strategies']['risk_parity']['window_days']}d window, equal risk contribution",
+        "S6_risk_parity": f"{cfg['strategies']['risk_parity']['volatility_window_days']}d window, equal risk contribution",
     }
     print("PHASE 1 FROZEN MATRIX")
     for k,v in strategies.items():
