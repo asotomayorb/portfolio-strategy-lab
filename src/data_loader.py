@@ -11,21 +11,45 @@ class AssetData:
     ticker: str
     frame: pd.DataFrame
 
+def _read_sheet(path: Path, sheet: str) -> pd.DataFrame:
+    # Source workbook has the field names in the first spreadsheet row.
+    raw = pd.read_excel(path, sheet_name=sheet, header=None)
+    header = raw.iloc[0].astype(str).str.strip().tolist()
+    out = raw.iloc[1:].copy()
+    out.columns = header
+    return out.reset_index(drop=True)
+
 def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
-    out = out.rename(columns={"Vol.": "Volume"})
+    # Normalize the source's first-column ticker/date layout.
+    if "Date" not in out.columns:
+        first = out.columns[0]
+        out = out.rename(columns={first: "Date"})
+    if "Open" not in out.columns and len(out.columns) >= 2:
+        out = out.rename(columns={out.columns[1]: "Open"})
+    if "High" not in out.columns and len(out.columns) >= 3:
+        out = out.rename(columns={out.columns[2]: "High"})
+    if "Low" not in out.columns and len(out.columns) >= 4:
+        out = out.rename(columns={out.columns[3]: "Low"})
+    if "Close" not in out.columns and len(out.columns) >= 5:
+        out = out.rename(columns={out.columns[4]: "Close"})
+    if "Volume" not in out.columns and "Vol." in out.columns:
+        out = out.rename(columns={"Vol.": "Volume"})
     missing = REQUIRED - set(out.columns)
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
+
     out["Date"] = pd.to_datetime(out["Date"], errors="coerce")
-    for c in ["Open", "High", "Low", "Close", "Volume"]:
-        if c in out.columns:
-            out[c] = pd.to_numeric(out[c], errors="coerce")
+    for c in ["Open", "High", "Low", "Close"]:
+        out[c] = pd.to_numeric(out[c], errors="coerce")
+    if "Volume" in out.columns:
+        out["Volume"] = pd.to_numeric(out["Volume"], errors="coerce")
     if out["Date"].isna().any():
         raise ValueError("Invalid dates found")
     out = out.sort_values("Date").reset_index(drop=True)
     if out["Date"].duplicated().any():
         raise ValueError("Duplicate dates found")
+
     out["ohlc_valid"] = (
         out[["Open","High","Low","Close"]].notna().all(axis=1)
         & (out["Open"] > 0) & (out["High"] > 0)
@@ -42,10 +66,12 @@ def load_workbook(path: str | Path) -> dict[str, AssetData]:
     for sheet in book.sheet_names:
         if sheet == "TICKERS" or sheet.startswith("Copia de"):
             continue
-        assets[sheet] = AssetData(sheet, normalize_columns(pd.read_excel(path, sheet_name=sheet)))
+        assets[sheet] = AssetData(sheet, normalize_columns(_read_sheet(path, sheet)))
     return assets
 
 def close_matrix(assets: dict[str, AssetData]) -> pd.DataFrame:
-    """Return raw close prices; missing history stays NaN (never forward-filled pre-inception)."""
-    series = {ticker: a.frame.set_index("Date")["Close"].where(a.frame.set_index("Date")["ohlc_valid"]) for ticker, a in assets.items()}
-    return pd.concat(series, axis=1).sort_index()
+    return pd.concat(
+        {ticker: a.frame.set_index("Date")["Close"].where(a.frame.set_index("Date")["ohlc_valid"])
+         for ticker, a in assets.items()},
+        axis=1
+    ).sort_index()
