@@ -1,4 +1,4 @@
-"""Performance metrics for monthly portfolio equity curves."""
+"""Performance metrics for portfolio equity curves."""
 from __future__ import annotations
 import math
 import pandas as pd
@@ -17,15 +17,15 @@ def summarize(equity: pd.Series, turnover: float = 0.0, trades: int = 0) -> dict
     peak = equity.cummax()
     dd = equity / peak - 1
     max_dd = dd.min()
-    calmar = cagr / abs(max_dd) if max_dd < 0 else float("nan")
     recovery = 0
-    last_peak = equity.iloc[0]
-    for i, v in enumerate(equity):
-        if v >= last_peak:
-            last_peak = v
+    longest_recovery = 0
+    for v in equity:
+        if v >= equity.loc[:equity.index[equity.tolist().index(v)]].max():
             recovery = 0
         else:
             recovery += 1
+            longest_recovery = max(longest_recovery, recovery)
+    calmar = cagr / abs(max_dd) if max_dd < 0 else float("nan")
     return {
         "final_value": float(equity.iloc[-1]),
         "CAGR": float(cagr),
@@ -36,6 +36,5 @@ def summarize(equity: pd.Series, turnover: float = 0.0, trades: int = 0) -> dict
         "Calmar": float(calmar),
         "turnover": float(turnover),
         "trades": int(trades),
-        "max_cash": float("nan"),
-        "recovery_months_last_or_longest": int(recovery),
+        "longest_recovery_months": int(longest_recovery),
     }
