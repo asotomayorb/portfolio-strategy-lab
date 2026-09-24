@@ -14,8 +14,12 @@ class AssetData:
 def _read_sheet(path: Path, sheet: str) -> pd.DataFrame:
     # Source workbook has the field names in the first spreadsheet row.
     raw = pd.read_excel(path, sheet_name=sheet, header=None)
-    header = raw.iloc[0].astype(str).str.strip().tolist()
-    out = raw.iloc[1:].copy()
+    header_rows = raw.index[raw.apply(lambda r: r.astype(str).str.strip().eq("Date").any(), axis=1)]
+    if len(header_rows) == 0:
+        raise ValueError(f"Could not locate OHLC header in sheet {sheet}")
+    header_row = header_rows[0]
+    header = raw.loc[header_row].astype(str).str.strip().tolist()
+    out = raw.iloc[header_row + 1:].copy()
     out.columns = header
     return out.reset_index(drop=True)
 
