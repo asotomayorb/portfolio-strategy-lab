@@ -2,6 +2,7 @@
 from __future__ import annotations
 import numpy as np
 import pandas as pd
+from risk import risk_parity as _erc_risk_parity
 
 def _monthly(prices):
     return prices.resample("ME").last()
@@ -47,11 +48,4 @@ def dynamic_allocation(prices, lookback_months=12, max_weight=0.25):
     return out.reindex(prices.index).ffill().fillna(0.0)
 
 def risk_parity(prices, window=60):
-    """Inverse-volatility approximation used only as a smoke-test placeholder.
-
-    Full equal-risk-contribution covariance optimization is added after the
-    execution engine tests are green.
-    """
-    vol = prices.pct_change().rolling(window).std()
-    inv = 1.0 / vol.replace(0, np.nan)
-    return inv.div(inv.sum(axis=1), axis=0).fillna(0.0)
+    return _erc_risk_parity(prices, window=window)
