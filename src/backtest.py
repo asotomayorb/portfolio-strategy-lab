@@ -5,12 +5,15 @@ import pandas as pd
 def simulate(prices, target_weights, initial_capital, monthly_contribution=0.0,
              commission_bps=10.0, slippage_bps=5.0,
              invest_contributions=True, rebalance=True):
-    """Simulate monthly decisions.
+    """Simulate month-end decisions using the next common tradable session.
 
-    B0 Buy & Hold: call with invest_contributions=False, rebalance=False.
-    DCA/tactical strategies: invest_contributions=True, rebalance=True.
+    The source may mix daily BTC timestamps/weekends with exchange-traded assets.
+    Decisions therefore use the last date in each month where the target universe
+    has usable prices, and execution uses the next date where those target assets
+    are tradable. This avoids accidentally executing on a BTC-only weekend.
     """
     prices = prices.sort_index()
+    target_weights = target_weights.sort_index()
     cash = float(initial_capital)
     shares = pd.Series(0.0, index=prices.columns)
     rows, turnover, trades = [], 0.0, 0
@@ -18,19 +21,34 @@ def simulate(prices, target_weights, initial_capital, monthly_contribution=0.0,
     cost_rate = (commission_bps + slippage_bps) / 10000.0
 
     for month_i, month in enumerate(months):
-        dates = prices.index[prices.index.to_period("M") == month]
-        if len(dates) == 0:
+        month_dates = prices.index[prices.index.to_period("M") == month]
+        if len(month_dates) == 0:
             continue
-        decision = dates[-1]
-        future = prices.index[prices.index > decision]
-        if len(future) == 0:
-            break
-        execution = future[0]
-        cash += float(monthly_contribution)
 
+        # Target for this month; zero-weight columns do not constrain execution.
+        target = target_weights[target_weights.index.to_period("M") == month]
+        desired = target.iloc[-1].reindex(prices.columns).fillna(0.0).clip(lower=0.0) if len(target) else pd.Series(0.0, index=prices.columns)
+        required = desired[desired > 0].index.tolist()
+        if required:
+            common_dates = prices.index[prices.index.to_period("M") == month]
+            common_dates = common_dates[prices.loc[common_dates, required].notna().all(axis=1)]
+            decision = common_dates[-1] if len(common_dates) else month_dates[-1]
+        else:
+            decision = month_dates[-1]
+
+        future = prices.index[prices.index > decision]
+        execution = None
+        for dt in future:
+            p_try = prices.loc[dt]
+            tradable_required = p_try.reindex(required).notna().all() if required else True
+            if tradable_required:
+                execution = dt
+                break
+        if execution is None:
+            break
+
+        cash += float(monthly_contribution)
         p_dec = prices.loc[decision]
-        desired = target_weights.loc[decision] if decision in target_weights.index else pd.Series(0.0, index=prices.columns)
-        desired = desired.reindex(prices.columns).fillna(0.0).clip(lower=0.0)
         desired[~p_dec.notna()] = 0.0
         if desired.sum() > 1.0:
             desired /= desired.sum()
@@ -41,13 +59,13 @@ def simulate(prices, target_weights, initial_capital, monthly_contribution=0.0,
         total = float(cash + current.sum())
 
         if month_i == 0 or rebalance:
-            target = total * desired
+            target_value = total * desired
         elif invest_contributions and desired.sum() > 0:
-            target = current + float(monthly_contribution) * desired
+            target_value = current + float(monthly_contribution) * desired
         else:
-            target = current.copy()
+            target_value = current.copy()
 
-        delta_value = target - current
+        delta_value = target_value - current
         delta_value[~tradable] = 0.0
         gross_buy = float(delta_value.clip(lower=0).sum())
         gross_sell = float((-delta_value.clip(upper=0)).sum())
