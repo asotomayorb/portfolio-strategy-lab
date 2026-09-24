@@ -1,0 +1,38 @@
+project: portfolio_strategy_lab
+dataset_version: v1
+config_version: v1
+
+portfolio:
+  initial_capital: 100000
+  monthly_contribution: 1000
+  leverage: 0
+  short_allowed: false
+  cash_allowed: true
+  rebalance_frequency: monthly
+  execution: next_session_open
+
+costs:
+  commission_bps: 10
+  slippage_bps: 5
+
+strategies:
+  momentum:
+    lookback_months: 12
+    selection: top_n
+    top_n: 3
+  rotation:
+    lookback_months: 12
+    top_n: 3
+  moving_average:
+    window_days: 200
+  dynamic_allocation:
+    score: positive_trailing_return
+    max_weight: 0.25
+  risk_parity:
+    volatility_window_days: 60
+    target: equal_risk_contribution
+
+data:
+  source_file: BOLSA HISTORICOS corregido.xlsx
+  btc_replaces_ibit: true
+  duplicate_sheet_to_ignore: Copia de QQQ
