@@ -30,3 +30,14 @@ The BTC series has 31 rows where Open/High/Low/Close do not satisfy standard OHL
 
 ## Decision
 Dataset is structurally usable for the backtester after validation/normalization. The BTC anomalies remain visible in the data-quality log and are handled deterministically.
+
+
+## Loader verification update
+
+The source workbook layout was checked against the actual spreadsheet structure: each asset sheet contains a metadata row followed by the OHLC header row. The loader now locates the row containing `Date` rather than assuming the first row is the header.
+
+A recheck of the corrected workbook finds:
+- 0 invalid OHLC rows for every non-BTC asset.
+- 33 invalid OHLC rows for BTC.
+- The two additional BTC rows are 2010-08-30 and 2010-10-08; both contain a zero Low and are therefore excluded under the same deterministic validation rule.
+- No correction is fabricated; invalid BTC OHLC observations remain flagged/excluded from OHLC-derived calculations.
