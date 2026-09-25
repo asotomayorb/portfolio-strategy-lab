@@ -16,10 +16,11 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: python scripts/run_phase1.py --output reports/phase1_results.csv
+      - run: python scripts/run_history_comparison.py --output reports/phase1_history_comparison.csv
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/phase1_results.csv
+          git add reports/phase1_results.csv reports/phase1_history_comparison.csv
           git diff --cached --quiet || git commit -m "Update Phase 1 results"
           git push
       - uses: actions/upload-artifact@v4
