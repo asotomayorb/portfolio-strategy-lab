@@ -3,9 +3,18 @@
 Reproducible backtesting project for comparing portfolio strategy families before parameter optimization.
 
 ## Current status
-Phase 1 engine, data normalization, deterministic simulation, metrics, risk-parity solver, preliminary real-data results, and an uploadable Streamlit interface are in the repository.
+Phase 1 engine, CSV-folder data normalization, deterministic simulation, metrics, risk-parity solver, and a Streamlit interface are in the repository.
 
-The historical workbook is intentionally not committed to GitHub. The online interface accepts the corrected .xlsx directly, so the source dataset can remain private.
+## Data architecture
+The historical Excel workbook is no longer part of the workflow. Each ticker is an independent CSV stored in `tickers/`, for example:
+
+- `tickers/QQQ.csv`
+- `tickers/BTC.csv`
+- `tickers/SMH.csv`
+
+The app reads these files directly from the repository. No historical workbook needs to be uploaded to ChatGPT or stored in the chat.
+
+Current CSV exports use a ticker label on the first row and OHLC headers on the second row. The loader normalizes that format and flags invalid OHLC rows instead of silently repairing them.
 
 ## Phase 1
 - Buy & Hold
@@ -28,13 +37,13 @@ The ATR/pullback strategy is deliberately excluded from Phase 1 and will be test
 6. Keep an experiment log and immutable dataset/config versions.
 
 ## Online use
-Install the requirements and launch Streamlit with: streamlit run app.py. Upload the corrected historical workbook, inspect the data-quality table, then run Phase 1 and download the CSV.
+The app reads `tickers/*.csv` from the repository. No file upload is required. Install requirements and launch with `streamlit run app.py`.
 
 ## Data
-The working universe uses BTC instead of IBIT. The backup sheet Copia de QQQ is ignored. BTC OHLC anomalies are flagged/excluded rather than silently repaired.
+The working universe uses BTC instead of IBIT. The old `Copia de QQQ` workbook sheet is no longer relevant. BTC OHLC anomalies are flagged/excluded rather than silently repaired.
 
 ## Workflow
-Raw data -> validation/normalization -> strategy signals -> portfolio simulation -> metrics -> CSV summaries -> walk-forward/out-of-sample -> dashboard.
+GitHub `tickers/*.csv` -> validation/normalization -> strategy signals -> portfolio simulation -> metrics -> CSV summaries -> walk-forward/out-of-sample -> dashboard.
 
 ## Important
 No strategy is declared "best" from one metric. Results are descriptive and should be evaluated across periods, drawdowns, turnover, cash drag, and out-of-sample behavior.
