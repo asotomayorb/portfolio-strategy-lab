@@ -17,6 +17,19 @@ def test_invalid_ohlc_flagged():
     assert out.loc[0, "ohlc_valid"] == False
 
 
+def test_btc_thousands_separators_are_numeric():
+    df = pd.DataFrame({
+        "Date": ["30/09/2020"],
+        "Open": ['"10,843.40"'],
+        "High": ['"10,847.70"'],
+        "Low": ['"10,667.60"'],
+        "Close": ['"10,776.10"'],
+    })
+    out = normalize_columns(df)
+    assert out.loc[0, "Close"] == pytest.approx(10776.10)
+    assert bool(out.loc[0, "ohlc_valid"]) is True
+
+
 def test_close_matrix_preserves_date_indexed_validity_mask():
     from data_loader import AssetData, close_matrix
 
