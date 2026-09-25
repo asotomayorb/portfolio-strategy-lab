@@ -1,51 +1,44 @@
 # Portfolio Strategy Lab
 
-Reproducible backtesting project for comparing portfolio strategy families before parameter optimization.
+Reproducible research comparing investment strategy families before any user-specific strategy.
 
-## Current status
-Phase 1 engine, CSV-folder data normalization, deterministic simulation, metrics, risk-parity solver, and a Streamlit interface are in the repository.
+## START HERE
+Read these files before continuing:
+1. `docs/README_RESEARCH_MAP.txt` — short map, current status and next step.
+2. `docs/PHASE1_PROTOCOL.txt` — complete Phase 1 protocol/checklist.
+3. `docs/PHASE2_PROTOCOL.txt` — future Phase 2; currently **BLOCKED**.
 
-## Data architecture
-The historical Excel workbook is no longer part of the workflow. Each ticker is an independent CSV stored in `tickers/`, for example:
+## Current status — 2026-09-25
+**Phase 1 is NOT finished. Phase 2 must NOT start.**
 
-- `tickers/QQQ.csv`
-- `tickers/BTC.csv`
-- `tickers/SMH.csv`
+Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity.
+Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
-The app reads these files directly from the repository. No historical workbook needs to be uploaded to ChatGPT or stored in the chat.
+Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis.
 
-Current CSV exports use a ticker label on the first row and OHLC headers on the second row. The loader normalizes that format and flags invalid OHLC rows instead of silently repairing them.
+In progress: pre-registered parameter-neighbor sensitivity and leave-one-asset-out universe sensitivity.
 
-## Phase 1
-- Buy & Hold
-- DCA
-- Momentum
-- Rotation
-- Moving Average
-- Dynamic Allocation
-- Risk Parity
-- Value is specified as a research family but is not fabricated without a comparable valuation dataset.
+Pending after that: cost/slippage sensitivity, concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
 
-The ATR/pullback strategy is deliberately excluded from Phase 1 and will be tested later.
+**No robust Phase 1 winner has been established.**
 
-## Anti-overfitting protocol
-1. Freeze Phase 1 definitions before inspecting performance.
-2. Use the same universe, capital, contributions, costs and evaluation frequency where applicable.
-3. Do not select parameters from historical results in Phase 1.
-4. Use walk-forward / out-of-sample validation before Phase 2 optimization.
-5. Prefer parameter plateaus and robustness over the single best historical result.
-6. Keep an experiment log and immutable dataset/config versions.
+## Research rules
+- Freeze definitions/config/data before evaluating results.
+- Never optimize parameters after seeing results.
+- Neighbor tests measure stability, not parameter selection.
+- Robustness matters more than peak CAGR.
+- Do not declare a winner from a single metric or period.
+- Do not use Phase 2 concepts to alter Phase 1.
+- At the beginning of every step, reread the research map and Phase 1 protocol.
+- At the end of every step, update the research map/protocol/checklist.
 
-## Online use
-The app reads `tickers/*.csv` from the repository. No file upload is required. Install requirements and launch with `streamlit run app.py`.
+## Repository
+- `tickers/` — historical CSV inputs.
+- `scripts/run_phase1.py` — baseline Phase 1.
+- `scripts/run_strategy_robustness.py` — robustness comparison.
+- `scripts/run_walkforward_robustness.py` — walk-forward.
+- `scripts/run_phase1_sensitivity.py` — parameter/universe sensitivity.
+- `docs/` — durable protocol, status and results log.
+- `reports/` — reproducible reports/results.
 
-For a reproducible numerical Phase 1 report, run `python scripts/run_phase1.py --output reports/phase1_results.csv`. For robustness against different asset inception dates, run `python scripts/run_history_comparison.py --output reports/phase1_history_comparison.csv`. The manual `phase1-report` GitHub Actions workflow runs both and persists the CSV reports in `reports/` as well as publishing artifacts. Historical report files are kept in Git so results are not dependent on chat attachments.
-
-## Data
-The working universe uses BTC instead of IBIT. The old `Copia de QQQ` workbook sheet is no longer relevant. BTC OHLC anomalies are flagged/excluded rather than silently repaired.
-
-## Workflow
-GitHub `tickers/*.csv` -> validation/normalization -> strategy signals -> portfolio simulation -> metrics -> CSV summaries -> walk-forward/out-of-sample -> dashboard.
-
-## Important
-No strategy is declared "best" from one metric. Results are descriptive and should be evaluated across periods, drawdowns, turnover, cash drag, and out-of-sample behavior.
+The ATR/pullback strategy belongs exclusively to Phase 2 and remains blocked.
