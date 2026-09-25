@@ -9,6 +9,7 @@ import pandas as pd
 from backtest import simulate
 from data_loader import normalize_columns
 from metrics import summarize
+from strategies import momentum, rotation
 
 
 def test_invalid_ohlc_flagged():
@@ -128,3 +129,13 @@ def test_phase1_smoke_with_repository_data():
     )
     assert np.allclose(result["allocation_total"].to_numpy(), 1.0, atol=1e-10)
     assert np.allclose(result["cash_target"].to_numpy(), 0.05, atol=1e-10)
+
+
+def test_rotation_can_move_to_cash_when_all_returns_are_non_positive():
+    idx = pd.date_range("2020-01-01", periods=30, freq="ME")
+    prices = pd.DataFrame({"A": 100.0, "B": 100.0}, index=idx)
+    prices.loc[idx[-1], ["A", "B"]] = 90.0
+    m = momentum(prices, lookback_months=12, top_n=1)
+    r = rotation(prices, lookback_months=12, top_n=1)
+    assert r.iloc[-1].sum() == pytest.approx(0.0)
+    assert m.iloc[-1].sum() == pytest.approx(1.0)
