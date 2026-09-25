@@ -14,6 +14,8 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: pytest -q --durations=10
+      - name: Strategy robustness comparison
+        run: python scripts/run_strategy_robustness.py
       - name: Upload Phase 1 baseline
         if: success()
         uses: actions/upload-artifact@v4
@@ -21,4 +23,12 @@ jobs:
           name: phase1-results
           path: phase1_results_ci.csv
           if-no-files-found: error
+          retention-days: 14
+      - name: Upload strategy robustness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: strategy-robustness
+          path: |
+            strategy_robustness_ci.csv
+            strategy_robustness_summary.txt
           retention-days: 14
