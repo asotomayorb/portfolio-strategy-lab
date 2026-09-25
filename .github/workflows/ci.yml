@@ -16,6 +16,8 @@ jobs:
       - run: pytest -q --durations=10
       - name: Strategy robustness comparison
         run: python scripts/run_strategy_robustness.py
+      - name: Walk-forward robustness validation
+        run: python scripts/run_walkforward_robustness.py
       - name: Upload Phase 1 baseline
         if: success()
         uses: actions/upload-artifact@v4
@@ -31,4 +33,12 @@ jobs:
           path: |
             strategy_robustness_ci.csv
             strategy_robustness_summary.txt
+          retention-days: 14
+      - name: Upload walk-forward robustness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: walkforward-robustness
+          path: |
+            walkforward_robustness_ci.csv
+            walkforward_robustness_summary.txt
           retention-days: 14
