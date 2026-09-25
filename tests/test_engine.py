@@ -79,6 +79,30 @@ def test_execution_is_after_decision():
     assert eq.index[0] > idx[0]
 
 
+
+def test_dca_does_not_rebalance_existing_holdings():
+    idx = pd.date_range("2024-01-01", periods=50, freq="B")
+    prices = pd.DataFrame({"A": 100.0, "B": 100.0}, index=idx)
+    weights = pd.DataFrame(
+        {"A": 0.50, "B": 0.50},
+        index=idx,
+    )
+    second_month = idx.to_period("M") == idx[-1].to_period("M")
+    weights.loc[second_month, "A"] = 1.0
+    weights.loc[second_month, "B"] = 0.0
+    eq, _, trades = simulate(
+        prices,
+        weights,
+        1000,
+        monthly_contribution=0,
+        commission_bps=0,
+        slippage_bps=0,
+        invest_contributions=False,
+        rebalance=False,
+    )
+    assert not eq.empty
+    assert trades == 2
+
 def test_no_negative_cash():
     idx = pd.date_range("2024-01-01", periods=100, freq="B")
     prices = pd.DataFrame({"A": 100.0, "B": 100.0}, index=idx)
