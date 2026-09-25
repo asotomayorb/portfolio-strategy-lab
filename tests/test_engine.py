@@ -201,6 +201,23 @@ def test_rotation_can_move_to_cash_when_all_returns_are_non_positive():
 
 
 
+
+def test_common_history_uses_latest_inception_date():
+    from history import common_history_start, clip_common_history, coverage_table
+
+    idx = pd.date_range("2020-01-01", periods=10, freq="D")
+    prices = pd.DataFrame(
+        {
+            "A": [np.nan] * 2 + list(range(100, 108)),
+            "B": [np.nan] * 5 + list(range(200, 205)),
+        },
+        index=idx,
+    )
+    assert common_history_start(prices) == idx[5]
+    clipped = clip_common_history(prices)
+    assert clipped.index[0] == idx[5]
+    assert coverage_table(prices).loc["B", "observations"] == 5
+
 def test_risk_parity_weights_are_valid():
     from risk import erc_weights
 
