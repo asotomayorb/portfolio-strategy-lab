@@ -71,7 +71,7 @@ def test_metrics_has_core_fields():
         assert field in out
 
 
-def test_metrics_are_not_distorted_by_contributions():\n    idx = pd.date_range("2020-01-31", periods=24, freq="ME")\n    equity = pd.Series(1000.0 + 100.0 * np.arange(len(idx)), index=idx)\n    flows = pd.Series(100.0, index=idx)\n    out = summarize(equity, external_cashflows=flows, initial_capital=1000.0)\n    assert abs(out["CAGR"]) < 1e-10\n    assert abs(out["ann_vol"]) < 1e-10\n\n\ndef test_metrics_recovery_is_not_negative():
+def test_metrics_are_not_distorted_by_contributions():\n    idx = pd.date_range("2020-01-31", periods=24, freq="ME")\n    equity = pd.Series(1100.0 + 100.0 * np.arange(len(idx)), index=idx)\n    flows = pd.Series(100.0, index=idx)\n    out = summarize(equity, external_cashflows=flows, initial_capital=1000.0)\n    assert abs(out["CAGR"]) < 1e-10\n    assert abs(out["ann_vol"]) < 1e-10\n\n\ndef test_metrics_recovery_is_not_negative():
     idx = pd.date_range("2020-01-31", periods=24, freq="ME")
     equity = pd.Series([100, 90, 80, 90, 100, 110] + [110] * 18, index=idx)
     out = summarize(equity)
