@@ -1,0 +1,14 @@
+PHASE 1 RESULTS LOG
+===================
+
+2026-09-25
+- Common and expansive history backtests completed for B0/B1/S1/S3/S4/S5/S6.
+- Walk-forward completed over four folds in each history definition.
+- Pareto robustness returned no robust winner.
+- Walk-forward robustness returned no robust winner.
+- Value omitted because current OHLCV dataset cannot support comparable historical point-in-time valuation signals.
+- Added pre-registered parameter-neighbor sensitivity and leave-one-asset-out universe sensitivity to CI.
+- No parameters are to be selected based on these results.
+
+NEXT
+Wait for sensitivity CI artifacts, then continue with cost/slippage -> concentration -> OOS -> holdout -> uncertainty -> final synthesis.
