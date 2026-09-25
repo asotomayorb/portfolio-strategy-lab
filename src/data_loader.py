@@ -44,10 +44,18 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
         date_text.loc[has_time], errors="coerce", dayfirst=False, format="mixed"
     )
     out["Date"] = parsed.dt.normalize()
-    for c in ["Open","High","Low","Close"]:
-        out[c] = pd.to_numeric(out[c], errors="coerce")
+    for c in ["Open", "High", "Low", "Close"]:
+        # Some exported feeds quote thousands separators, e.g. "10,843.40".
+        # Remove grouping commas before numeric conversion.
+        out[c] = pd.to_numeric(
+            out[c].astype(str).str.replace(",", "", regex=False).str.strip(),
+            errors="coerce",
+        )
     if "Volume" in out.columns:
-        out["Volume"] = pd.to_numeric(out["Volume"], errors="coerce")
+        out["Volume"] = pd.to_numeric(
+            out["Volume"].astype(str).str.replace(",", "", regex=False).str.strip(),
+            errors="coerce",
+        )
     if out["Date"].isna().any():
         raise ValueError("Invalid dates found")
     out = out.sort_values("Date").reset_index(drop=True)
