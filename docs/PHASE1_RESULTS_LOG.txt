@@ -13,3 +13,5 @@ PHASE 1 RESULTS LOG
 NEXT
 The earlier CI run (36177518921) predates the sensitivity workflow step and therefore did not execute it. Current workflow includes the sensitivity step; a fresh CI run is required before marking these tests complete.
 After validated sensitivity artifacts: continue with cost/slippage -> concentration -> OOS -> holdout -> uncertainty -> final synthesis.
+
+CI validation branch created only to execute the already-frozen sensitivity workflow.
