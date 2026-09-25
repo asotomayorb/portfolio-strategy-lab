@@ -67,6 +67,21 @@ def test_allocation_csv_maps_btcusd_and_cash(tmp_path):
     assert out["CASH"] == pytest.approx(0.05)
 
 
+def test_buy_and_hold_repository_simulation_has_history():
+    from experiment import load_config, load_targets, prepare_prices
+    from strategies import buy_and_hold
+    cfg = load_config()
+    targets = {k: v for k, v in load_targets(cfg).items() if k != "CASH"}
+    prices = prepare_prices()
+    signal = buy_and_hold(prices, targets)
+    eq, _, _ = simulate(prices, signal, 100000, 0)
+    assert not eq.empty, (
+        f"B0 empty: prices={prices.index.min()}..{prices.index.max()}, "
+        f"rows={len(prices)}, cols={list(prices.columns)}, "
+        f"signal_rows={len(signal)}, target_assets={list(targets)}"
+    )
+
+
 def test_phase1_smoke_with_repository_data():
     from experiment import run_phase1, load_config, load_targets, allocation_metadata
     cfg = load_config()
