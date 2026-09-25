@@ -124,7 +124,7 @@ def simulate(
             gross_sell = float((-delta_value.clip(upper=0)).sum())
             costs = (gross_buy + gross_sell) * cost_rate
 
-        shares += delta_value / p.replace(0, pd.NA)
+        shares += (delta_value / p.replace(0, pd.NA)).fillna(0.0)
         cash = max(0.0, float(cash - delta_value.sum() - costs))
         turnover += (gross_buy + gross_sell) / max(total, 1e-12)
         trades += int((delta_value.abs() > 1e-10).sum())
