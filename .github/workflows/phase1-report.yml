@@ -1,0 +1,19 @@
+name: phase1-report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python scripts/run_phase1.py --output reports/phase1_results.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase1-results
+          path: reports/phase1_results.csv
