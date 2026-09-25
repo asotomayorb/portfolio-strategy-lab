@@ -84,6 +84,6 @@ def simulate(prices, target_weights, initial_capital, monthly_contribution=0.0,
         turnover += (gross_buy + gross_sell) / max(total, 1e-12)
         trades += int((delta_value.abs() > 1e-10).sum())
         mark = float(cash + (shares * p.fillna(0.0)).sum())
-        rows.append((execution, mark, cash))
+        rows.append((execution, mark, cash, float(monthly_contribution) if invest_contributions else 0.0))
 
-    return pd.DataFrame(rows, columns=["date","equity","cash"]).set_index("date"), turnover, trades
+    return pd.DataFrame(rows, columns=["date","equity","cash","contribution"]).set_index("date"), turnover, trades
