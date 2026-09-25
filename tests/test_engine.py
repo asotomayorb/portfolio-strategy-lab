@@ -65,3 +65,19 @@ def test_allocation_csv_maps_btcusd_and_cash(tmp_path):
     assert out["BTC"] == pytest.approx(0.10)
     assert out["QQQ"] == pytest.approx(0.85)
     assert out["CASH"] == pytest.approx(0.05)
+
+
+def test_phase1_smoke_with_repository_data():
+    from experiment import run_phase1, load_config, load_targets, allocation_metadata
+    cfg = load_config()
+    targets = load_targets(cfg)
+    assert targets["CASH"] == pytest.approx(0.05)
+    assert sum(targets.values()) == pytest.approx(1.0)
+    result = run_phase1()
+    assert not result.empty
+    assert set(["B0_buy_hold", "B1_dca", "S1_momentum", "S3_rotation",
+                "S4_moving_average", "S5_dynamic_allocation", "S6_risk_parity"]).issubset(
+        set(result["strategy"])
+    )
+    assert (result["allocation_total"] == pytest.approx(1.0)).all()
+    assert (result["cash_target"] == pytest.approx(0.05)).all()
