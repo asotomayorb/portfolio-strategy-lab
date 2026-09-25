@@ -3,10 +3,15 @@ from __future__ import annotations
 import math
 import pandas as pd
 
-def summarize(equity: pd.Series, returns: pd.Series | None = None,
-             turnover: float = 0.0, trades: int = 0,
-             external_cashflows: pd.Series | None = None,
-             initial_capital: float = 0.0) -> dict:
+def summarize(
+    equity: pd.Series,
+    returns: pd.Series | None = None,
+    turnover: float = 0.0,
+    trades: int = 0,
+    external_cashflows: pd.Series | None = None,
+    initial_capital: float = 0.0,
+    cash: pd.Series | None = None,
+) -> dict:
     equity = equity.dropna()
     if len(equity) < 2:
         return {}
@@ -42,7 +47,8 @@ def summarize(equity: pd.Series, returns: pd.Series | None = None,
         annual = equity.resample("YE").last().pct_change()
         worst_calendar_year = float(annual.min()) if len(annual) else float("nan")
     calmar = cagr / abs(max_dd) if max_dd < 0 else float("nan")
-    return {
+
+    out = {
         "final_value": float(equity.iloc[-1]),
         "CAGR": float(cagr),
         "ann_vol": float(vol),
@@ -55,3 +61,13 @@ def summarize(equity: pd.Series, returns: pd.Series | None = None,
         "trades": int(trades),
         "longest_recovery_months": int(longest_recovery),
     }
+    if cash is not None:
+        cash = cash.reindex(equity.index).dropna()
+        if len(cash):
+            cash_pct = cash / equity.reindex(cash.index)
+            out["average_cash"] = float(cash.mean())
+            out["max_cash"] = float(cash.max())
+            out["min_cash"] = float(cash.min())
+            out["average_cash_pct"] = float(cash_pct.mean())
+            out["max_cash_pct"] = float(cash_pct.max())
+    return out
