@@ -126,5 +126,5 @@ def test_phase1_smoke_with_repository_data():
                 "S4_moving_average", "S5_dynamic_allocation", "S6_risk_parity"]).issubset(
         set(result["strategy"])
     )
-    assert (result["allocation_total"] == pytest.approx(1.0)).all()
-    assert (result["cash_target"] == pytest.approx(0.05)).all()
+    assert np.allclose(result["allocation_total"].to_numpy(), 1.0, atol=1e-10)
+    assert np.allclose(result["cash_target"].to_numpy(), 0.05, atol=1e-10)
