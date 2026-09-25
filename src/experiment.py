@@ -3,34 +3,29 @@ from __future__ import annotations
 from pathlib import Path
 import pandas as pd
 import yaml
-from data_loader import load_workbook, close_matrix
+from data_loader import load_csv_folder, close_matrix
 from backtest import simulate
 from metrics import summarize
 from strategies import buy_and_hold, dca, momentum, rotation, moving_average, dynamic_allocation, risk_parity
 
 CONFIG = Path(__file__).parents[1] / "config" / "phase1.yaml"
+TICKER_DIR = Path(__file__).parents[1] / "tickers"
 
 def load_config(path=CONFIG):
     return yaml.safe_load(Path(path).read_text())
 
-def load_targets(path: str | Path) -> dict[str, float]:
-    df = pd.read_excel(path, sheet_name="TICKERS", header=None)
-    result: dict[str, float] = {}
-    for _, row in df.iterrows():
-        vals = [str(v).strip() for v in row.tolist()]
-        if len(vals) < 2:
-            continue
-        ticker = vals[0]
-        try:
-            weight = float(vals[1])
-        except (TypeError, ValueError):
-            continue
-        if ticker and ticker not in {"Ticker", "TICKER", "TOTAL"}:
-            result[ticker] = weight
-    return result
+def load_targets(cfg):
+    weights = cfg.get("portfolio", {}).get("target_weights", {})
+    result = {str(k).upper(): float(v) for k, v in weights.items()}
+    if result:
+        total = sum(result.values())
+        if total <= 0:
+            raise ValueError("portfolio.target_weights must contain positive weights")
+        return {k: v / total for k, v in result.items()}
+    return {}
 
-def prepare_prices(source: str | Path) -> pd.DataFrame:
-    return close_matrix(load_workbook(source))
+def prepare_prices(ticker_dir=TICKER_DIR):
+    return close_matrix(load_csv_folder(ticker_dir))
 
 def _signals(prices, targets, cfg):
     return {
@@ -43,25 +38,23 @@ def _signals(prices, targets, cfg):
         "S6_risk_parity": risk_parity(prices, cfg["strategies"]["risk_parity"]["volatility_window_days"]),
     }
 
-def run_phase1(source: str | Path, cfg_path=CONFIG, initial_capital=None, monthly_contribution=None):
+def run_phase1(ticker_dir=TICKER_DIR, cfg_path=CONFIG, initial_capital=None, monthly_contribution=None):
     cfg = load_config(cfg_path)
-    prices = prepare_prices(source)
-    targets = load_targets(source)
+    prices = prepare_prices(ticker_dir)
+    targets = load_targets(cfg)
     initial_capital = cfg["portfolio"]["initial_capital"] if initial_capital is None else initial_capital
     monthly_contribution = cfg["portfolio"]["monthly_contribution"] if monthly_contribution is None else monthly_contribution
     signals = _signals(prices, targets, cfg)
     rows = []
     for name, sig in signals.items():
+        if name in {"B0_buy_hold", "B1_dca"} and not targets:
+            continue
         invest = name != "B0_buy_hold"
         rebalance = name != "B0_buy_hold"
-        eq, turnover, trades = simulate(
-            prices, sig, initial_capital,
+        eq, turnover, trades = simulate(prices, sig, initial_capital,
             monthly_contribution if invest else 0.0,
-            cfg["costs"]["commission_bps"],
-            cfg["costs"]["slippage_bps"],
-            invest_contributions=invest,
-            rebalance=rebalance,
-        )
+            cfg["costs"]["commission_bps"], cfg["costs"]["slippage_bps"],
+            invest_contributions=invest, rebalance=rebalance)
         if eq.empty:
             continue
         m = summarize(eq["equity"], turnover=turnover, trades=trades)
@@ -72,10 +65,10 @@ def run_phase1(source: str | Path, cfg_path=CONFIG, initial_capital=None, monthl
 if __name__ == "__main__":
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("source")
+    p.add_argument("--tickers", default=str(TICKER_DIR))
     p.add_argument("--output", default=None)
     a = p.parse_args()
-    result = run_phase1(a.source)
+    result = run_phase1(a.tickers)
     print(result.to_string(index=False))
     if a.output:
         Path(a.output).parent.mkdir(parents=True, exist_ok=True)
