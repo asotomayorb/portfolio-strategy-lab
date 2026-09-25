@@ -7,6 +7,7 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from data_loader import load_csv_folder, close_matrix
+from history import common_history_start
 from experiment import run_phase1, load_config, load_targets, allocation_metadata
 
 TICKER_DIR = ROOT / "tickers"
@@ -24,6 +25,12 @@ except Exception as exc:
     st.stop()
 
 st.success(f"Dataset leído: {len(assets)} tickers, {len(prices):,} fechas.")
+
+try:
+    common_start = common_history_start(prices)
+    st.info(f"Historia común de todo el universo: {common_start.date()}")
+except Exception as exc:
+    st.warning(f"No se pudo determinar la historia común: {exc}")
 
 quality = []
 for ticker, asset in assets.items():
@@ -74,6 +81,10 @@ if st.button("Ejecutar Phase 1", type="primary"):
             if col in display:
                 display[col] = display[col].astype(float).round(4)
         st.dataframe(display, use_container_width=True, hide_index=True)
+        st.subheader("Comparación visual")
+        if "CAGR" in result.columns and "max_drawdown" in result.columns:
+            chart = result.set_index("strategy")[["CAGR", "max_drawdown"]]
+            st.bar_chart(chart)
         st.download_button(
             "Descargar resultados CSV",
             result.to_csv(index=False).encode("utf-8"),
