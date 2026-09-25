@@ -39,6 +39,8 @@ The ATR/pullback strategy is deliberately excluded from Phase 1 and will be test
 ## Online use
 The app reads `tickers/*.csv` from the repository. No file upload is required. Install requirements and launch with `streamlit run app.py`.
 
+For a reproducible numerical Phase 1 report, run `python scripts/run_phase1.py --output reports/phase1_results.csv`. GitHub Actions also provides a manual `phase1-report` workflow that publishes the resulting CSV as an artifact.
+
 ## Data
 The working universe uses BTC instead of IBIT. The old `Copia de QQQ` workbook sheet is no longer relevant. BTC OHLC anomalies are flagged/excluded rather than silently repaired.
 
