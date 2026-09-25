@@ -1,6 +1,6 @@
 project: portfolio_strategy_lab
-dataset_version: v1
-config_version: v1
+dataset_version: tickers-csv-v1
+config_version: v2
 
 portfolio:
   initial_capital: 100000
@@ -10,6 +10,7 @@ portfolio:
   cash_allowed: true
   rebalance_frequency: monthly
   execution: next_session_open
+  target_weights: {}
 
 costs:
   commission_bps: 10
@@ -33,6 +34,5 @@ strategies:
     target: equal_risk_contribution
 
 data:
-  source_file: BOLSA HISTORICOS corregido.xlsx
+  source: github_repository/tickers/*.csv
   btc_replaces_ibit: true
-  duplicate_sheet_to_ignore: Copia de QQQ
