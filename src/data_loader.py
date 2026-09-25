@@ -75,7 +75,9 @@ def load_csv_folder(folder: str | Path) -> dict[str, AssetData]:
     return assets
 
 def close_matrix(assets):
-    return pd.concat(
-        {ticker: a.frame.set_index("Date")["Close"].where(a.frame.set_index("Date")["ohlc_valid"])
-         for ticker, a in assets.items()}, axis=1
-    ).sort_index()
+    """Build a date-indexed close matrix while preserving OHLC validity masks."""
+    series = {}
+    for ticker, asset in assets.items():
+        frame = asset.frame.set_index("Date")
+        series[ticker] = frame["Close"].where(frame["ohlc_valid"])
+    return pd.concat(series, axis=1).sort_index()
