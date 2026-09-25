@@ -172,7 +172,7 @@ def run_phase1(
                 )
             continue
 
-        m = summarize(eq["equity"], turnover=turnover, trades=trades)
+        m = summarize(\n            eq["equity"],\n            turnover=turnover,\n            trades=trades,\n            external_cashflows=eq["contribution"],\n            initial_capital=initial_capital,\n        )
         m.update(
             {
                 "strategy": name,
