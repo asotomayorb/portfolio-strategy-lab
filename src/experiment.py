@@ -137,6 +137,13 @@ def run_phase1(
     )
 
     signals = _signals(prices, targets, cfg)
+    # B0/B1 use the user's explicit 95% investable allocation. Tactical
+    # strategies are normalized to the same 95% invested ceiling so the
+    # configured 5% cash reserve is preserved consistently.
+    invest_total = sum(invest_targets.values())
+    for name in list(signals):
+        if name not in {"B0_buy_hold", "B1_dca"} and invest_total < 1.0:
+            signals[name] = signals[name] * invest_total
     meta = allocation_metadata(cfg, alloc_path)
     rows = []
 
