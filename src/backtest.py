@@ -48,7 +48,7 @@ def simulate(
             else pd.Series(0.0, index=prices.columns)
         )
         required = desired[desired > 0].index.tolist()
-        if required:
+        if required and rebalance:
             common_dates = prices.index[prices.index.to_period("M") == month]
             common_dates = common_dates[
                 prices.loc[common_dates, required].notna().all(axis=1)
@@ -61,7 +61,10 @@ def simulate(
         execution = None
         for dt in future:
             p_try = execution_prices.loc[dt]
-            if p_try.reindex(required).notna().all() if required else True:
+            # Non-rebalancing strategies must not wait for late-starting
+            # assets: they execute on the next session and retain idle cash
+            # until each target asset becomes tradable.
+            if not rebalance or (p_try.reindex(required).notna().all() if required else True):
                 execution = dt
                 break
         if execution is None:
@@ -69,6 +72,7 @@ def simulate(
 
         cash += float(monthly_contribution)
         p_dec = prices.loc[decision]
+        eligible_target = desired.copy()
         desired[~p_dec.notna()] = 0.0
         if desired.sum() > 1.0:
             desired /= desired.sum()
@@ -95,7 +99,7 @@ def simulate(
             # Deploy the portion of initial capital reserved for assets that
             # were unavailable at the beginning of the expanding history.
             newly_tradable = (
-                desired.gt(0)
+                eligible_target.gt(0)
                 & tradable
                 & shares.eq(0.0)
                 & (~funded_initial)
