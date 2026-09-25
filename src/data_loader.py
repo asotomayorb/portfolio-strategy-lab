@@ -34,7 +34,16 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     missing = REQUIRED - set(out.columns)
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
-    date_text = out["Date"].astype(str).str.strip()\n        has_time = date_text.str.contains(r"\\s")\n        parsed = pd.Series(pd.NaT, index=out.index, dtype="datetime64[ns]")\n        parsed.loc[~has_time] = pd.to_datetime(date_text.loc[~has_time], errors="coerce", dayfirst=True, format="mixed")\n        parsed.loc[has_time] = pd.to_datetime(date_text.loc[has_time], errors="coerce", dayfirst=False, format="mixed")\n        out["Date"] = parsed.dt.normalize()
+    date_text = out["Date"].astype(str).str.strip()
+    has_time = date_text.str.contains(r"\\s")
+    parsed = pd.Series(pd.NaT, index=out.index, dtype="datetime64[ns]")
+    parsed.loc[~has_time] = pd.to_datetime(
+        date_text.loc[~has_time], errors="coerce", dayfirst=True, format="mixed"
+    )
+    parsed.loc[has_time] = pd.to_datetime(
+        date_text.loc[has_time], errors="coerce", dayfirst=False, format="mixed"
+    )
+    out["Date"] = parsed.dt.normalize()
     for c in ["Open","High","Low","Close"]:
         out[c] = pd.to_numeric(out[c], errors="coerce")
     if "Volume" in out.columns:
