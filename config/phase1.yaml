@@ -1,6 +1,6 @@
 project: portfolio_strategy_lab
 dataset_version: tickers-csv-v1
-config_version: v2
+config_version: v3
 
 portfolio:
   initial_capital: 100000
@@ -10,7 +10,7 @@ portfolio:
   cash_allowed: true
   rebalance_frequency: monthly
   execution: next_session_open
-  target_weights: {}
+  allocation_file: portfolio_allocation.csv
 
 costs:
   commission_bps: 10
