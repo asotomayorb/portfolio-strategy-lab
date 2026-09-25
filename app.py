@@ -35,11 +35,7 @@ for ticker, asset in assets.items():
 st.subheader("Validación")
 st.dataframe(pd.DataFrame(quality), use_container_width=True, hide_index=True)
 
-weights = cfg.get("portfolio", {}).get("target_weights", {})
-if weights:
-    st.write("Pesos objetivo configurados:", weights)
-else:
-    st.warning("No hay target_weights configurados. B0 Buy & Hold y B1 DCA quedarán fuera hasta definirlos.")
+try:\n    from experiment import load_targets, allocation_metadata\n    alloc = load_targets(cfg)\n    meta = allocation_metadata(cfg)\n    st.subheader("Portfolio allocation")\n    st.dataframe(\n        pd.DataFrame([{ "Ticker": k, "Allocation %": round(v * 100, 2) } for k, v in alloc.items()]),\n        use_container_width=True, hide_index=True\n    )\n    st.caption(f"Archivo: {meta[\"allocation_file\"]} · versión por contenido: {meta[\"allocation_sha256\"]} · efectivo objetivo: {meta[\"cash_target\"]:.1%}")\nexcept Exception as exc:\n    st.error(f"Allocation inválido: {exc}")\n    st.stop()
 
 if st.button("Ejecutar Phase 1", type="primary"):
     with st.spinner("Ejecutando simulaciones..."):
