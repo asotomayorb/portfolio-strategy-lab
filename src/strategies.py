@@ -34,7 +34,22 @@ def moving_average(prices, window=200):
     return out.div(out.sum(axis=1).replace(0, np.nan), axis=0).fillna(0.0)
 
 def rotation(prices, lookback_months=12, top_n=3):
-    return momentum(prices, lookback_months, top_n)
+    """Relative-strength rotation: hold only positive-return leaders.
+
+    Unlike momentum, which always selects the top N available assets, rotation
+    can move the strategy to cash when no asset has a positive trailing return.
+    This keeps the two Phase 1 families economically distinct without tuning
+    additional parameters.
+    """
+    m = _monthly(prices).pct_change(lookback_months)
+    out = pd.DataFrame(np.nan, index=prices.index, columns=prices.columns)
+    for dt, row in m.iterrows():
+        eligible = row[row > 0].nlargest(top_n)
+        w = pd.Series(0.0, index=prices.columns)
+        if len(eligible):
+            w.loc[eligible.index] = 1.0 / len(eligible)
+        out.loc[dt] = w
+    return out.ffill().fillna(0.0)
 
 def dynamic_allocation(prices, lookback_months=12, max_weight=0.25):
     scores = _monthly(prices).pct_change(lookback_months).clip(lower=0)
