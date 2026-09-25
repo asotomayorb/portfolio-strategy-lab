@@ -48,7 +48,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
         # Some exported feeds quote thousands separators, e.g. "10,843.40".
         # Remove grouping commas before numeric conversion.
         out[c] = pd.to_numeric(
-            out[c].astype(str).str.replace(",", "", regex=False).str.strip(),
+            out[c].astype(str).str.replace(",", "", regex=False).str.strip().str.strip('"'),
             errors="coerce",
         )
     if "Volume" in out.columns:
