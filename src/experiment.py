@@ -145,7 +145,7 @@ def run_phase1(
             continue
 
         invest = name != "B0_buy_hold"
-        rebalance = name != "B0_buy_hold"
+        rebalance = name not in {"B0_buy_hold", "B1_dca"}
         eq, turnover, trades = simulate(
             prices,
             sig,
