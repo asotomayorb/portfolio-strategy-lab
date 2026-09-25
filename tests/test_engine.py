@@ -291,3 +291,16 @@ def test_non_rebalancing_expanding_universe_deploys_late_asset_allocation():
     # remaining 5% cash reserve stays untouched.
     assert eq["cash"].iloc[-1] == pytest.approx(50.0, abs=1e-8)
 
+def test_missing_valuation_price_does_not_zero_existing_position():
+    idx = pd.date_range("2024-01-01", periods=70, freq="B")
+    prices = pd.DataFrame({"A": 100.0}, index=idx)
+    prices.loc[idx[30], "A"] = np.nan
+    weights = pd.DataFrame({"A": 0.95}, index=idx)
+    eq, _, _ = simulate(
+        prices, weights, 1000, 0,
+        commission_bps=0, slippage_bps=0,
+        invest_contributions=False, rebalance=False,
+    )
+    assert eq["equity"].min() == pytest.approx(950.0)
+    assert eq["cash"].iloc[-1] == pytest.approx(50.0)
+\n
