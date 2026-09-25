@@ -111,6 +111,11 @@ def simulate(
             ) | newly_tradable
 
         delta_value = target_value - current
+        if not rebalance:
+            # Initial allocation is funded exactly once when each asset first
+            # becomes tradable. Keep this explicit at the order level so a
+            # late-starting asset cannot leave its reserved capital stranded.
+            delta_value.loc[newly_tradable] = initial_target_value.loc[newly_tradable]
         delta_value[~tradable] = 0.0
         gross_buy = float(delta_value.clip(lower=0).sum())
         gross_sell = float((-delta_value.clip(upper=0)).sum())
