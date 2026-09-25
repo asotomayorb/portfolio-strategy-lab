@@ -92,6 +92,9 @@ def run_phase1(ticker_dir=TICKER_DIR, cfg_path=CONFIG, initial_capital=None, mon
     prices = prepare_prices(ticker_dir)
     alloc_path = allocation_path(cfg)
     targets = load_targets(cfg, alloc_path)
+    missing = sorted(set(targets) - {"CASH"} - set(prices.columns))
+    if missing:
+        raise ValueError("Allocation contains tickers without price data: " + ", ".join(missing))
     invest_targets = {k: v for k, v in targets.items() if k != "CASH"}
     initial_capital = cfg["portfolio"]["initial_capital"] if initial_capital is None else initial_capital
     monthly_contribution = cfg["portfolio"]["monthly_contribution"] if monthly_contribution is None else monthly_contribution
