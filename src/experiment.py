@@ -191,6 +191,7 @@ def run_phase1(
             trades=trades,
             external_cashflows=eq["contribution"],
             initial_capital=initial_capital,
+            cash=eq["cash"],
         )
         m.update(
             {
