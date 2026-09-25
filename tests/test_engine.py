@@ -82,6 +82,8 @@ def test_buy_and_hold_repository_simulation_has_history():
     )
 
 
+# Repository-level Phase 1 coverage is intentionally exercised in CI.
+
 def test_phase1_smoke_with_repository_data():
     from experiment import run_phase1, load_config, load_targets, allocation_metadata
     cfg = load_config()
