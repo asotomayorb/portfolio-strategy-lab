@@ -113,17 +113,24 @@ def main():
             p=p.loc[p.index>=start]; x=x.reindex(p.index)
         for omitted in [None]+assets:
             t=dict(targets)
+            p_test=p.copy()
+            x_test=x.copy()
             if omitted is not None:
                 t.pop(omitted,None)
+                # True leave-one-asset-out: the omitted asset must be absent
+                # from both the signal universe and the execution matrix.
+                p_test=p_test.drop(columns=[omitted], errors="ignore")
+                x_test=x_test.drop(columns=[omitted], errors="ignore")
             invest=[k for k in t if k!="CASH"]
             invest_sum=sum(t[k] for k in invest)
             target_invest=sum(targets[k] for k in assets)
             if invest_sum<=0: continue
-            # Keep original 5% cash; rescale only investable weights to 95%.
+            # Keep original 5% cash; rescale only remaining investable weights
+            # to the original 95% investable budget.
             scale=target_invest/invest_sum
             for k in invest: t[k]*=scale
-            sigs=_signals(p,t,cfg)
-            rows=evaluate(p,x,cfg,t,sigs)
+            sigs=_signals(p_test,t,cfg)
+            rows=evaluate(p_test,x_test,cfg,t,sigs)
             for r in rows:
                 r.update({"history_mode":history_mode,
                           "omitted_asset":"NONE" if omitted is None else omitted})
