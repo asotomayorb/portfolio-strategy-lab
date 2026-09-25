@@ -54,8 +54,8 @@ ROBUSTNESS CHECKLIST
 [done] Pareto robustness
 [done] Walk-forward
 [done] Regime stability analysis
-[done] Parameter-neighbor sensitivity (run pending final CI artifact)
-[done] Universe sensitivity (run pending final CI artifact)
+[in_progress] Parameter-neighbor sensitivity (pre-registered; final CI artifact pending)
+[in_progress] Universe sensitivity (pre-registered; final CI artifact pending)
 [pending] Cost/slippage sensitivity
 [pending] Concentration/dependence synthesis
 [pending] Independent OOS
