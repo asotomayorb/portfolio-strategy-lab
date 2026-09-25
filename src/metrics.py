@@ -48,8 +48,14 @@ def summarize(
         worst_calendar_year = float(annual.min()) if len(annual) else float("nan")
     calmar = cagr / abs(max_dd) if max_dd < 0 else float("nan")
 
+    total_contributions = float(external_cashflows.reindex(equity.index).fillna(0.0).sum()) if external_cashflows is not None else 0.0
+    invested_capital = float(initial_capital) + total_contributions
+    turnover_per_year = float(turnover / years) if years > 0 else float("nan")
     out = {
         "final_value": float(equity.iloc[-1]),
+        "total_contributions": total_contributions,
+        "invested_capital": invested_capital,
+        "terminal_wealth_multiple": float(equity.iloc[-1] / invested_capital) if invested_capital > 0 else float("nan"),
         "CAGR": float(cagr),
         "ann_vol": float(vol),
         "max_drawdown": max_dd,
@@ -58,6 +64,7 @@ def summarize(
         "Calmar": float(calmar),
         "worst_calendar_year": worst_calendar_year,
         "turnover": float(turnover),
+        "turnover_per_year": turnover_per_year,
         "trades": int(trades),
         "longest_recovery_months": int(longest_recovery),
     }
