@@ -165,4 +165,4 @@ def test_phase1_tactical_signals_respect_cash_reserve():
         if name in {"B0_buy_hold", "B1_dca"}:
             assert np.nanmax(row_sums.to_numpy()) <= 0.95 + 1e-10
         else:
-            assert np.nanmax(row_sums.to_numpy()) <= pytest.approx(0.95)
+            assert np.nanmax(row_sums.to_numpy()) <= 0.95 + 1e-10
