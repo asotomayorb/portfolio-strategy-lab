@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-def erc_weights(returns: pd.DataFrame, max_iter: int = 2000, tol: float = 1e-9) -> pd.Series:
+def erc_weights(returns: pd.DataFrame, max_iter: int = 500, tol: float = 1e-9) -> pd.Series:
     x = returns.dropna(axis=1, how="all").copy()
     if x.shape[1] == 0:
         return pd.Series(dtype=float)
