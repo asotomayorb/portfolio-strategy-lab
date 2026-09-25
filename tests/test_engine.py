@@ -139,3 +139,21 @@ def test_rotation_can_move_to_cash_when_all_returns_are_non_positive():
     r = rotation(prices, lookback_months=12, top_n=1)
     assert r.iloc[-1].sum() == pytest.approx(0.0)
     assert m.iloc[-1].sum() == pytest.approx(1.0)
+
+
+def test_phase1_tactical_signals_respect_cash_reserve():
+    from experiment import _signals, load_config
+
+    idx = pd.date_range("2024-01-01", periods=40, freq="B")
+    prices = pd.DataFrame(
+        {ticker: np.linspace(100.0, 140.0, len(idx)) for ticker in ["A", "B", "C"]},
+        index=idx,
+    )
+    targets = {"A": 0.50, "B": 0.25, "C": 0.20, "CASH": 0.05}
+    signals = _signals(prices, targets, load_config())
+    for name, signal in signals.items():
+        row_sums = signal.sum(axis=1)
+        if name in {"B0_buy_hold", "B1_dca"}:
+            assert np.nanmax(row_sums.to_numpy()) <= 0.95 + 1e-10
+        else:
+            assert np.nanmax(row_sums.to_numpy()) <= pytest.approx(0.95)
