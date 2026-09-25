@@ -89,4 +89,5 @@ def simulate(
         mark = float(cash + (shares * p.fillna(0.0)).sum())
         rows.append((execution, mark, cash, float(monthly_contribution) if invest_contributions else 0.0))
 
-    return pd.DataFrame(rows, columns=["date", "equity", "cash", "contribution"]).set_index("date")
+    equity = pd.DataFrame(rows, columns=["date", "equity", "cash", "contribution"]).set_index("date")
+    return equity, turnover, trades
