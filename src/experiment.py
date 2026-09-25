@@ -4,7 +4,7 @@ from pathlib import Path
 import hashlib
 import pandas as pd
 import yaml
-from data_loader import load_csv_folder, close_matrix
+from data_loader import load_csv_folder, close_matrix, open_matrix
 from backtest import simulate
 from metrics import summarize
 
@@ -79,8 +79,13 @@ def allocation_metadata(cfg, path=None):
     }
 
 
+def prepare_price_matrices(ticker_dir=TICKER_DIR):
+    assets = load_csv_folder(ticker_dir)
+    return close_matrix(assets), open_matrix(assets)
+
+
 def prepare_prices(ticker_dir=TICKER_DIR):
-    return close_matrix(load_csv_folder(ticker_dir))
+    return prepare_price_matrices(ticker_dir)[0]
 
 
 def _signals(prices, targets, cfg):
@@ -119,7 +124,7 @@ def run_phase1(
     monthly_contribution=None,
 ):
     cfg = load_config(cfg_path)
-    prices = prepare_prices(ticker_dir)
+    prices, execution_prices = prepare_price_matrices(ticker_dir)
     alloc_path = allocation_path(cfg)
     targets = load_targets(cfg, alloc_path)
     missing = sorted(set(targets) - {"CASH"} - set(prices.columns))
@@ -162,6 +167,7 @@ def run_phase1(
             cfg["costs"]["slippage_bps"],
             invest_contributions=invest,
             rebalance=rebalance,
+            execution_prices=execution_prices,
         )
 
         if eq.empty:
