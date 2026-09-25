@@ -1,0 +1,67 @@
+PHASE 1 — STRATEGY-FAMILY RESEARCH PROTOCOL
+===========================================
+
+PURPOSE
+Compare broad investment strategy families before any user-specific ATR/pullback strategy (Phase 2).
+The objective is robustness, not maximizing historical CAGR.
+
+STATUS AT 2026-09-25
+- Core Phase 1 families implemented/evaluated: B0 Buy & Hold, B1 DCA, S1 Momentum, S3 Rotation, S4 Moving Average, S5 Dynamic Allocation, S6 Risk Parity.
+- S2 Value: intentionally OMITTED from active comparison until a comparable historical point-in-time valuation dataset is available. It is not classified as a loser.
+- Common-history and expansive-history comparisons completed.
+- Pareto robustness and walk-forward robustness completed; no robust winner.
+- Parameter-neighbor and leave-one-asset-out sensitivity code has been added and is currently being executed/validated.
+- Next: cost/slippage sensitivity, concentration/dependence analysis, independent OOS, reserved holdout, statistical uncertainty, final synthesis.
+- Phase 2 is BLOCKED until Phase 1 checklist is complete.
+
+FROZEN PRINCIPLES
+1. No post-result parameter optimization.
+2. Baseline parameters remain the reference.
+3. Neighbor tests measure stability/plateaus, not winners.
+4. Same universe/protocol whenever the comparison permits.
+5. Historical regimes must be separated from current/OOS periods.
+6. Robustness > peak CAGR.
+7. No winner unless supported across multiple independent robustness dimensions.
+8. Value is omitted rather than fabricated when comparable data are unavailable.
+
+STRATEGIES
+B0 Buy & Hold
+B1 DCA
+S1 Momentum
+S2 Value — omitted pending data
+S3 Rotation
+S4 Moving Average
+S5 Dynamic Allocation
+S6 Risk Parity
+
+CORE PROTOCOL
+- Monthly evaluation.
+- No leverage/short.
+- 5% cash reserve under the frozen baseline.
+- Equal transaction-cost assumptions across comparable strategies.
+- Execution at next open.
+- Historical data are repository CSVs under tickers/.
+- Common history and expansive history are evaluated separately.
+- Walk-forward folds are evaluated before any final selection.
+- Final decision is descriptive/robustness-based; no ranking is created merely from one metric.
+
+ROBUSTNESS CHECKLIST
+[done] Protocol/data/config freeze
+[done] Strategy family implementation (except Value)
+[done] Common history
+[done] Expansive history
+[done] Cross-history comparison
+[done] Pareto robustness
+[done] Walk-forward
+[done] Regime stability analysis
+[done] Parameter-neighbor sensitivity (run pending final CI artifact)
+[done] Universe sensitivity (run pending final CI artifact)
+[pending] Cost/slippage sensitivity
+[pending] Concentration/dependence synthesis
+[pending] Independent OOS
+[pending] Truly reserved holdout
+[pending] Statistical uncertainty
+[pending] Final Phase 1 synthesis
+[pending] Robust winner (must remain NONE if evidence is insufficient)
+
+RULE: Never start Phase 2 because a Phase 1 test is inconvenient, slow, or inconclusive.
