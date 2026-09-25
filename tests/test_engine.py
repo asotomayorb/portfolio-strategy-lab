@@ -131,6 +131,10 @@ def test_metrics_report_cash_exposure():
     assert out["max_cash"] == pytest.approx(100.0)
     assert out["average_cash_pct"] == pytest.approx(0.10)
     assert out["max_cash_pct"] == pytest.approx(0.10)
+    assert out["total_contributions"] == pytest.approx(0.0)
+    assert out["invested_capital"] == pytest.approx(1000.0)
+    assert out["terminal_wealth_multiple"] == pytest.approx(1.0)
+    assert out["turnover_per_year"] == pytest.approx(0.0)
 
 
 def test_metrics_are_not_distorted_by_contributions():
