@@ -268,3 +268,26 @@ def test_phase1_tactical_signals_respect_cash_reserve():
             assert np.nanmax(row_sums.to_numpy()) <= 0.95 + 1e-10
         else:
             assert np.nanmax(row_sums.to_numpy()) <= 0.95 + 1e-10
+
+def test_non_rebalancing_expanding_universe_deploys_late_asset_allocation():
+    idx = pd.date_range("2020-01-01", periods=90, freq="B")
+    prices = pd.DataFrame({"EARLY": 100.0, "LATE": np.nan}, index=idx)
+    prices.loc[idx[45]:, "LATE"] = 100.0
+    weights = pd.DataFrame({"EARLY": 0.475, "LATE": 0.475}, index=idx)
+
+    eq, _, _ = simulate(
+        prices,
+        weights,
+        1000,
+        monthly_contribution=0,
+        commission_bps=0,
+        slippage_bps=0,
+        invest_contributions=False,
+        rebalance=False,
+    )
+
+    assert not eq.empty
+    # Once LATE exists, its reserved 47.5% allocation is deployed; the
+    # remaining 5% cash reserve stays untouched.
+    assert eq["cash"].iloc[-1] == pytest.approx(50.0, abs=1e-8)
+
