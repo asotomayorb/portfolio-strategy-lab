@@ -88,4 +88,4 @@ def close_matrix(assets):
     for ticker, asset in assets.items():
         frame = asset.frame.set_index("Date")
         series[ticker] = frame["Close"].where(frame["ohlc_valid"])
-    return pd.concat(series, axis=1).sort_index()
+    return pd.concat(series, axis=1, sort=False).sort_index()
