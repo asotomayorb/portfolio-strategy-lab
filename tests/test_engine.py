@@ -120,7 +120,7 @@ def test_metrics_has_core_fields():
     out = summarize(equity)
     for field in ["final_value", "CAGR", "ann_vol", "max_drawdown", "Sharpe", "Sortino", "Calmar", "worst_calendar_year"]:
         assert field in out
-
+\n\ndef test_metrics_report_cash_exposure():\n    idx = pd.date_range("2020-01-31", periods=24, freq="ME")\n    equity = pd.Series(1000.0, index=idx)\n    cash = pd.Series(100.0, index=idx)\n    out = summarize(equity, cash=cash)\n    assert out["average_cash"] == pytest.approx(100.0)\n    assert out["max_cash"] == pytest.approx(100.0)\n    assert out["average_cash_pct"] == pytest.approx(0.10)\n    assert out["max_cash_pct"] == pytest.approx(0.10)\n
 
 def test_metrics_are_not_distorted_by_contributions():
     idx = pd.date_range("2020-01-31", periods=24, freq="ME")
