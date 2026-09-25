@@ -120,7 +120,18 @@ def test_metrics_has_core_fields():
     out = summarize(equity)
     for field in ["final_value", "CAGR", "ann_vol", "max_drawdown", "Sharpe", "Sortino", "Calmar", "worst_calendar_year"]:
         assert field in out
-\n\ndef test_metrics_report_cash_exposure():\n    idx = pd.date_range("2020-01-31", periods=24, freq="ME")\n    equity = pd.Series(1000.0, index=idx)\n    cash = pd.Series(100.0, index=idx)\n    out = summarize(equity, cash=cash)\n    assert out["average_cash"] == pytest.approx(100.0)\n    assert out["max_cash"] == pytest.approx(100.0)\n    assert out["average_cash_pct"] == pytest.approx(0.10)\n    assert out["max_cash_pct"] == pytest.approx(0.10)\n
+
+
+def test_metrics_report_cash_exposure():
+    idx = pd.date_range("2020-01-31", periods=24, freq="ME")
+    equity = pd.Series(1000.0, index=idx)
+    cash = pd.Series(100.0, index=idx)
+    out = summarize(equity, cash=cash)
+    assert out["average_cash"] == pytest.approx(100.0)
+    assert out["max_cash"] == pytest.approx(100.0)
+    assert out["average_cash_pct"] == pytest.approx(0.10)
+    assert out["max_cash_pct"] == pytest.approx(0.10)
+
 
 def test_metrics_are_not_distorted_by_contributions():
     idx = pd.date_range("2020-01-31", periods=24, freq="ME")
@@ -150,7 +161,11 @@ def test_allocation_csv_maps_btcusd_and_cash(tmp_path):
     sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
     from experiment import load_targets
     path = tmp_path / "portfolio_allocation.csv"
-    path.write_text("Ticker,Allocation %\nBTCUSD,10%\nQQQ,85%\ncash,5%\n", encoding="utf-8")
+    path.write_text("Ticker,Allocation %
+BTCUSD,10%
+QQQ,85%
+cash,5%
+", encoding="utf-8")
     out = load_targets({}, path)
     assert out["BTC"] == pytest.approx(0.10)
     assert out["QQQ"] == pytest.approx(0.85)
