@@ -1,0 +1,24 @@
+PHASE 2 — USER-SPECIFIC STRATEGY RESEARCH
+=============================================
+
+STATUS
+BLOCKED. Do not execute until docs/PHASE1_PROTOCOL.txt checklist is complete and Phase 1 is formally closed.
+
+PURPOSE
+Only after Phase 1, evaluate the user's specified ATR/pullback investment strategy separately.
+Phase 2 must not contaminate Phase 1 family comparisons.
+
+KNOWN CONCEPTS TO BE SPECIFIED/TESTED LATER
+- User-defined target allocations.
+- Available margin/room check before normal trigger logic.
+- 20-week ATR levels: 1.5x, 3x, 5x, 8x.
+- Deepest-to-shallowest allocation priority.
+- Swing-high definition requiring validation with three candles on each side.
+- DCA/dip allocation variants, including ATRx8 exception rules.
+- Monthly/daily/weekly evaluation cadence variants only if pre-registered before testing.
+- No leverage unless explicitly included in a separately defined test.
+- Tax-aware/rebalancing rules only when formally specified.
+
+IMPORTANT
+The above is a future research specification, not part of current Phase 1.
+Do not use these parameters to modify or interpret Phase 1 results.
