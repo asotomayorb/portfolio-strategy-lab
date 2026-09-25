@@ -1,3 +1,4 @@
+import pytest
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
@@ -45,3 +46,22 @@ def test_metrics_recovery_is_not_negative():
     equity = pd.Series([100, 90, 80, 90, 100, 110] + [110] * 18, index=idx)
     out = summarize(equity)
     assert out["longest_recovery_months"] >= 0
+
+
+def test_target_cash_is_preserved():
+    idx = pd.date_range("2024-01-01", periods=70, freq="B")
+    prices = pd.DataFrame({"A": 100.0}, index=idx)
+    weights = pd.DataFrame({"A": 0.95}, index=idx)
+    eq, _, _ = simulate(prices, weights, 1000, 0, commission_bps=0, slippage_bps=0)
+    assert eq["cash"].iloc[-1] == pytest.approx(50.0, abs=1e-8)
+
+
+def test_allocation_csv_maps_btcusd_and_cash(tmp_path):
+    sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
+    from experiment import load_targets
+    path = tmp_path / "portfolio_allocation.csv"
+    path.write_text("Ticker,Allocation %\nBTCUSD,10%\nQQQ,85%\ncash,5%\n", encoding="utf-8")
+    out = load_targets({}, path)
+    assert out["BTC"] == pytest.approx(0.10)
+    assert out["QQQ"] == pytest.approx(0.85)
+    assert out["CASH"] == pytest.approx(0.05)
