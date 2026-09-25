@@ -21,6 +21,7 @@ def simulate(
     execution_prices = execution_prices.reindex(index=prices.index, columns=prices.columns)
     cash = float(initial_capital)
     shares = pd.Series(0.0, index=prices.columns)
+    mark_prices = pd.Series(float("nan"), index=prices.columns)
     rows, turnover, trades = [], 0.0, 0
     months = prices.index.to_period("M").unique()
     cost_rate = (commission_bps + slippage_bps) / 10000.0
@@ -79,7 +80,8 @@ def simulate(
 
         p = execution_prices.loc[execution]
         tradable = p.notna()
-        current = shares * p.fillna(0.0)
+        mark_prices.loc[tradable] = p.loc[tradable]
+        current = shares * mark_prices.fillna(0.0)
         total = float(cash + current.sum())
 
         if month_i == 0 and not rebalance:
@@ -133,7 +135,7 @@ def simulate(
         cash = max(0.0, float(cash - delta_value.sum() - costs))
         turnover += (gross_buy + gross_sell) / max(total, 1e-12)
         trades += int((delta_value.abs() > 1e-10).sum())
-        mark = float(cash + (shares * p.fillna(0.0)).sum())
+        mark = float(cash + (shares * mark_prices.fillna(0.0)).sum())
         rows.append(
             (
                 execution,
