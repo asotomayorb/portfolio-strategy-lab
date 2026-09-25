@@ -7,6 +7,7 @@ import yaml
 from data_loader import load_csv_folder, close_matrix, open_matrix
 from backtest import simulate
 from metrics import summarize
+from history import common_history_start
 
 from strategies import (
     buy_and_hold,
@@ -122,9 +123,16 @@ def run_phase1(
     cfg_path=CONFIG,
     initial_capital=None,
     monthly_contribution=None,
+    history_mode="expanding",
 ):
     cfg = load_config(cfg_path)
     prices, execution_prices = prepare_price_matrices(ticker_dir)
+    if history_mode == "common":
+        start = common_history_start(prices)
+        prices = prices.loc[prices.index >= start].copy()
+        execution_prices = execution_prices.reindex(prices.index).copy()
+    elif history_mode != "expanding":
+        raise ValueError("history_mode must be 'expanding' or 'common'")
     alloc_path = allocation_path(cfg)
     targets = load_targets(cfg, alloc_path)
     missing = sorted(set(targets) - {"CASH"} - set(prices.columns))
@@ -154,6 +162,7 @@ def run_phase1(
         "history_start": prices.index.min().strftime("%Y-%m-%d"),
         "history_end": prices.index.max().strftime("%Y-%m-%d"),
         "history_rows": int(len(prices)),
+        "history_mode": history_mode,
     })
     rows = []
 
