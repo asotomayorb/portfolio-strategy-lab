@@ -1,6 +1,7 @@
 """Deterministic Phase 1 experiment runner."""
 from __future__ import annotations
 from pathlib import Path
+import hashlib
 import pandas as pd
 import yaml
 from data_loader import load_csv_folder, close_matrix
@@ -8,29 +9,76 @@ from backtest import simulate
 from metrics import summarize
 from strategies import buy_and_hold, dca, momentum, rotation, moving_average, dynamic_allocation, risk_parity
 
-CONFIG = Path(__file__).parents[1] / "config" / "phase1.yaml"
-TICKER_DIR = Path(__file__).parents[1] / "tickers"
+ROOT = Path(__file__).parents[1]
+CONFIG = ROOT / "config" / "phase1.yaml"
+TICKER_DIR = ROOT / "tickers"
+
 
 def load_config(path=CONFIG):
     return yaml.safe_load(Path(path).read_text())
 
-def load_targets(cfg):
-    weights = cfg.get("portfolio", {}).get("target_weights", {})
-    result = {str(k).upper(): float(v) for k, v in weights.items()}
-    if result:
-        total = sum(result.values())
-        if total <= 0:
-            raise ValueError("portfolio.target_weights must contain positive weights")
-        return {k: v / total for k, v in result.items()}
-    return {}
+
+def allocation_path(cfg):
+    configured = cfg.get("portfolio", {}).get("allocation_file", "portfolio_allocation.csv")
+    return ROOT / configured
+
+
+def load_targets(cfg, path=None):
+    """Load user-controlled allocation CSV without normalizing away cash."""
+    path = Path(path) if path is not None else allocation_path(cfg)
+    frame = pd.read_csv(path)
+    required = {"Ticker", "Allocation %"}
+    if not required.issubset(frame.columns):
+        raise ValueError(f"{path} must contain columns: Ticker, Allocation %")
+
+    result = {}
+    for _, row in frame.iterrows():
+        ticker = str(row["Ticker"]).strip().upper()
+        if not ticker:
+            continue
+        raw = str(row["Allocation %"]).strip().replace("%", "").replace(",", ".")
+        try:
+            weight = float(raw) / 100.0
+        except ValueError as exc:
+            raise ValueError(f"Invalid allocation for {ticker}: {row['Allocation %']}") from exc
+        if weight < 0 or weight > 1:
+            raise ValueError(f"Allocation for {ticker} must be between 0% and 100%")
+        if ticker in {"CASH", "CASHUSD", "CASH USD"}:
+            ticker = "CASH"
+        if ticker == "BTCUSD":
+            ticker = "BTC"
+        if ticker == "CASH":
+            result["CASH"] = result.get("CASH", 0.0) + weight
+        else:
+            result[ticker] = result.get(ticker, 0.0) + weight
+
+    total = sum(result.values())
+    if total <= 0 or total > 1.0 + 1e-9:
+        raise ValueError(f"Total portfolio allocation must be > 0 and <= 100%; got {total:.2%}")
+    return result
+
+
+def allocation_metadata(cfg, path=None):
+    path = Path(path) if path is not None else allocation_path(cfg)
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+    targets = load_targets(cfg, path)
+    return {
+        "allocation_file": str(path.relative_to(ROOT)),
+        "allocation_sha256": digest,
+        "allocation_total": sum(targets.values()),
+        "cash_target": targets.get("CASH", 0.0),
+    }
+
 
 def prepare_prices(ticker_dir=TICKER_DIR):
     return close_matrix(load_csv_folder(ticker_dir))
 
+
 def _signals(prices, targets, cfg):
+    invest_targets = {k: v for k, v in targets.items() if k != "CASH"}
     return {
-        "B0_buy_hold": buy_and_hold(prices, targets),
-        "B1_dca": dca(prices, targets),
+        "B0_buy_hold": buy_and_hold(prices, invest_targets),
+        "B1_dca": dca(prices, invest_targets),
         "S1_momentum": momentum(prices, cfg["strategies"]["momentum"]["lookback_months"], cfg["strategies"]["momentum"]["top_n"]),
         "S3_rotation": rotation(prices, cfg["strategies"]["rotation"]["lookback_months"], cfg["strategies"]["rotation"]["top_n"]),
         "S4_moving_average": moving_average(prices, cfg["strategies"]["moving_average"]["window_days"]),
@@ -38,29 +86,40 @@ def _signals(prices, targets, cfg):
         "S6_risk_parity": risk_parity(prices, cfg["strategies"]["risk_parity"]["volatility_window_days"]),
     }
 
+
 def run_phase1(ticker_dir=TICKER_DIR, cfg_path=CONFIG, initial_capital=None, monthly_contribution=None):
     cfg = load_config(cfg_path)
     prices = prepare_prices(ticker_dir)
-    targets = load_targets(cfg)
+    alloc_path = allocation_path(cfg)
+    targets = load_targets(cfg, alloc_path)
+    invest_targets = {k: v for k, v in targets.items() if k != "CASH"}
     initial_capital = cfg["portfolio"]["initial_capital"] if initial_capital is None else initial_capital
     monthly_contribution = cfg["portfolio"]["monthly_contribution"] if monthly_contribution is None else monthly_contribution
     signals = _signals(prices, targets, cfg)
+    meta = allocation_metadata(cfg, alloc_path)
     rows = []
     for name, sig in signals.items():
-        if name in {"B0_buy_hold", "B1_dca"} and not targets:
+        if name in {"B0_buy_hold", "B1_dca"} and not invest_targets:
             continue
         invest = name != "B0_buy_hold"
         rebalance = name != "B0_buy_hold"
-        eq, turnover, trades = simulate(prices, sig, initial_capital,
+        eq, turnover, trades = simulate(
+            prices, sig, initial_capital,
             monthly_contribution if invest else 0.0,
             cfg["costs"]["commission_bps"], cfg["costs"]["slippage_bps"],
             invest_contributions=invest, rebalance=rebalance)
         if eq.empty:
             continue
         m = summarize(eq["equity"], turnover=turnover, trades=trades)
-        m.update({"strategy": name, "dataset_version": cfg["dataset_version"], "config_version": cfg["config_version"]})
+        m.update({
+            "strategy": name,
+            "dataset_version": cfg["dataset_version"],
+            "config_version": cfg["config_version"],
+            **meta,
+        })
         rows.append(m)
     return pd.DataFrame(rows)
+
 
 if __name__ == "__main__":
     import argparse
