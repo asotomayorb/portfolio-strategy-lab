@@ -165,7 +165,7 @@ def test_allocation_csv_maps_btcusd_and_cash(tmp_path):
     sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
     from experiment import load_targets
     path = tmp_path / "portfolio_allocation.csv"
-    path.write_text("Ticker,Allocation %\\nBTCUSD,10%\\nQQQ,85%\\ncash,5%\\n", encoding="utf-8")
+    path.write_text("Ticker,Allocation %\nBTCUSD,10%\nQQQ,85%\ncash,5%\n", encoding="utf-8")
     out = load_targets({}, path)
     assert out["BTC"] == pytest.approx(0.10)
     assert out["QQQ"] == pytest.approx(0.85)
