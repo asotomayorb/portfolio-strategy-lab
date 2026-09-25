@@ -1,6 +1,8 @@
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 import pandas as pd
-from src.data_loader import load_csv_folder, close_matrix
+from data_loader import load_csv_folder, close_matrix
 
 def test_csv_folder_loader(tmp_path):
     p = tmp_path / "QQQ.csv"
