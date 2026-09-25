@@ -1,4 +1,5 @@
 import pytest
+import os
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
@@ -180,6 +181,8 @@ def test_phase1_smoke_with_repository_data():
     assert targets["CASH"] == pytest.approx(0.05)
     assert sum(targets.values()) == pytest.approx(1.0)
     result = run_phase1()
+    if os.getenv("CI"):
+        result.to_csv("phase1_results_ci.csv", index=False)
     assert not result.empty
     assert set(result["strategy"]) == set(["B0_buy_hold", "B1_dca", "S1_momentum", "S3_rotation", "S4_moving_average", "S5_dynamic_allocation", "S6_risk_parity"])
     assert set(["B0_buy_hold", "B1_dca", "S1_momentum", "S3_rotation",
