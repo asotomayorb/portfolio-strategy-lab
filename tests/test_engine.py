@@ -51,6 +51,7 @@ def test_execution_uses_next_session_open_not_decision_close():
     idx = pd.date_range("2024-01-01", periods=45, freq="B")
     closes = pd.DataFrame({"A": 100.0}, index=idx)
     opens = pd.DataFrame({"A": 200.0}, index=idx)
+    opens.loc[idx[-1], "A"] = 300.0
     weights = pd.DataFrame(1.0, index=idx, columns=["A"])
     eq, _, _ = simulate(
         closes, weights, 1000, 0,
@@ -59,6 +60,7 @@ def test_execution_uses_next_session_open_not_decision_close():
     )
     assert eq.index[0] > idx[0]
     assert eq["equity"].iloc[0] == pytest.approx(1000.0)
+    assert eq["equity"].iloc[-1] == pytest.approx(1500.0)
 
 
 def test_open_matrix_uses_valid_open_prices():
