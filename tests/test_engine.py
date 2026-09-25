@@ -32,7 +32,7 @@ def test_btc_thousands_separators_are_numeric():
 
 
 def test_close_matrix_preserves_date_indexed_validity_mask():
-    from data_loader import AssetData, close_matrix
+    from data_loader import AssetData, close_matrix, open_matrix
 
     frame = pd.DataFrame({
         "Date": pd.to_datetime(["2024-01-02", "2024-01-03"]),
@@ -45,6 +45,30 @@ def test_close_matrix_preserves_date_indexed_validity_mask():
     out = close_matrix({"A": AssetData("A", frame)})
     assert out.loc[pd.Timestamp("2024-01-02"), "A"] == pytest.approx(10.5)
     assert pd.isna(out.loc[pd.Timestamp("2024-01-03"), "A"])
+
+
+def test_execution_uses_next_session_open_not_decision_close():
+    idx = pd.date_range("2024-01-01", periods=45, freq="B")
+    closes = pd.DataFrame({"A": 100.0}, index=idx)
+    opens = pd.DataFrame({"A": 200.0}, index=idx)
+    weights = pd.DataFrame(1.0, index=idx, columns=["A"])
+    eq, _, _ = simulate(
+        closes, weights, 1000, 0,
+        commission_bps=0, slippage_bps=0,
+        execution_prices=opens,
+    )
+    assert eq.index[0] > idx[0]
+    assert eq["equity"].iloc[0] == pytest.approx(1000.0)
+
+
+def test_open_matrix_uses_valid_open_prices():
+    frame = pd.DataFrame({
+        "Date": pd.to_datetime(["2024-01-02"]),
+        "Open": [12.0], "High": [13.0], "Low": [11.0], "Close": [12.5],
+        "ohlc_valid": [True],
+    })
+    out = open_matrix({"A": AssetData("A", frame)})
+    assert out.loc[pd.Timestamp("2024-01-02"), "A"] == pytest.approx(12.0)
 
 
 def test_execution_is_after_decision():
