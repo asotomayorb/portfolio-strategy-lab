@@ -200,6 +200,23 @@ def test_rotation_can_move_to_cash_when_all_returns_are_non_positive():
     assert m.iloc[-1].sum() == pytest.approx(1.0)
 
 
+
+def test_risk_parity_weights_are_valid():
+    from risk import erc_weights
+
+    idx = pd.date_range("2024-01-01", periods=120, freq="B")
+    rng = np.random.default_rng(42)
+    returns = pd.DataFrame(
+        rng.normal(0, 0.01, size=(len(idx), 4)),
+        index=idx,
+        columns=["A", "B", "C", "D"],
+    )
+    weights = erc_weights(returns)
+    assert set(weights.index) == {"A", "B", "C", "D"}
+    assert np.isfinite(weights.to_numpy()).all()
+    assert (weights.to_numpy() >= 0).all()
+    assert weights.sum() == pytest.approx(1.0, abs=1e-8)
+
 def test_phase1_tactical_signals_respect_cash_reserve():
     from experiment import _signals, load_config
 
