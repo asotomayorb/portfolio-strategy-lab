@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from backtest import simulate
-from data_loader import normalize_columns
+from data_loader import normalize_columns, open_matrix, AssetData
 from metrics import summarize
 from strategies import momentum, rotation
 
