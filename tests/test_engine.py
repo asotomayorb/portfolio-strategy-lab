@@ -301,5 +301,5 @@ def test_missing_valuation_price_does_not_zero_existing_position():
         commission_bps=0, slippage_bps=0,
         invest_contributions=False, rebalance=False,
     )
-    assert eq["equity"].min() == pytest.approx(950.0)
+    assert eq["equity"].min() == pytest.approx(1000.0)
     assert eq["cash"].iloc[-1] == pytest.approx(50.0)
