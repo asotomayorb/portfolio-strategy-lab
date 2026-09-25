@@ -103,9 +103,12 @@ def simulate(
                 & tradable
                 & shares.eq(0.0)
                 & (~funded_initial)
+                & (month_i > 0)
             )
             target_value = target_value + initial_target_value.where(newly_tradable, 0.0)
-            funded_initial = funded_initial | newly_tradable
+            funded_initial = funded_initial | (
+                eligible_target.gt(0) & tradable & shares.eq(0.0) & (month_i == 0)
+            ) | newly_tradable
 
         delta_value = target_value - current
         delta_value[~tradable] = 0.0
