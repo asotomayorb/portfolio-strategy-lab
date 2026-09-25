@@ -1,0 +1,20 @@
+item,status,notes
+protocol_data_config_freeze,done,Protocol and repository dataset/config frozen
+strategy_families_except_value,done,B0 B1 S1 S3 S4 S5 S6
+value,omitted,No comparable point-in-time valuation dataset; not a loser
+common_history,done,Completed
+expansive_history,done,Completed
+cross_history_comparison,done,Completed
+pareto_robustness,done,No robust winner
+walk_forward,done,Completed; no robust winner
+regime_stability,done,Completed
+parameter_neighbor_sensitivity,in_progress,Pre-registered; final CI artifact pending
+universe_sensitivity,in_progress,Leave-one-asset-out; final CI artifact pending
+cost_slippage_sensitivity,pending,Not started
+concentration_dependence,pending,Not started/synthesis pending
+independent_oos,pending,Not started
+reserved_holdout,pending,Not started
+statistical_uncertainty,pending,Not started
+final_phase1_synthesis,pending,Not started
+robust_winner,pending,Must be NONE if evidence remains insufficient
+phase2,blocked,Explicitly forbidden until Phase 1 closes
