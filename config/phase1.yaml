@@ -28,6 +28,7 @@ strategies:
     window_days: 200
   dynamic_allocation:
     score: positive_trailing_return
+    lookback_months: 12
     max_weight: 0.25
   risk_parity:
     volatility_window_days: 60
