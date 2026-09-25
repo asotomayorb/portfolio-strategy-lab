@@ -82,10 +82,20 @@ def load_csv_folder(folder: str | Path) -> dict[str, AssetData]:
         raise ValueError(f"No .csv ticker files found in {folder}")
     return assets
 
-def close_matrix(assets):
-    """Build a date-indexed close matrix while preserving OHLC validity masks."""
+def price_matrix(assets, field):
+    """Build a date-indexed OHLC matrix using only rows with valid OHLC data."""
+    if field not in {"Open", "High", "Low", "Close"}:
+        raise ValueError(f"Unsupported price field: {field}")
     series = {}
     for ticker, asset in assets.items():
         frame = asset.frame.set_index("Date")
-        series[ticker] = frame["Close"].where(frame["ohlc_valid"])
+        series[ticker] = frame[field].where(frame["ohlc_valid"])
     return pd.concat(series, axis=1, sort=False).sort_index()
+
+
+def close_matrix(assets):
+    return price_matrix(assets, "Close")
+
+
+def open_matrix(assets):
+    return price_matrix(assets, "Open")
