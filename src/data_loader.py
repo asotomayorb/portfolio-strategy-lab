@@ -35,7 +35,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
     date_text = out["Date"].astype(str).str.strip()
-    has_time = date_text.str.contains(r"\\s")
+    has_time = date_text.str.contains(r"\s")
     parsed = pd.Series(pd.NaT, index=out.index, dtype="datetime64[ns]")
     parsed.loc[~has_time] = pd.to_datetime(
         date_text.loc[~has_time], errors="coerce", dayfirst=True, format="mixed"
