@@ -13,4 +13,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: pytest -q
+      - run: pytest -q --durations=10
+      - name: Upload Phase 1 baseline
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-results
+          path: phase1_results_ci.csv
+          if-no-files-found: error
+          retention-days: 14
