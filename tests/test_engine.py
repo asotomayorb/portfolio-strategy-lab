@@ -195,7 +195,7 @@ def test_phase1_smoke_with_repository_data():
     targets = load_targets(cfg)
     assert targets["CASH"] == pytest.approx(0.05)
     assert sum(targets.values()) == pytest.approx(1.0)
-    result = run_phase1()
+    result = run_phase1(history_mode="common")
     if os.getenv("CI"):
         result.to_csv("phase1_results_ci.csv", index=False)
     assert not result.empty
