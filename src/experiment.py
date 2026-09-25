@@ -150,6 +150,11 @@ def run_phase1(
         if name not in {"B0_buy_hold", "B1_dca"} and invest_total < 1.0:
             signals[name] = signals[name] * invest_total
     meta = allocation_metadata(cfg, alloc_path)
+    meta.update({
+        "history_start": prices.index.min().strftime("%Y-%m-%d"),
+        "history_end": prices.index.max().strftime("%Y-%m-%d"),
+        "history_rows": int(len(prices)),
+    })
     rows = []
 
     for name, sig in signals.items():
