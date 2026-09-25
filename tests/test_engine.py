@@ -75,6 +75,7 @@ def test_phase1_smoke_with_repository_data():
     assert sum(targets.values()) == pytest.approx(1.0)
     result = run_phase1()
     assert not result.empty
+    assert set(result["strategy"]) == set(["B0_buy_hold", "B1_dca", "S1_momentum", "S3_rotation", "S4_moving_average", "S5_dynamic_allocation", "S6_risk_parity"])
     assert set(["B0_buy_hold", "B1_dca", "S1_momentum", "S3_rotation",
                 "S4_moving_average", "S5_dynamic_allocation", "S6_risk_parity"]).issubset(
         set(result["strategy"])
