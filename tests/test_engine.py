@@ -17,6 +17,22 @@ def test_invalid_ohlc_flagged():
     assert out.loc[0, "ohlc_valid"] == False
 
 
+def test_close_matrix_preserves_date_indexed_validity_mask():
+    from data_loader import AssetData, close_matrix
+
+    frame = pd.DataFrame({
+        "Date": pd.to_datetime(["2024-01-02", "2024-01-03"]),
+        "Open": [10.0, 10.0],
+        "High": [11.0, 9.0],
+        "Low": [9.0, 8.0],
+        "Close": [10.5, 8.5],
+        "ohlc_valid": [True, False],
+    })
+    out = close_matrix({"A": AssetData("A", frame)})
+    assert out.loc[pd.Timestamp("2024-01-02"), "A"] == pytest.approx(10.5)
+    assert pd.isna(out.loc[pd.Timestamp("2024-01-03"), "A"])
+
+
 def test_execution_is_after_decision():
     idx = pd.date_range("2024-01-01", periods=45, freq="B")
     prices = pd.DataFrame({"A": range(100, 145)}, index=idx, dtype=float)
