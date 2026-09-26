@@ -10,7 +10,10 @@ STATUS AT 2026-09-26
 - Common/expansive histories, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected universe sensitivity, cost/slippage sensitivity and concentration/dependence synthesis are complete.
 - External-universe validation is complete.
 - Reserved holdout is complete.
-- Statistical uncertainty is complete; final synthesis remains pending.
+- Statistical uncertainty is complete.
+- Final Phase 1 synthesis is complete.
+- Robust winner = NONE.
+- Phase 1 is closed; Phase 2 has not started.
 - Phase 2 is BLOCKED until Phase 1 closes.
 
 FROZEN PRINCIPLES
@@ -39,9 +42,9 @@ ROBUSTNESS CHECKLIST
 [done] Concentration/dependence synthesis
 [done] External-universe generalization validation
 [done] Reserved holdout
-[pending] Statistical uncertainty
-[pending] Final Phase 1 synthesis
-[pending] Robust winner (must remain NONE if evidence is insufficient)
+[done] Statistical uncertainty
+[done] Final Phase 1 synthesis
+[done] Robust winner = NONE (evidence insufficient for a universal winner)
 
 RESERVED HOLDOUT DESIGN
 Frozen ticker universe, selected before execution and not present as ticker data in prior Phase 1 runs:
@@ -68,4 +71,4 @@ The reserved universe again shows that strategy-family behavior depends on the i
 STATISTICAL UNCERTAINTY
 Method was frozen before execution: circular moving-block bootstrap on monthly time-weighted returns, using the original development universe only. Block lengths 3, 6 and 12 months were all evaluated; 6 months was the primary analysis. 5,000 bootstrap replicates per strategy/history/block length and 95% percentile intervals were used. Contributions were handled as r_t = equity_t / (equity_{t-1} + contribution_t) - 1. Paired CAGR differences used identical bootstrap resamples across strategies. Results are stored in reports/phase1_statistical_uncertainty_primary.csv and reports/phase1_statistical_pairwise_cagr_primary.csv. Primary paired CAGR intervals versus B0 crossed zero for every comparator in both common and expansive histories. Block-length sensitivity did not alter the broad conclusion.
 
-NEXT: final Phase 1 synthesis. Phase 2 remains blocked.
+FINAL: Phase 1 is complete. Phase 2 remains separate and unstarted.
