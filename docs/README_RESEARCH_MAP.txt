@@ -42,7 +42,7 @@ LATEST SENSITIVITY RESULT
 These observations are descriptive robustness evidence, not rankings.
 
 NEXT EXECUTION ORDER
-1. Run cost/slippage sensitivity.
+1. Complete/validate cost/slippage sensitivity.
 2. Synthesize concentration/dependence using the validated universe results.
 3. Run independent OOS.
 4. Run truly reserved holdout.
