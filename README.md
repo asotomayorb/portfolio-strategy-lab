@@ -58,7 +58,7 @@ Commit 42391fdfcae01c07d8c6f11d45b8bea80793e761 corrected that data-continuity i
 
 Run 8 completed successfully on the corrected engine and produced finite metrics plus the expected artifact. It tested all frozen S1-S4 strategies under D1/D2/D3 on common and expanding histories. Common-history CAGR was approximately 27.3%-28.5% with max drawdowns approximately -24.7% to -29.6%; expanding-history max drawdowns remained approximately -89.5% to -90.7%. These results are descriptive and do not establish a winner.
 
-Stage 2A is therefore no longer blocked by the previously identified integrity issue, but Phase 2 remains open. Stage 2B rule reconciliation, initial-capital deployment variants, cash-floor sensitivity, walk-forward, universe robustness, cost sensitivity, external holdout and statistical uncertainty remain pending.
+Stage 2A is therefore no longer blocked by the previously identified integrity issue, but Phase 2 remains open. Stage 2B rule reconciliation is complete with D3 frozen as the operational simultaneous-capital rule. Stage 2C deployment-speed research is frozen in docs/PHASE2C_PROTOCOL.txt and implemented in scripts/run_phase2c.py with workflow .github/workflows/phase2c.yml. The workflow has not started automatically from the connector-created workflow commit, so a manual GitHub Actions dispatch is currently required to execute Stage 2C. Cash-floor sensitivity, walk-forward, universe robustness, cost sensitivity, external holdout and statistical uncertainty remain pending.
 
 ## Phase 3 — preliminary
 docs/PHASE3_PROTOCOL.txt defines the preliminary Phase 3 scope: integration of the strategy/rule set selected only after the Phase 1 + Phase 2 robustness gates into the investment platform, with two operating modes:
