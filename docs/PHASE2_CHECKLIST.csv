@@ -11,9 +11,9 @@ common_expansive,done,All frozen S1-S4 x D1-D3 tested on common and expanding hi
 stage2b_rule_reconciliation,done,D3 frozen for subsequent stages based on pre-existing capital-priority design, not performance ranking
 deployment_variants,done,Frozen immediate/3m/6m/12m/24m/opportunities-only tested successfully in run 5; artifact phase2c-deployment-speeds
 cash_floor,done,0% sensitivity completed against validated 5% baseline; 5% remains core baseline
-walk_forward,pending,Phase 2E frozen; four chronological folds on common and expanding histories
-universe_robustness,pending,Phase 2E frozen; leave-one-asset-out with proportional target renormalization
-cost_sensitivity,pending,Phase 2E frozen; exact six Phase 1 friction scenarios
-external_holdout,pending,Phase 2E frozen; external 12-ETF generalization plus newly reserved 10-ETF holdout
-statistical_uncertainty,pending,Phase 2E frozen; circular moving-block bootstrap, 3/6/12 months, 5000 replicates
-final_synthesis,pending,No final Phase 2 strategy/rule set until robustness gate is complete
+walk_forward,done,Four chronological folds completed on common and expanding histories
+universe_robustness,done,Leave-one-asset-out completed with proportional target renormalization
+cost_sensitivity,done,All six pre-registered friction scenarios completed
+external_holdout,done,External 12-ETF generalization and reserved 10-ETF holdout completed
+statistical_uncertainty,done,Circular moving-block bootstrap completed at 3/6/12 months with 5000 replicates
+final_synthesis,done,Phase 2E completed; no robust universal separation among S1-S4, so no strategy winner is declared
