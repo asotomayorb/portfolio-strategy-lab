@@ -20,7 +20,9 @@ The validated universe test shows material dependence on individual assets for M
 
 Completed: pre-registered cost/slippage sensitivity (six friction scenarios); broad conclusions stable.
 
-In progress next: concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
+Completed: concentration/dependence synthesis; Risk Parity is exceptionally universe-dependent, while Momentum/Rotation have material but bounded sensitivity.
+
+In progress next: independent OOS, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
 
 **No robust Phase 1 winner has been established.**
 
