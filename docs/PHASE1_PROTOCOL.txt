@@ -5,12 +5,13 @@ PURPOSE
 Compare broad investment strategy families before any user-specific ATR/pullback strategy (Phase 2).
 The objective is robustness, not maximizing historical CAGR.
 
-STATUS AT 2026-09-25
+STATUS AT 2026-09-26
 - Core Phase 1 families implemented/evaluated: B0 Buy & Hold, B1 DCA, S1 Momentum, S3 Rotation, S4 Moving Average, S5 Dynamic Allocation, S6 Risk Parity.
 - S2 Value: intentionally OMITTED from active comparison until a comparable historical point-in-time valuation dataset is available. It is not classified as a loser.
 - Common-history and expansive-history comparisons completed.
 - Pareto robustness and walk-forward robustness completed; no robust winner.
-- Parameter-neighbor and leave-one-asset-out sensitivity code has been added and is currently being executed/validated.
+- Parameter-neighbor and true leave-one-asset-out universe sensitivity are now completed and validated by CI.
+- Universe sensitivity implementation was corrected before acceptance: the omitted asset is now removed from both signal and execution matrices.
 - Next: cost/slippage sensitivity, concentration/dependence analysis, independent OOS, reserved holdout, statistical uncertainty, final synthesis.
 - Phase 2 is BLOCKED until Phase 1 checklist is complete.
 
@@ -54,8 +55,8 @@ ROBUSTNESS CHECKLIST
 [done] Pareto robustness
 [done] Walk-forward
 [done] Regime stability analysis
-[in_progress] Parameter-neighbor sensitivity (pre-registered; final CI artifact pending)
-[in_progress] Universe sensitivity (pre-registered; final CI artifact pending)
+[done] Parameter-neighbor sensitivity (pre-registered; CI run 36202769069 passed)
+[done] Universe sensitivity (true leave-one-asset-out; CI run 36202769069 passed)
 [pending] Cost/slippage sensitivity
 [pending] Concentration/dependence synthesis
 [pending] Independent OOS
@@ -63,5 +64,14 @@ ROBUSTNESS CHECKLIST
 [pending] Statistical uncertainty
 [pending] Final Phase 1 synthesis
 [pending] Robust winner (must remain NONE if evidence is insufficient)
+
+SENSITIVITY INTERPRETATION
+Parameter neighbors are a stability test, not an optimization procedure.
+The validated universe test found:
+- Momentum common CAGR range: 27.69%–35.90%; expansive: 18.58%–30.58%.
+- Rotation common CAGR range: 24.50%–37.36%; expansive: 18.14%–29.24%.
+- Dynamic Allocation common CAGR range: 19.84%–24.09%; expansive: 14.39%–23.16%.
+- Risk Parity common CAGR range: 0%–25.73%; expansive: 0.75%–69.00%, with major BTC dependence.
+These ranges describe sensitivity, not superiority.
 
 RULE: Never start Phase 2 because a Phase 1 test is inconvenient, slow, or inconclusive.
