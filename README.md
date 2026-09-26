@@ -107,3 +107,7 @@ Phase 2D does not promote a strategy or alter the frozen baseline. Its role is t
 
 ## Phase 2E protocol-freeze checkpoint — 2026-09-26
 Stage 2E was frozen before execution in docs/PHASE2E_PROTOCOL.txt. The robustness set covers temporal folds, leave-one-asset-out universe sensitivity, six pre-registered friction scenarios, external-universe generalization, a newly reserved holdout, and circular moving-block bootstrap uncertainty. No Stage 2E result may change frozen definitions after inspection. Phase 3 remains blocked until the complete Phase 2 robustness gate is synthesized.
+
+
+## Phase 2E execution checkpoint — 2026-09-26
+The frozen Stage 2E suite is implemented in scripts/run_phase2e.py and .github/workflows/phase2e.yml. The implementation covers the pre-registered temporal, leave-one-asset-out, cost, external-generalization, newly reserved holdout and bootstrap tests without changing the frozen strategy definitions. The first workflow execution must be validated for engine integrity and artifact completeness before any Phase 2E results are interpreted.
