@@ -290,3 +290,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Phase 2E workflow trigger: execution is frozen by docs/PHASE2E_PROTOCOL.txt.
