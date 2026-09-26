@@ -43,3 +43,15 @@ Stage 2A frozen:
 - Newly reserved holdout tickers: VUG, VTV, VEA, BND, LQD, SHY, DBC, XLF, XLK, VOO.
 - No Stage 2E result may alter definitions after inspection.
 - Phase 3 remains blocked until the complete Phase 2 robustness gate and final synthesis are complete.
+
+
+2026-09-26 — Phase 2E robustness gate completed successfully (run 5 / commit dc74ce1381e59b7e1e3972fd781e7af14f6f0d35).
+- Calendar integrity passed: all external/holdout coverage and simulation endpoints are <= frozen cutoff 2026-09-24; no result extends beyond available parsed OHLC coverage.
+- Walk-forward: all 4 common and 4 expanding chronological folds completed. Common-history results vary by fold and do not produce a stable ordering across S1-S4. Expanding history shows materially larger drawdowns (about -89.5% to -90.7%) and represents a distinct long-history stress regime.
+- Universe leave-one-out: all frozen development assets were removed one at a time with proportional target renormalization. Relative strategy differences remain small for most omissions; PLTR is a material driver of absolute portfolio CAGR, so absolute performance is sensitive to that asset.
+- Cost sensitivity: all six pre-registered friction scenarios completed. Performance changes smoothly as costs rise; no definition-level break or robust strategy reversal was observed.
+- External generalization: all 12 ETFs completed through 2026-09-24. S1/S3 are nearly identical; S2 and S4 show different return/risk/cash-utilization profiles, but the external universe does not establish a universal strategy ordering.
+- Reserved holdout: all 10 newly frozen ETFs completed through 2026-09-24, preserving actual coverage differences. S4 has somewhat higher CAGR in this diagnostic holdout while S2 has somewhat lower drawdown; S1/S3 remain nearly indistinguishable. These differences are descriptive and cannot tune the frozen candidates.
+- Bootstrap uncertainty: 5,000 circular moving-block replicates at 3/6/12 months completed. Primary 6-month paired CAGR probabilities versus S1 are approximately 47.4% (S2), 50.2% (S3), and 52.5% (S4) on common history; 37.4%, 50.2%, and 49.0% respectively on expanding history. The 95% paired-CAGR intervals all span zero, so the data do not establish a statistically reliable CAGR separation among candidates.
+- Overall Phase 2E conclusion: the robustness gate is complete, but it does not provide evidence strong enough under the frozen protocol to declare a universally superior S1-S4 strategy. S1 and S3 are effectively indistinguishable in the reported tests; S2 and S4 represent different return/drawdown/cash-utilization profiles rather than a consistently dominant alternative.
+- No post-result parameter, strategy, distribution, cash-floor or deployment definition was changed. Phase 3 remains blocked until a human decision on how to handle the non-separating robustness evidence is explicitly made.
