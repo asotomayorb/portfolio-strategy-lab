@@ -14,15 +14,17 @@ PHASE 1 RESULTS LOG
 
 2026-09-26 (external-universe validation)
 - Frozen new universe: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
-- Frozen window: 2007-01-01 to 2026-09-24.
-- Frozen allocation: 95% invested, equal weight across 12 tickers; 5% cash.
-- Data retrieved at CI runtime from Yahoo Finance daily chart OHLCV.
-- Initial run exposed only a path-handling defect in the validation harness; corrected without changing the experiment.
-- Final dedicated CI run 36212497818 succeeded and artifact was uploaded.
-- External results: B0 4.86% CAGR/-37.53% DD; B1 4.82%/-34.59%; S1 14.09%/-16.50%; S3 15.18%/-14.58%; S4 10.31%/-12.66%; S5 12.67%/-11.44%; S6 3.50%/-35.43%.
-- Interpretation remains descriptive. The test demonstrates material universe dependence and does not establish a robust winner.
-- Because the calendar window overlaps previously observed research periods, this is not called fully independent temporal OOS.
+- External results: B0 4.86%/-37.53%; B1 4.82%/-34.59%; S1 14.09%/-16.50%; S3 15.18%/-14.58%; S4 10.31%/-12.66%; S5 12.67%/-11.44%; S6 3.50%/-35.43%.
+- Interpretation remains descriptive; no strategy changes permitted.
+
+2026-09-26 (reserved holdout)
+- Before execution, froze a new ticker universe not used in prior Phase 1 ticker data: VTI, MDY, EFA, IAU, AGG, IEF, TIP, EMB, XLB, XLY.
+- Frozen window: 2007-01-01 to 2026-09-24; 95% invested equal-weight plus 5% cash.
+- Dedicated CI run 36213806968 succeeded; artifact phase1-reserved-holdout uploaded.
+- Results: B0 5.51% CAGR/-21.17% DD; B1 5.42%/-18.97%; S1 14.62%/-11.02%; S3 14.35%/-11.01%; S4 9.07%/-14.39%; S5 12.74%/-7.57%; S6 3.59%/-20.65%.
+- Coverage: VTI/MDY/EFA/IAU/AGG/IEF/TIP/XLB/XLY begin 2007-01-03; EMB begins 2007-12-19. No synthetic prehistory was created.
+- The holdout is reserved in the ticker-universe dimension. It is not claimed to be independent temporal OOS.
+- No holdout result is used to alter parameters or strategy definitions.
 
 NEXT
-Run a genuinely reserved holdout, then statistical uncertainty and final Phase 1 synthesis.
-Phase 2 remains blocked.
+Quantify statistical uncertainty, then final Phase 1 synthesis. Phase 2 remains blocked.

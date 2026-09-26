@@ -9,7 +9,8 @@ STATUS AT 2026-09-26
 - S2 Value: intentionally omitted until comparable point-in-time historical valuation data are available; not classified as a loser.
 - Common/expansive histories, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected universe sensitivity, cost/slippage sensitivity and concentration/dependence synthesis are complete.
 - External-universe validation is complete.
-- A genuinely reserved holdout, statistical uncertainty and final synthesis remain pending.
+- Reserved holdout is complete.
+- Statistical uncertainty and final synthesis remain pending.
 - Phase 2 is BLOCKED until Phase 1 closes.
 
 FROZEN PRINCIPLES
@@ -21,7 +22,7 @@ FROZEN PRINCIPLES
 6. Robustness > peak CAGR.
 7. No winner unless supported across multiple independent robustness dimensions.
 8. Value is omitted rather than fabricated when comparable data are unavailable.
-9. External-universe results cannot alter frozen definitions.
+9. Holdout results cannot alter frozen definitions.
 
 ROBUSTNESS CHECKLIST
 [done] Protocol/data/config freeze
@@ -37,28 +38,31 @@ ROBUSTNESS CHECKLIST
 [done] Cost/slippage sensitivity
 [done] Concentration/dependence synthesis
 [done] External-universe generalization validation
-[pending] Truly reserved holdout
+[done] Reserved holdout
 [pending] Statistical uncertainty
 [pending] Final Phase 1 synthesis
 [pending] Robust winner (must remain NONE if evidence is insufficient)
 
-EXTERNAL-UNIVERSE VALIDATION DESIGN
-Frozen new universe: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
+RESERVED HOLDOUT DESIGN
+Frozen ticker universe, selected before execution and not present as ticker data in prior Phase 1 runs:
+VTI, MDY, EFA, IAU, AGG, IEF, TIP, EMB, XLB, XLY.
 Frozen window: 2007-01-01 through 2026-09-24.
-External allocation: 95% investable, equal weight across all 12 tickers; 5% cash.
-Source: Yahoo Finance daily chart OHLCV retrieved at CI runtime.
-Classification: external-universe generalization test, not fully independent temporal OOS, because its calendar period overlaps previously observed research periods.
-No result from this test may be used to optimize or alter frozen strategy definitions.
+Allocation: 95% invested, equal weight; 5% cash.
+Source: Yahoo Finance daily chart OHLCV at CI runtime.
+EMB begins 2007-12-19; all other holdout tickers begin 2007-01-03. The engine's expanding-history treatment handles this coverage difference; no synthetic prehistory was created.
+The strategy definitions, parameters, monthly cadence, next-open execution, leverage/short constraints and friction assumptions remained unchanged.
+This is a genuinely reserved ticker-universe holdout/generalization test, but not a claim of independent temporal OOS.
 
-RESULT — EXTERNAL-UNIVERSE VALIDATION
-B0 Buy & Hold: CAGR 4.86%, Max DD -37.53%, Sharpe 0.386.
-B1 DCA: CAGR 4.82%, Max DD -34.59%, Sharpe 0.383.
-S1 Momentum: CAGR 14.09%, Max DD -16.50%, Sharpe 0.720.
-S3 Rotation: CAGR 15.18%, Max DD -14.58%, Sharpe 0.760.
-S4 Moving Average: CAGR 10.31%, Max DD -12.66%, Sharpe 0.705.
-S5 Dynamic Allocation: CAGR 12.67%, Max DD -11.44%, Sharpe 0.800.
-S6 Risk Parity: CAGR 3.50%, Max DD -35.43%, Sharpe 0.311.
+RESERVED HOLDOUT RESULT
+B0 Buy & Hold: CAGR 5.51%, Max DD -21.17%, Sharpe 0.474.
+B1 DCA: CAGR 5.42%, Max DD -18.97%, Sharpe 0.470.
+S1 Momentum: CAGR 14.62%, Max DD -11.02%, Sharpe 0.793.
+S3 Rotation: CAGR 14.35%, Max DD -11.01%, Sharpe 0.777.
+S4 Moving Average: CAGR 9.07%, Max DD -14.39%, Sharpe 0.706.
+S5 Dynamic Allocation: CAGR 12.74%, Max DD -7.57%, Sharpe 0.843.
+S6 Risk Parity: CAGR 3.59%, Max DD -20.65%, Sharpe 0.378.
 
-Interpretation: the frozen tactical families produced materially different results on this new universe than on the original universe, demonstrating that strategy-family behavior is universe-dependent. This single external test does not establish a robust winner or permit ranking/selection. It does not become temporal OOS merely because the ticker universe is new.
+INTERPRETATION
+The reserved universe again shows that strategy-family behavior depends on the investable universe. Several tactical families have positive and comparatively moderate drawdowns here, but the holdout is one validation sample and does not establish a universal winner. It is descriptive evidence only. Holdout results must not be used for parameter or strategy selection.
 
-NEXT: genuinely reserved holdout, then statistical uncertainty and final synthesis.
+NEXT: quantify statistical uncertainty, then final Phase 1 synthesis.
