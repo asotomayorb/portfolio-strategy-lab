@@ -1,0 +1,51 @@
+PHASE 2C — INITIAL / EXTRAORDINARY CAPITAL DEPLOYMENT SPEEDS
+===============================================================
+
+Status: FROZEN before execution.
+
+Purpose
+-------
+Test how a pre-existing initial capital balance should be phased into the frozen Phase 2 entry engine. This stage does not change the ATR/HH52 trigger definitions, S1-S4 strategy definitions, D3 simultaneous-capital rule, costs, or cash-floor definition.
+
+Pre-registered deployment variants
+----------------------------------
+- immediate: full initial capital available from day 1.
+- 3m: equal scheduled release over 3 months.
+- 6m: equal scheduled release over 6 months.
+- 12m: equal scheduled release over 12 months.
+- 24m: equal scheduled release over 24 months.
+- opportunities-only: initial capital remains cash until eligible strategy purchases occur; no time-based forced deployment.
+
+Initial-capital test amount
+---------------------------
+USD 12,000, equal to 12 months of the frozen USD 1,000 recurring contribution. This normalized amount is used so deployment-speed results can be compared without relying on an unspecified user-specific transfer amount.
+
+Frozen common conditions
+------------------------
+- Initial capital = USD 12,000.
+- Recurring contribution = USD 1,000/month.
+- No leverage or shorting.
+- 5% cash floor.
+- D3 deepest-first simultaneous allocation.
+- Orders execute at next valid session open.
+- Phase 1 baseline costs: 10 bps commission + 5 bps slippage.
+- Same universe and target allocations as Stage 2A.
+- Same common and expanding histories.
+- All S1-S4 are tested.
+- Initial capital is introduced only according to the deployment schedule; recurring contributions retain Stage 2A behavior.
+- Unused cash carries indefinitely.
+- Opportunities-only means no calendar-based release and therefore no forced deployment simply because time elapsed.
+
+Interpretation
+--------------
+Deployment speed is evaluated descriptively across return, drawdown, risk-adjusted metrics, cash utilization, trade count and the consistency of behavior across common/expanding histories.
+
+No variant is promoted from one metric or one history. Results must subsequently pass Phase 2E robustness checks.
+
+Anti-optimization
+-----------------
+These six deployment schedules are frozen before execution. No schedule may be added, removed or altered after seeing results in order to improve a preferred candidate.
+
+Relationship to Stage 2A
+------------------------
+Stage 2A remains the clean contribution-only entry-engine test. Stage 2C does not replace or overwrite it. The 2C results answer a separate question: how the same frozen engine behaves when a pre-existing capital balance must be deployed.
