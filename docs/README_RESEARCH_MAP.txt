@@ -30,6 +30,7 @@ No robust Phase 1 winner has been established.
 Value is omitted until comparable point-in-time valuation data are available.
 Parameter-neighbor sensitivity and universe sensitivity are now validated by CI.
 Universe sensitivity shows material dependence on individual assets for Momentum/Rotation and especially Risk Parity.
+Cost/slippage sensitivity is validated; conclusions are materially stable under the tested friction grid.
 Phase 2 must not start.
 
 LATEST SENSITIVITY RESULT
@@ -42,8 +43,8 @@ LATEST SENSITIVITY RESULT
 These observations are descriptive robustness evidence, not rankings.
 
 NEXT EXECUTION ORDER
-1. Complete/validate cost/slippage sensitivity.
-2. Synthesize concentration/dependence using the validated universe results.
+1. Synthesize concentration/dependence using the validated universe results.
+2. Run independent OOS.
 3. Run independent OOS.
 4. Run truly reserved holdout.
 5. Quantify statistical uncertainty.
