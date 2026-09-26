@@ -1,0 +1,111 @@
+PHASE 1 — FINAL SYNTHESIS
+Date: 2026-09-26
+Status: COMPLETE
+Robust winner: NONE
+
+PURPOSE
+Compare broad strategy families before any user-specific Phase 2 strategy, prioritizing robustness over peak historical return.
+
+SCOPE
+Evaluated:
+B0 Buy & Hold
+B1 DCA
+S1 Momentum
+S3 Rotation
+S4 Moving Average
+S5 Dynamic Allocation
+S6 Risk Parity
+
+S2 Value is omitted because the repository lacks comparable point-in-time valuation history across the heterogeneous universe. It is not classified as a loser.
+
+FROZEN PROTOCOL
+Monthly evaluation; next-session-open execution; no leverage; no shorting; 5% cash reserve; frozen baseline parameters; common and expansive histories; equal friction assumptions; no post-result parameter optimization.
+
+EVIDENCE BY DIMENSION
+1. Historical performance
+Common history:
+B0 31.3% CAGR / -36.0% DD
+B1 29.6% / -31.5%
+S1 28.8% / -36.1%
+S3 30.2% / -36.1%
+S4 -0.4% / -47.2%
+S5 22.3% / -21.2%
+S6 25.7% / -68.1%
+
+Expansive history:
+B0 52.8% / -81.8%
+B1 48.2% / -81.6%
+S1 28.7% / -50.3%
+S3 28.2% / -43.6%
+S4 17.8% / -62.4%
+S5 22.8% / -30.0%
+S6 65.7% / -79.8%
+
+These are descriptive historical results, not a selection rule.
+
+2. Walk-forward
+No strategy was Pareto-dominant across both common and expansive walk-forward histories. B0/B1 had strong common-history medians but severe expansive-history drawdowns. Tactical families also showed regime variation. S6 was especially unstable across folds.
+
+3. Parameter-neighbor sensitivity
+Neighbor tests did not identify a parameter setting for selection. Results were used only as stability diagnostics.
+
+4. Universe sensitivity
+Leave-one-asset-out results showed meaningful dependence on the investable universe. S6 was exceptionally sensitive; other tactical families also moved materially when assets were removed. This prevents treating the original universe result as universal.
+
+5. Costs/slippage
+The pre-registered six friction scenarios did not change the broad conclusions. S1/S3 were moderately more friction-sensitive than B0/B1; S5 also showed moderate sensitivity; S6's CAGR changed little under the tested friction assumptions but its drawdown/universe dependence remained.
+
+6. Concentration/dependence
+Dependence diagnostics confirmed that some strategy outcomes are driven materially by individual assets. The diagnostic was not used to reweight or select a strategy.
+
+7. External-universe validation
+Frozen unseen 12-ETF universe:
+B0 4.86% CAGR / -37.53% DD
+B1 4.82% / -34.59%
+S1 14.09% / -16.50%
+S3 15.18% / -14.58%
+S4 10.31% / -12.66%
+S5 12.67% / -11.44%
+S6 3.50% / -35.43%
+This is ticker-universe generalization, not independent temporal OOS. It demonstrates material strategy-family dependence on universe.
+
+8. Reserved holdout
+Frozen unseen ticker universe:
+VTI, MDY, EFA, IAU, AGG, IEF, TIP, EMB, XLB, XLY.
+Results:
+B0 5.51% / -21.17% DD / 0.474 Sharpe
+B1 5.42% / -18.97% / 0.470
+S1 14.62% / -11.02% / 0.793
+S3 14.35% / -11.01% / 0.777
+S4 9.07% / -14.39% / 0.706
+S5 12.74% / -7.57% / 0.843
+S6 3.59% / -20.65% / 0.378
+This is one reserved ticker-universe validation sample, not independent temporal OOS and was not used to alter definitions or parameters.
+
+9. Statistical uncertainty
+Circular moving-block bootstrap of monthly time-weighted returns; 3/6/12-month blocks; 6-month primary; 5,000 replicates; 95% percentile intervals. Common history contained 71 months; expansive history 319 months.
+Primary paired CAGR differences versus B0 had 95% intervals crossing zero for every comparator in both histories. Block-length sensitivity changed interval width but not the broad conclusion.
+Therefore the observed historical differences are not sufficiently separated to establish a universal strategy-family winner under this uncertainty model.
+
+FINAL CONCLUSION
+No robust Phase 1 winner has been established.
+
+The evidence supports the following factual conclusions:
+- Buy & Hold and DCA are strong benchmarks in the original universe, but their expansive-history drawdowns are very large and their results do not generalize consistently to the additional universes.
+- Momentum and Rotation are relatively consistent across several development tests and show materially different behavior from the benchmarks in unseen universes, but they do not dominate across all frozen dimensions.
+- Dynamic Allocation shows comparatively constrained drawdowns in several tested universes and histories, but its returns are lower than the strongest benchmark/tactical observations and it is not dominant across all tests.
+- Moving Average is inconsistent across histories and regimes.
+- Risk Parity is highly dependent on universe composition and can experience very large drawdowns.
+- Statistical uncertainty is broad enough that pairwise CAGR differences do not provide clean separation.
+- Value remains an omitted family because the required comparable point-in-time valuation data are unavailable; it is not judged as a failure.
+
+PHASE 2 STATUS
+Phase 1 is now complete. Phase 2 has not been started. The user-specific ATR/pullback strategy remains outside all Phase 1 conclusions and has not been used to alter this research.
+
+REPRODUCIBILITY
+Primary uncertainty report:
+reports/phase1_statistical_uncertainty_primary.csv
+Primary paired uncertainty report:
+reports/phase1_statistical_pairwise_cagr_primary.csv
+Full 3/6/12-month bootstrap artifact:
+CI run 36215002297
