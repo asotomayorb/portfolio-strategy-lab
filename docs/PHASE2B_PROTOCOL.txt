@@ -1,0 +1,46 @@
+PHASE 2B — SIMULTANEOUS-CAPITAL RULE RECONCILIATION
+=====================================================
+
+Status: FROZEN for subsequent Phase 2 stages.
+
+Purpose
+-------
+Convert the pre-registered Stage 2A D1/D2/D3 comparison into one operational simultaneous-capital rule without post-hoc performance optimization.
+
+Evidence boundary
+-----------------
+Stage 2A tested:
+- D1 = target-weighted allocation among eligible needs.
+- D2 = equal-weight allocation among eligible needs.
+- D3 = deepest-first allocation, then residual by target weight.
+
+The Stage 2A results did not produce a stable universal performance ordering across S1-S4 and common/expanding histories. Therefore performance is NOT used to select the production rule.
+
+Reconciled rule
+---------------
+D3 — deepest-first, then residual target-weight allocation.
+
+Rationale
+--------
+D3 is selected as the operational interpretation of the already-frozen capital-priority principle: when simultaneous triggers compete for limited pooled capital, allocate first to the deepest/most extreme eligible trigger, then distribute any remaining capital according to target-weighted residual need.
+
+This is a rule-definition reconciliation, not a claim that D3 is the highest-return strategy.
+
+Tie/edge rules
+--------------
+1. Compare trigger depth using the deepest triggered ATR multiple for each eligible asset on that day.
+2. Higher ATR multiple receives priority.
+3. If multiple eligible assets have the same deepest level, allocate residual capital by target-weighted eligible need.
+4. Respect normal allocation room after current positions and pending orders.
+5. Respect the active cash floor.
+6. One daily evaluation creates at most one pooled purchase allocation per strategy bucket; do not split a same-day cumulative trigger into separate level orders.
+7. If no eligible asset remains after checks, cash carries forward.
+8. No leverage.
+
+Anti-optimization
+-----------------
+D1/D2/D3 results remain preserved in the Stage 2A log. This reconciliation does not retune ATR levels, target percentages, DCA proportions, cash floor, trigger timing, or any other Phase 2 parameter.
+
+Promotion
+---------
+D3 is now the frozen simultaneous-capital rule for Stage 2C onward, subject to the normal Phase 2 robustness gate. If later evidence shows that this operational rule itself must change, that change creates a new frozen research version rather than silently replacing D3.
