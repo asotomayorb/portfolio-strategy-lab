@@ -1,0 +1,19 @@
+PHASE 2 RESULTS LOG
+====================
+
+2026-09-26 — Phase 2 activated after Phase 1 and Phase 1B closure.
+
+Stage 2A frozen:
+- Daily trigger evaluation.
+- Weekly HH52 and Wilder ATR20W.
+- 3-week-left/3-week-right swing-high confirmation; usable after right-side confirmation.
+- ATR levels 1.5/3/5/8 with cumulative target percentages 25/50/75/100.
+- S1 50% DCA + 50% Dip.
+- S2 50% DCA + 50% ATR8.
+- S3 50% DCA + 25% Dip + 25% ATR8.
+- S4 100% ATR8 when active, otherwise S1.
+- 5% cash floor, no leverage, unused cash carries.
+- Initial capital excluded (0) to isolate entry mechanics; deployment tested separately later.
+- Simultaneous-trigger allocation remains an explicit D1/D2/D3 comparison, not an optimized parameter.
+
+Results pending.
