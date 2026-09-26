@@ -1,4 +1,5 @@
 """Phase 2E frozen robustness, generalization and uncertainty suite."""
+# Frozen integrity rerun trigger; no research-definition change.
 from __future__ import annotations
 import importlib.util
 import json
