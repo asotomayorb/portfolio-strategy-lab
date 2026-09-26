@@ -1,0 +1,11 @@
+item,status,notes
+protocol_freeze,done,Fixed three ensembles and fixed sleeve weights documented before execution
+development_common_expansive,pending,Run frozen combinations
+walk_forward,pending,Run after development results without changing definitions
+cost_slippage,pending,Run frozen friction scenarios
+ensemble_universe_sensitivity,pending,Leave-one-asset-out descriptive diagnostic
+external_universe,pending,Use frozen Phase 1 external universe
+reserved_holdout,pending,Use frozen Phase 1 reserved universe
+statistical_uncertainty,pending,Use pre-registered bootstrap method adapted to ensemble returns
+final_synthesis,pending,Determine whether robust improvement exists
+phase2,blocked,Do not start Phase 2 until Phase 1B decision is documented
