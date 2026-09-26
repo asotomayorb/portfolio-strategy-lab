@@ -24,5 +24,6 @@ jobs:
         with:
           name: phase1b-development
           path: reports/phase1b_results.csv
+            reports/phase1b_walkforward.csv
           if-no-files-found: error
           retention-days: 30
