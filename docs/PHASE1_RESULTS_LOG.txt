@@ -22,6 +22,11 @@ PHASE 1 RESULTS LOG
 - Cost sensitivity changes only commission/slippage; strategy definitions, universe, allocation, monthly cadence and next-open execution remain frozen.
 - CI workflow now executes and uploads the cost sensitivity artifact.
 
+2026-09-26 (cost step completed)
+- Cost/slippage sensitivity CI passed using six pre-registered friction scenarios.
+- Common-history CAGR under stress changed modestly for B0/B1 and more for Momentum/Rotation; Dynamic Allocation changed moderately; Risk Parity changed very little but retained very large drawdowns.
+- Expansive-history conclusions were materially unchanged.
+
 NEXT
-Validate cost/slippage sensitivity, then concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
+Proceed to concentration/dependence synthesis, then independent OOS, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
 Phase 2 remains blocked.
