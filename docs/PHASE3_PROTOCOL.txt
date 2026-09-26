@@ -1,0 +1,82 @@
+PHASE 3 PROTOCOL — PRELIMINARY
+=================================
+
+Status: PRELIMINARY / BLOCKED until a strategy has passed the Phase 1 + Phase 2 robustness gates.
+
+Purpose
+-------
+Phase 3 is the integration phase: take the strategy selected only after the research gates of Phase 1 and Phase 2, and integrate its frozen rules into the investment platform so that it can generate and, subject to the selected operating mode, submit purchase orders.
+
+Phase 3 does NOT define a new investment strategy. It is an implementation/integration layer and must not change the strategy parameters, allocation rules, triggers, risk limits, or execution assumptions established by the completed research phases.
+
+Preliminary operating modes
+---------------------------
+1. Semi-automatic:
+   - The system monitors the portfolio and market inputs required by the frozen strategy.
+   - It calculates eligible purchases and generates proposed orders.
+   - The user reviews and confirms each proposed order/batch before submission to the broker.
+   - No order is submitted solely because a trigger occurred.
+
+2. Automatic:
+   - The system performs the same calculations and validations as semi-automatic mode.
+   - Eligible orders are submitted automatically only after all predefined safety checks pass.
+   - Automatic mode must have an explicit user-controlled enable/disable state and an emergency stop.
+
+Core integration requirements
+-----------------------------
+- Broker/platform adapter, initially compatible with the user's investment platform.
+- Read current positions, available cash/buying power, pending orders and instrument identifiers.
+- Reproduce the frozen strategy decision engine without silent parameter changes.
+- Calculate allocation room before generating normal purchase orders.
+- Prevent duplicate orders when an equivalent order is already pending.
+- Handle simultaneous triggers according to the rule frozen by Phase 2.
+- Validate market status, instrument tradability, price availability and order quantities.
+- Apply the same commission/slippage assumptions only for simulation; live orders must use actual broker execution conditions.
+- Persist decisions, generated orders, confirmations, submissions, rejects and fills in an auditable log.
+- Reconcile broker state after submission/fill/cancellation.
+- Detect discrepancies between expected and actual portfolio state and stop or require user intervention according to predefined rules.
+- Never use leverage or other behavior prohibited by the frozen strategy.
+- Protect credentials and use least-privilege broker/API access where available.
+
+Safety gates before live use
+----------------------------
+A. Unit/integration tests against frozen Phase 2 examples.
+B. Historical replay comparing the production decision engine against the accepted backtest engine.
+C. Paper/simulated trading with broker connectivity.
+D. Dry-run mode that generates orders but cannot submit them.
+E. Semi-automatic human-confirmation testing.
+F. Reconciliation testing for fills, partial fills, cancellations and rejected orders.
+G. Automatic-mode test only after the preceding gates pass.
+H. Explicit emergency-stop and recovery procedure.
+
+Order lifecycle
+---------------
+Signal -> eligibility check -> allocation/cash check -> pending-order check -> order construction -> risk/safety validation -> [human confirmation in semi-automatic mode] -> broker submission -> broker acknowledgement -> fill/reject/cancel -> portfolio reconciliation -> audit log.
+
+Mode equivalence
+----------------
+Semi-automatic and automatic modes must share the same signal and order-construction engine. The only intended difference is whether the final submission step requires explicit human confirmation.
+
+Phase 3 entry condition
+-----------------------
+Phase 3 may begin implementation only after:
+- Phase 1 has a documented robust strategy candidate or a documented conclusion that no candidate survives.
+- Phase 2 has completed its robustness gate and identified the strategy/rule set to integrate, if any.
+- The selected rules are frozen before integration work begins.
+
+Preliminary deliverables
+------------------------
+- Frozen strategy configuration consumed by the integration layer.
+- Broker/platform adapter.
+- Order-generation engine.
+- Semi-automatic confirmation interface.
+- Automatic execution mode with hard safety controls.
+- State/reconciliation database or equivalent durable state.
+- Audit/event log.
+- Dry-run and paper-trading harness.
+- Test suite and deployment/runbook.
+- Monitoring and emergency-stop procedure.
+
+Important
+---------
+A Phase 3 implementation must not be used to retrospectively optimize Phase 1 or Phase 2. Any change to strategy logic, parameters, allocations, triggers or risk rules creates a new research version and must be evaluated in the appropriate research phase before being promoted to production.
