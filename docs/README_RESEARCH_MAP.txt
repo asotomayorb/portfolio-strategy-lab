@@ -10,7 +10,7 @@ Phase 1B fixed-ensemble extension is CLOSED.
 No robust Phase 1 winner has been established.
 No robust Phase 1B ensemble improvement has been established.
 Value is omitted until comparable point-in-time historical valuation data are available.
-Phase 2 has not started.
+Phase 2 is ACTIVE — Stage 2A entry-engine research is running.
 
 PHASE 1B RESULT
 Frozen combinations:
@@ -33,3 +33,10 @@ Phase 2 may now be considered separately. It must not retroactively alter Phase 
 ANTI-REGRESSION RULE
 Do not use Phase 2 concepts to modify historical Phase 1/1B definitions.
 Freeze Phase 2 definitions before evaluating its results.
+
+
+PHASE 2 CURRENT STATE
+Stage 2A protocol is frozen in docs/PHASE2_PROTOCOL.txt.
+Baseline engine: daily triggers, weekly confirmed HH52 + Wilder ATR20W, ATR 1.5/3/5/8, cumulative 25/50/75/100%, S1-S4 matrix, 5% cash floor, no leverage, unused cash carries.
+Initial capital deployment is intentionally isolated; Stage 2A uses recurring contributions only.
+Simultaneous-trigger distribution is explicitly tested as D1 target-weighted, D2 equal-weighted and D3 deepest-first.
