@@ -27,6 +27,10 @@ PHASE 1 RESULTS LOG
 - Common-history CAGR under stress changed modestly for B0/B1 and more for Momentum/Rotation; Dynamic Allocation changed moderately; Risk Parity changed very little but retained very large drawdowns.
 - Expansive-history conclusions were materially unchanged.
 
+2026-09-26 (concentration/dependence step completed)
+- Synthesized the corrected leave-one-asset-out results. Momentum/Rotation show material but bounded individual-asset sensitivity; Dynamic Allocation is narrower in common history; Risk Parity is exceptionally universe-dependent, with common CAGR falling to 0% when BTC is omitted.
+- This is a dependence diagnostic, not a ranking or parameter-selection step.
+
 NEXT
-Proceed to concentration/dependence synthesis, then independent OOS, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
+Run independent OOS, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
 Phase 2 remains blocked.
