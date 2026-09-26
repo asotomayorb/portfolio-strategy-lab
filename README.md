@@ -18,9 +18,9 @@ Completed: common/expansive histories, cross-history comparison, Pareto robustne
 
 The validated universe test shows material dependence on individual assets for Momentum/Rotation and especially Risk Parity. Dynamic Allocation shows narrower dispersion in this test. These are descriptive robustness findings, not a ranking.
 
-In progress: pre-registered cost/slippage sensitivity (six friction scenarios).
+Completed: pre-registered cost/slippage sensitivity (six friction scenarios); broad conclusions stable.
 
-Pending after that: concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
+In progress next: concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
 
 **No robust Phase 1 winner has been established.**
 
