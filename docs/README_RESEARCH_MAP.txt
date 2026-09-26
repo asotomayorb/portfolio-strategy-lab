@@ -2,43 +2,34 @@ PORTFOLIO STRATEGY LAB — RESEARCH MAP
 ========================================
 
 START HERE
-Read this map and docs/PHASE1_PROTOCOL.txt before continuing. Phase 2 is blocked until Phase 1 is closed.
+Read this map, docs/PHASE1_PROTOCOL.txt and docs/PHASE1B_PROTOCOL.txt before continuing.
 
 CURRENT DECISION STATE
 Phase 1 is COMPLETE.
+Phase 1B fixed-ensemble extension is CLOSED.
 No robust Phase 1 winner has been established.
+No robust Phase 1B ensemble improvement has been established.
 Value is omitted until comparable point-in-time historical valuation data are available.
-All robustness and generalization tests completed so far are descriptive; no parameters were selected from them. Statistical uncertainty is now quantified with a pre-registered circular moving-block bootstrap on original development histories only.
-Phase 2 has not started and remains a separate next phase.
+Phase 2 has not started.
 
-RESERVED HOLDOUT RESULT
-Frozen new ticker universe: VTI, MDY, EFA, IAU, AGG, IEF, TIP, EMB, XLB, XLY.
-Window: 2007-01-01 to 2026-09-24.
-Allocation: 95% invested, equal-weight; 5% cash.
-Results:
-B0 5.51% CAGR / -21.17% DD / 0.474 Sharpe
-B1 5.42% / -18.97% / 0.470
-S1 14.62% / -11.02% / 0.793
-S3 14.35% / -11.01% / 0.777
-S4 9.07% / -14.39% / 0.706
-S5 12.74% / -7.57% / 0.843
-S6 3.59% / -20.65% / 0.378
-EMB starts 2007-12-19; other holdout tickers start 2007-01-03. No synthetic prehistory was used.
-This is a reserved ticker-universe generalization test, not independent temporal OOS.
+PHASE 1B RESULT
+Frozen combinations:
+C1 = 50% B0 + 50% Momentum
+C2 = 50% Momentum + 50% Dynamic Allocation
+C3 = 1/3 B0 + 1/3 Momentum + 1/3 Dynamic Allocation
 
-NO-LEAKAGE RULE
-Holdout results cannot be used to change strategy definitions, parameters, cadence, costs or selection rules.
+Development and walk-forward testing were completed. C2 was the closest candidate, but it did not consistently improve S5 Dynamic Allocation across common and expansive histories. C1 and C3 showed severe expansive-history drawdowns. Therefore no ensemble is promoted as a robust Phase 1 benchmark.
 
-STATISTICAL UNCERTAINTY RESULT
-Primary method: circular moving-block bootstrap of monthly time-weighted returns; 3/6/12-month blocks, 6-month primary; 5,000 replicates; 95% percentile intervals. Common history has 71 months and expansive history 319 months. Intervals are wide, especially for common history. Under the primary 6-month block, paired CAGR differences versus B0 have 95% intervals crossing zero for every other strategy in both histories. This is uncertainty evidence, not a selection rule.
+The Phase 1B screen was closed after development plus walk-forward; later cost, external-universe, reserved-holdout and bootstrap tests were not run for the ensembles because no candidate survived the initial robustness gate. This is a screening conclusion, not a claim about untested later results.
 
-FINAL PHASE 1 SYNTHESIS
-No robust winner. B0/B1 are strong original-universe benchmarks but have large expansive drawdowns and limited cross-universe generalization. S1/S3 show relatively consistent behavior but no dominance across all dimensions. S5 shows comparatively constrained drawdowns in several tests but no universal dominance. S4 is inconsistent. S6 is highly universe-dependent. Statistical uncertainty is broad and paired CAGR intervals versus B0 cross zero for all comparators in both histories.
+PHASE 1 FINAL STATE
+Phase 1 core families: B0, B1, S1, S3, S4, S5, S6. Value omitted.
+All Phase 1 robustness/generalization tests were completed.
+Robust Phase 1 winner = NONE.
 
 NEXT PHASE
-Phase 1 is closed. Phase 2 may now be considered separately; it has not been started.
+Phase 2 may now be considered separately. It must not retroactively alter Phase 1 or Phase 1B results.
 
 ANTI-REGRESSION RULE
-At the beginning of every research step, re-read this map and PHASE1_PROTOCOL.
-At the end of every step, update them with current status/results/next step.
-Never move to Phase 2 unless the Phase 1 checklist explicitly says complete.
+Do not use Phase 2 concepts to modify historical Phase 1/1B definitions.
+Freeze Phase 2 definitions before evaluating its results.
