@@ -8,6 +8,8 @@ from pathlib import Path
 import argparse
 import numpy as np
 import pandas as pd
+import sys
+sys.path.insert(0, str(ROOT / "src"))
 
 ROOT = Path(__file__).resolve().parents[1]
 TICKER_DIR = ROOT / "tickers"
