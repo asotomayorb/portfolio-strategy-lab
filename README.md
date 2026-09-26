@@ -8,17 +8,17 @@ Read these files before continuing:
 2. `docs/PHASE1_PROTOCOL.txt` — complete Phase 1 protocol/checklist.
 3. `docs/PHASE2_PROTOCOL.txt` — future Phase 2; currently **BLOCKED**.
 
-## Current status — 2026-09-25
+## Current status — 2026-09-26
 **Phase 1 is NOT finished. Phase 2 must NOT start.**
 
 Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity.
 Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
-Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis.
+Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, and corrected leave-one-asset-out universe sensitivity.
 
-In progress: pre-registered parameter-neighbor sensitivity and leave-one-asset-out universe sensitivity.
+The validated universe test shows material dependence on individual assets for Momentum/Rotation and especially Risk Parity. Dynamic Allocation shows narrower dispersion in this test. These are descriptive robustness findings, not a ranking.
 
-Pending after that: cost/slippage sensitivity, concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
+Pending: cost/slippage sensitivity, concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
 
 **No robust Phase 1 winner has been established.**
 
