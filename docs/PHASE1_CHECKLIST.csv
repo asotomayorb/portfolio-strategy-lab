@@ -12,7 +12,7 @@ parameter_neighbor_sensitivity,done,Pre-registered; CI validated
 universe_sensitivity,done,True leave-one-asset-out; corrected implementation and CI validated
 cost_slippage_sensitivity,done,Six pre-registered friction scenarios; CI validated; broad conclusions stable
 concentration_dependence,done,Validated leave-one-asset-out dependence synthesized; Risk Parity most universe-dependent
-external_universe_validation,in_progress,Frozen 12-ETF unseen universe; 2007-01-01 to 2026-09-24; equal-weight 95% invested plus 5% cash; generalization test
+external_universe_validation,done,Frozen 12-ETF unseen universe; 2007-01-01 to 2026-09-24; equal-weight 95% invested plus 5% cash; generalization test, not fully independent temporal OOS
 reserved_holdout,pending,Not started
 statistical_uncertainty,pending,Not started
 final_phase1_synthesis,pending,Not started

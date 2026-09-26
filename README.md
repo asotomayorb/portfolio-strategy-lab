@@ -10,9 +10,9 @@ Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, and docs/PHASE2_PRO
 
 Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
-Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected leave-one-asset-out universe sensitivity, cost/slippage sensitivity, and concentration/dependence synthesis.
+Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected leave-one-asset-out universe sensitivity, cost/slippage sensitivity, concentration/dependence synthesis, and external-universe generalization validation.
 
-**Current step: external-universe validation.** A frozen 12-ETF universe is being evaluated with unchanged Phase 1 definitions. This is an external-universe generalization test, not fully independent temporal OOS, because its calendar period overlaps periods already observed in the original research.
+External-universe validation used a frozen unseen 12-ETF set and confirmed material differences in strategy-family behavior across universes. It is not fully independent temporal OOS because its calendar period overlaps periods already observed in the original research.
 
 **No robust Phase 1 winner has been established.**
 

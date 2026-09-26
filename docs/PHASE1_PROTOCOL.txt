@@ -2,50 +2,26 @@ PHASE 1 — STRATEGY-FAMILY RESEARCH PROTOCOL
 ===========================================
 
 PURPOSE
-Compare broad investment strategy families before any user-specific ATR/pullback strategy (Phase 2).
-The objective is robustness, not maximizing historical CAGR.
+Compare broad investment strategy families before any user-specific ATR/pullback strategy (Phase 2). The objective is robustness, not maximizing historical CAGR.
 
 STATUS AT 2026-09-26
-- Core Phase 1 families implemented/evaluated: B0 Buy & Hold, B1 DCA, S1 Momentum, S3 Rotation, S4 Moving Average, S5 Dynamic Allocation, S6 Risk Parity.
-- S2 Value: intentionally OMITTED from active comparison until a comparable historical point-in-time valuation dataset is available. It is not classified as a loser.
-- Common-history and expansive-history comparisons completed.
-- Pareto robustness and walk-forward robustness completed; no robust winner.
-- Parameter-neighbor and true leave-one-asset-out universe sensitivity are now completed and validated by CI.
-- Universe sensitivity implementation was corrected before acceptance: the omitted asset is now removed from both signal and execution matrices.
-- Cost/slippage sensitivity is complete and validated; friction does not change the broad Phase 1 conclusions.
-- Next after cost validation: concentration/dependence analysis, independent OOS, reserved holdout, statistical uncertainty, final synthesis.
-- Phase 2 is BLOCKED until Phase 1 checklist is complete.
+- Core Phase 1 families: B0 Buy & Hold, B1 DCA, S1 Momentum, S3 Rotation, S4 Moving Average, S5 Dynamic Allocation, S6 Risk Parity.
+- S2 Value: intentionally omitted until comparable point-in-time historical valuation data are available; not classified as a loser.
+- Common/expansive histories, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected universe sensitivity, cost/slippage sensitivity and concentration/dependence synthesis are complete.
+- External-universe validation is complete.
+- A genuinely reserved holdout, statistical uncertainty and final synthesis remain pending.
+- Phase 2 is BLOCKED until Phase 1 closes.
 
 FROZEN PRINCIPLES
 1. No post-result parameter optimization.
 2. Baseline parameters remain the reference.
-3. Neighbor tests measure stability/plateaus, not winners.
-4. Same universe/protocol whenever the comparison permits.
+3. Neighbor tests measure stability, not winners.
+4. Same universe/protocol whenever comparison permits.
 5. Historical regimes must be separated from current/OOS periods.
 6. Robustness > peak CAGR.
 7. No winner unless supported across multiple independent robustness dimensions.
 8. Value is omitted rather than fabricated when comparable data are unavailable.
-
-STRATEGIES
-B0 Buy & Hold
-B1 DCA
-S1 Momentum
-S2 Value — omitted pending data
-S3 Rotation
-S4 Moving Average
-S5 Dynamic Allocation
-S6 Risk Parity
-
-CORE PROTOCOL
-- Monthly evaluation.
-- No leverage/short.
-- 5% cash reserve under the frozen baseline.
-- Equal transaction-cost assumptions across comparable strategies.
-- Execution at next open.
-- Historical data are repository CSVs under tickers/.
-- Common history and expansive history are evaluated separately.
-- Walk-forward folds are evaluated before any final selection.
-- Final decision is descriptive/robustness-based; no ranking is created merely from one metric.
+9. External-universe results cannot alter frozen definitions.
 
 ROBUSTNESS CHECKLIST
 [done] Protocol/data/config freeze
@@ -56,49 +32,33 @@ ROBUSTNESS CHECKLIST
 [done] Pareto robustness
 [done] Walk-forward
 [done] Regime stability analysis
-[done] Parameter-neighbor sensitivity (pre-registered; CI run 36202769069 passed)
-[done] Universe sensitivity (true leave-one-asset-out; CI run 36202769069 passed)
-[done] Cost/slippage sensitivity (six pre-registered friction scenarios; CI validated)
-[pending] Concentration/dependence synthesis
-[pending] Independent OOS
+[done] Parameter-neighbor sensitivity
+[done] Universe sensitivity
+[done] Cost/slippage sensitivity
+[done] Concentration/dependence synthesis
+[done] External-universe generalization validation
 [pending] Truly reserved holdout
 [pending] Statistical uncertainty
 [pending] Final Phase 1 synthesis
 [pending] Robust winner (must remain NONE if evidence is insufficient)
 
-SENSITIVITY INTERPRETATION
-Parameter neighbors are a stability test, not an optimization procedure.
-The validated universe test found:
-- Momentum common CAGR range: 27.69%–35.90%; expansive: 18.58%–30.58%.
-- Rotation common CAGR range: 24.50%–37.36%; expansive: 18.14%–29.24%.
-- Dynamic Allocation common CAGR range: 19.84%–24.09%; expansive: 14.39%–23.16%.
-- Risk Parity common CAGR range: 0%–25.73%; expansive: 0.75%–69.00%, with major BTC dependence.
-These ranges describe sensitivity, not superiority.
+EXTERNAL-UNIVERSE VALIDATION DESIGN
+Frozen new universe: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
+Frozen window: 2007-01-01 through 2026-09-24.
+External allocation: 95% investable, equal weight across all 12 tickers; 5% cash.
+Source: Yahoo Finance daily chart OHLCV retrieved at CI runtime.
+Classification: external-universe generalization test, not fully independent temporal OOS, because its calendar period overlaps previously observed research periods.
+No result from this test may be used to optimize or alter frozen strategy definitions.
 
-RULE: Never start Phase 2 because a Phase 1 test is inconvenient, slow, or inconclusive.
+RESULT — EXTERNAL-UNIVERSE VALIDATION
+B0 Buy & Hold: CAGR 4.86%, Max DD -37.53%, Sharpe 0.386.
+B1 DCA: CAGR 4.82%, Max DD -34.59%, Sharpe 0.383.
+S1 Momentum: CAGR 14.09%, Max DD -16.50%, Sharpe 0.720.
+S3 Rotation: CAGR 15.18%, Max DD -14.58%, Sharpe 0.760.
+S4 Moving Average: CAGR 10.31%, Max DD -12.66%, Sharpe 0.705.
+S5 Dynamic Allocation: CAGR 12.67%, Max DD -11.44%, Sharpe 0.800.
+S6 Risk Parity: CAGR 3.50%, Max DD -35.43%, Sharpe 0.311.
 
+Interpretation: the frozen tactical families produced materially different results on this new universe than on the original universe, demonstrating that strategy-family behavior is universe-dependent. This single external test does not establish a robust winner or permit ranking/selection. It does not become temporal OOS merely because the ticker universe is new.
 
-COST/SLIPPAGE TEST DESIGN
-The frozen strategy definitions, data, allocations, evaluation frequency and execution rule remain unchanged. Only execution friction varies.
-Pre-registered scenarios:
-- zero: commission 0 bps, slippage 0 bps
-- commission_only: 10 bps, 0 bps
-- slippage_only: 0 bps, 5 bps
-- baseline: 10 bps, 5 bps
-- high: 20 bps, 10 bps
-- stress: 30 bps, 20 bps
-No scenario is selected after observing results; the purpose is to measure friction sensitivity and whether conclusions materially depend on the baseline cost assumption.
-
-COST/SLIPPAGE RESULT
-- Common-history CAGR under baseline -> stress: B0 31.34% -> 31.32%; B1 29.61% -> 29.58%; S1 28.78% -> 26.95%; S3 30.17% -> 28.14%; S4 -0.42% -> -1.28%; S5 22.34% -> 21.47%; S6 25.73% -> 25.64%.
-- Expansive-history CAGR under baseline -> stress: B0/B1 essentially unchanged; S1 28.71% -> 26.74%; S3 28.23% -> 26.09%; S4 17.78% -> 16.55%; S5 22.82% -> 21.95%; S6 65.73% -> 64.95%.
-- The stress grid does not produce a robust winner or overturn the existing robustness conclusions.
-
-CONCENTRATION / DEPENDENCE SYNTHESIS — 2026-09-26
-The validated leave-one-asset-out experiment provides a dependence screen. It is not itself a portfolio-weight concentration measure.
-- Common-history CAGR ranges across individual asset omissions: S1 27.69–35.90%, S3 24.50–37.36%, S5 19.84–24.09%, S6 0–25.73%. S6 can collapse to 0% when BTC is omitted.
-- Expansive-history CAGR ranges: S1 18.58–30.58%, S3 18.14–29.24%, S5 14.39–23.16%, S6 0.75–69.00%. S6 is exceptionally universe-dependent.
-- Momentum/Rotation have material but bounded sensitivity to individual assets; Dynamic Allocation is narrower in common history; Risk Parity is the most universe-dependent of the evaluated tactical families.
-- The sensitivity result should be interpreted together with the earlier drawdown/regime tests. It does not create a winner or justify changing the frozen universe.
-- Buy & Hold and DCA are not re-evaluated here as tactical leave-one-asset-out signal sensitivity is not the appropriate diagnostic for their fixed target construction.
-NEXT: independent OOS.
+NEXT: genuinely reserved holdout, then statistical uncertainty and final synthesis.

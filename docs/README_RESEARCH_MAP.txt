@@ -6,28 +6,33 @@ Read this map and docs/PHASE1_PROTOCOL.txt before continuing. Phase 2 is blocked
 
 CURRENT DECISION STATE
 No robust Phase 1 winner has been established.
-Value is omitted until comparable point-in-time valuation data are available.
-Parameter-neighbor, universe, cost/slippage and concentration/dependence tests are complete and validated.
+Value is omitted until comparable point-in-time historical valuation data are available.
+All pre-external robustness checks are complete.
+External-universe generalization validation is complete.
 Phase 2 must not start.
 
-CURRENT STEP — EXTERNAL-UNIVERSE VALIDATION
-Frozen new ticker universe:
-SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
-Frozen window: 2007-01-01 through 2026-09-24.
-External allocation: 95% invested, equal weight across the 12 tickers; 5% cash.
-Source: Yahoo Finance daily chart OHLCV retrieved at CI runtime.
-Strategy definitions and parameters remain exactly those frozen in Phase 1.
-Classification: external-universe generalization test, not fully independent temporal OOS because the calendar period overlaps previously observed data.
+EXTERNAL-UNIVERSE RESULT
+Frozen new universe: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
+Window: 2007-01-01 to 2026-09-24.
+Allocation: 95% invested, equal-weight; 5% cash.
+Results:
+B0 4.86% CAGR / -37.53% DD / 0.386 Sharpe
+B1 4.82% / -34.59% / 0.383
+S1 14.09% / -16.50% / 0.720
+S3 15.18% / -14.58% / 0.760
+S4 10.31% / -12.66% / 0.705
+S5 12.67% / -11.44% / 0.800
+S6 3.50% / -35.43% / 0.311
+These are descriptive results, not a ranking. The test is an external-universe generalization test, not fully independent temporal OOS.
 
 NO-LEAKAGE RULE
-Results from this external universe must not be used to change strategy definitions, parameters, cadence, costs, or selection rules. Any change would invalidate this validation.
+External results cannot be used to change strategy definitions, parameters, cadence, costs or selection rules.
 
 NEXT EXECUTION ORDER
-1. Complete external-universe validation and record results.
-2. Run a genuinely reserved holdout that remains unseen during all prior development and this external test.
-3. Quantify statistical uncertainty.
-4. Perform final Phase 1 synthesis and decide whether evidence supports any robust winner.
-5. Only then unlock Phase 2.
+1. Run a genuinely reserved holdout unseen during all development and the external test.
+2. Quantify statistical uncertainty.
+3. Perform final Phase 1 synthesis and decide whether evidence supports any robust winner.
+4. Only then unlock Phase 2.
 
 ANTI-REGRESSION RULE
 At the beginning of every research step, re-read this map and PHASE1_PROTOCOL.
