@@ -1,5 +1,8 @@
 import pandas as pd
-from src.data_loader import normalize_columns
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
+from data_loader import normalize_columns
 
 def test_iso_dates_are_not_dayfirst_swapped():
     df = pd.DataFrame({
