@@ -1,24 +1,74 @@
-PHASE 2 — USER-SPECIFIC STRATEGY RESEARCH
-=============================================
+PHASE 2 — USER-SPECIFIC ATR/PULLBACK STRATEGY
+===============================================
 
 STATUS
-BLOCKED. Do not execute until docs/PHASE1_PROTOCOL.txt checklist is complete and Phase 1 is formally closed.
+ACTIVE — Stage 2A entry-engine research.
+Phase 1 and Phase 1B are closed and must not be modified.
 
 PURPOSE
-Only after Phase 1, evaluate the user's specified ATR/pullback investment strategy separately.
-Phase 2 must not contaminate Phase 1 family comparisons.
+Evaluate the user's specified ATR/pullback investment mechanics separately from generic Phase 1 strategy families.
 
-KNOWN CONCEPTS TO BE SPECIFIED/TESTED LATER
-- User-defined target allocations.
-- Available margin/room check before normal trigger logic.
-- 20-week ATR levels: 1.5x, 3x, 5x, 8x.
-- Deepest-to-shallowest allocation priority.
-- Swing-high definition requiring validation with three candles on each side.
-- DCA/dip allocation variants, including ATRx8 exception rules.
-- Monthly/daily/weekly evaluation cadence variants only if pre-registered before testing.
-- No leverage unless explicitly included in a separately defined test.
-- Tax-aware/rebalancing rules only when formally specified.
+FROZEN CORE
+Universe/targets: current portfolio_allocation.csv.
+No leverage; no short.
+Daily trigger evaluation.
+Weekly structural inputs:
+- HH52 based on confirmed weekly swing highs.
+- Swing high requires 3 weekly candles on each side.
+- A swing high becomes usable only after the 3 right-side weeks have completed.
+- HH52 is the maximum usable confirmed swing high in the trailing 52 weeks.
+- ATR is Wilder/RMA 20-week ATR.
+- ATR and HH52 are weekly; price trigger is checked daily.
+- ATR% = ATR20W / HH52.
+- Trigger prices = HH52 * (1 - k * ATR%), k = 1.5, 3, 5, 8.
+- Cumulative target position at deepest triggered level:
+  1.5x = 25% of target
+  3x = 50%
+  5x = 75%
+  8x = 100%.
+- Each daily evaluation uses only the deepest triggered level. Crossing multiple levels in one day creates one cumulative order, not multiple orders.
+- Normal order room = MAX(0, target position - current position - pending orders).
+- S1 ATR8 is capped at the asset target; no indefinite over-allocation in the frozen S1 baseline.
+- Orders are executed at the next session open.
+- Unused cash carries indefinitely; deposits do not expire and do not force a purchase.
+- Costs use Phase 1 baseline: 10 bps commission + 5 bps slippage.
 
-IMPORTANT
-The above is a future research specification, not part of current Phase 1.
-Do not use these parameters to modify or interpret Phase 1 results.
+S1–S4 STRATEGY MATRIX
+S1 = 50% DCA + 50% Dip.
+  Dip uses all four cumulative ATR levels.
+S2 = 50% DCA + 50% ATR8.
+S3 = 50% DCA + 25% Dip + 25% ATR8.
+S4 = 100% ATR8 when ATR8 is active; otherwise S1.
+
+DCA means the specified DCA capital is deployed according to target allocations, subject to allocation room.
+Dip/ATR8 orders are pooled globally when multiple assets trigger on the same day.
+
+UNRESOLVED SIMULTANEOUS-TRIGGER DIMENSION
+The exact global distribution rule was not previously frozen. Therefore Stage 2A tests three pre-registered descriptive variants:
+D1 target-weighted allocation among eligible needs.
+D2 equal-weight allocation among eligible needs.
+D3 deepest-first allocation, then residual by target weight.
+No result may be used to choose or tune the rule until all three are reported.
+
+STAGE 2A ISOLATION
+To avoid contaminating entry mechanics with the still-unresolved initial-capital deployment policy:
+- Initial capital = 0 for the entry-engine comparison.
+- Monthly contribution = 1,000.
+- Contributions are available as cash; no forced purchase outside the strategy's DCA/dip rules.
+- Baseline cash floor = 5%.
+- This stage measures the incremental contribution process. Initial-capital deployment is a separate later stage.
+
+PRIMARY OUTPUT
+Compare S1–S4 across D1–D3 on the same data, with common and expansive histories.
+Report CAGR/TWR-style return, maximum drawdown, Sharpe, Sortino, cash utilization, trigger counts, and execution/trade counts.
+Do not declare a winner from one metric.
+
+NEXT STAGES
+2B: reconcile simultaneous-capital rule after Stage 2A evidence, without post-hoc parameter tuning.
+2C: cross deployment speeds for initial/extraordinary capital (immediate, 3m, 6m, 12m, 24m, opportunities-only) as pre-registered variants.
+2D: cash-floor 0% vs 5%.
+2E: robustness, walk-forward, universe sensitivity, costs, holdout and statistical uncertainty for surviving frozen candidates.
+No deployment or cash-floor result may alter the Stage 2A entry definitions.
+
+VALUE
+Still omitted.
