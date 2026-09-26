@@ -6,6 +6,7 @@ short-term time dependence. The method and block lengths are fixed before
 observing this run's results.
 
 Primary block length: 6 months.
+This file is intentionally executed in a dedicated CI workflow.
 Sensitivity block lengths: 3 and 12 months.
 Bootstrap replicates: 5000 per strategy/history/block length.
 95% percentile intervals are reported for CAGR, annualized Sharpe and max drawdown.
