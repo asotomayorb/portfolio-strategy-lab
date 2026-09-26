@@ -2,12 +2,13 @@ item,status,notes
 phase1_closed,done,Phase 1 formally closed with no robust winner
 phase1b_closed,done,Phase 1B closed with no robust ensemble improvement
 phase2_protocol_freeze,done,ATR20W/HH52/levels/S1-S4/daily engine frozen
-stage2a_contribution_only,pending,Initial capital excluded to isolate entry mechanics
-simultaneous_distribution_d1,pending,Target-weighted pooled allocation
-simultaneous_distribution_d2,pending,Equal-weight pooled allocation
-simultaneous_distribution_d3,pending,Deepest-first pooled allocation
-common_expansive,pending,Run all frozen S1-S4 x D1-D3
-stage2b_rule_reconciliation,pending,Only after Stage 2A evidence
+stage2a_integrity_gate,done,Run 8 passed engine execution and produced finite metrics/artifact after missing-price continuity correction
+stage2a_contribution_only,done,Initial capital excluded to isolate entry mechanics
+simultaneous_distribution_d1,done,Target-weighted pooled allocation tested
+simultaneous_distribution_d2,done,Equal-weight pooled allocation tested
+simultaneous_distribution_d3,done,Deepest-first pooled allocation tested
+common_expansive,done,All frozen S1-S4 x D1-D3 tested on common and expanding histories
+stage2b_rule_reconciliation,pending,Only after Stage 2A evidence; no post-hoc optimization
 deployment_variants,pending,Immediate/3m/6m/12m/24m/opportunities-only
 cash_floor,pending,5% baseline then 0% sensitivity
 walk_forward,pending,After definitions frozen
