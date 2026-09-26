@@ -111,3 +111,7 @@ Stage 2E was frozen before execution in docs/PHASE2E_PROTOCOL.txt. The robustnes
 
 ## Phase 2E execution checkpoint — 2026-09-26
 The frozen Stage 2E suite is implemented in scripts/run_phase2e.py and .github/workflows/phase2e.yml. The implementation covers the pre-registered temporal, leave-one-asset-out, cost, external-generalization, newly reserved holdout and bootstrap tests without changing the frozen strategy definitions. The first workflow execution must be validated for engine integrity and artifact completeness before any Phase 2E results are interpreted.
+
+
+## Phase 2E first execution — 2026-09-26
+The installed Phase 2E workflow was triggered by the frozen script commit e530f374f4a6e689a569d6bfb526177ac9ae6f3f. Results remain uninterpreted until the GitHub Actions run and artifact are validated.
