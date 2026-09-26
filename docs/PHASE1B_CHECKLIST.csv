@@ -1,11 +1,12 @@
 item,status,notes
-protocol_freeze,done,Fixed three ensembles and fixed sleeve weights documented before execution
-development_common_expansive,pending,Run frozen combinations
-walk_forward,pending,Run after development results without changing definitions
-cost_slippage,pending,Run frozen friction scenarios
-ensemble_universe_sensitivity,pending,Leave-one-asset-out descriptive diagnostic
-external_universe,pending,Use frozen Phase 1 external universe
-reserved_holdout,pending,Use frozen Phase 1 reserved universe
-statistical_uncertainty,pending,Use pre-registered bootstrap method adapted to ensemble returns
-final_synthesis,pending,Determine whether robust improvement exists
-phase2,blocked,Do not start Phase 2 until Phase 1B decision is documented
+protocol_freeze,done,Three fixed ensembles and weights frozen before execution
+development_common_expansive,done,Executed on original development universe; no robust improvement
+walk_forward,done,Four chronological folds in common and expansive histories; no robust improvement
+cost_slippage,not_run,No ensemble survived development plus walk-forward gate; not used for selection
+ensemble_universe_sensitivity,not_run,No ensemble promoted past the robustness gate
+external_universe,not_run,No ensemble promoted past the robustness gate
+reserved_holdout,not_run,No ensemble promoted past the robustness gate
+statistical_uncertainty,not_run,No ensemble promoted past the robustness gate
+final_synthesis,done,No robust improvement; C2 closest but does not consistently improve S5
+phase1b,closed,Optional combination extension closed without a promoted ensemble
+phase2,ready,Phase 1 and Phase 1B combination screen complete; Phase 2 remains separate
