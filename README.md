@@ -115,3 +115,9 @@ The frozen Stage 2E suite is implemented in scripts/run_phase2e.py and .github/w
 
 ## Phase 2E first execution — 2026-09-26
 The installed Phase 2E workflow was triggered by the frozen script commit e530f374f4a6e689a569d6bfb526177ac9ae6f3f. Results remain uninterpreted until the GitHub Actions run and artifact are validated.
+
+
+## Phase 2E first execution validation — 2026-09-26
+The first frozen Stage 2E workflow (36266398095) completed successfully and uploaded all 10 expected artifact files. However, artifact validation found an integrity inconsistency: the external-generalization and reserved-holdout result rows report an end date of 2026-12-08 even though the frozen protocol cutoff is 2026-09-24 and the fetched Yahoo coverage files both end on 2026-09-24. The results are therefore **not interpreted** and Stage 2E is not marked complete.
+
+This is treated as an execution/data-calendar integrity defect, not a strategy result. A guard has been added to scripts/run_phase2e.py so future runs fail rather than silently accepting a result calendar beyond the frozen cutoff or fetched coverage. The next step is to rerun the frozen suite, diagnose the underlying date propagation if the guard trips, and only then validate and synthesize the results. No Phase 2 definitions, parameters, candidates, weights or evaluation rules are changed.
