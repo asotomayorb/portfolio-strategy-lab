@@ -1,0 +1,58 @@
+PHASE 2E — ROBUSTNESS / GENERALIZATION / UNCERTAINTY
+
+STATUS
+FROZEN — definitions must not be changed after result inspection.
+Phase 2E is a robustness gate, not a parameter/strategy optimization stage.
+
+FROZEN CANDIDATES
+S1 = 50% DCA + 50% Dip.
+S2 = 50% DCA + 50% ATR8.
+S3 = 50% DCA + 25% Dip + 25% ATR8.
+S4 = 100% ATR8 when active; otherwise S1.
+D3 = deepest-first simultaneous-capital allocation, then residual by target weight.
+Baseline cash floor = 5%.
+Core robustness runs: initial capital 0, monthly contribution USD 1,000.
+Daily triggers; weekly confirmed HH52 and Wilder/RMA 20-week ATR; 3-left/3-right swing-high confirmation; ATR levels 1.5/3/5/8; cumulative 25/50/75/100%; next-session-open execution; no leverage/short; unused cash carries; normal allocation-room rule; baseline costs 10 bps commission + 5 bps slippage.
+
+ANTI-LEAKAGE
+1. No definitions, parameters, weights or candidate rules may change after results are inspected.
+2. Phase 2D 0% cash-floor results are sensitivity only; Phase 2E baseline remains 5%.
+3. No candidate is promoted from a single metric, period or universe.
+4. External and holdout results cannot tune candidates.
+5. Bootstrap uses the original Phase 2 development universe only.
+6. Blocked tests are reported as blocked; no substitute data or altered definitions.
+
+TEST A — WALK-FORWARD
+Four chronological folds, separately for common and expanding histories. Frozen S1-S4/D3 definitions only. Structural indicators retain their normal historical context; fold metrics are evaluated inside each fold. This is regime robustness, not parameter-fitting OOS. Report CAGR, Sharpe, Sortino, Calmar, max drawdown and recovery where defined.
+
+TEST B — UNIVERSE SENSITIVITY
+Leave-one-asset-out on the frozen Phase 2 target universe. Remove the asset from data and targets, then renormalize remaining non-cash targets proportionally while preserving the 5% cash floor. Run S1-S4/D3 and report changes versus the full-universe baseline. This is dependence diagnostics, not reweighting.
+
+TEST C — COST / SLIPPAGE
+Use the exact Phase 1 pre-registered six scenarios:
+zero 0/0 bps; commission_only 10/0; slippage_only 0/5; baseline 10/5; high 20/10; stress 30/20.
+Only friction assumptions change. Run S1-S4/D3 on common and expanding histories.
+
+TEST D — EXTERNAL GENERALIZATION
+Frozen universe: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
+Window: 2007-01-01 through 2026-09-24.
+Diagnostic allocation: 95% invested, equal weight across available tickers, 5% cash.
+Yahoo Finance daily OHLCV retrieved at CI runtime.
+This is external-universe generalization, not independent temporal OOS and not the reserved holdout.
+
+TEST E — RESERVED HOLDOUT
+New ticker universe frozen before execution and absent from prior repository ticker data:
+VUG, VTV, VEA, BND, LQD, SHY, DBC, XLF, XLK, VOO.
+Window: 2007-01-01 through 2026-09-24.
+Allocation: 95% invested, equal weight across available tickers, 5% cash.
+Yahoo Finance daily OHLCV retrieved at CI runtime.
+Preserve real coverage differences; no synthetic prehistory. Results cannot alter definitions.
+
+TEST F — STATISTICAL UNCERTAINTY
+Original Phase 2 development universe only; exclude external/holdout data.
+Monthly time-weighted return: r_t = equity_t / (equity_{t-1} + contribution_t) - 1.
+Circular moving-block bootstrap; block lengths 3, 6, 12 months; 6-month primary; 5,000 replicates; seed 20260926.
+95% percentile intervals for CAGR, annualized Sharpe and max drawdown. Paired CAGR differences use identical resamples across candidates.
+
+REPORTING / GATE
+Publish raw and summary artifacts for every completed test plus a final synthesis. The synthesis reports completion/blockage, stability/dispersion, material sensitivities, generalization evidence and uncertainty. It does not select by highest CAGR/Sharpe or any single metric. No final Phase 2 strategy/rule set is selected until Phase 2E is complete and Stages 2A-2E are synthesized. Phase 3 remains blocked until that freeze.
