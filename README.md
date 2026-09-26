@@ -46,6 +46,11 @@ Final Phase 1B synthesis: reports/PHASE1B_FINAL_SYNTHESIS_2026-09-26.txt
 
 The ATR/pullback strategy belongs exclusively to Phase 2 and was not used in Phase 1 or Phase 1B.
 
+## Phase 1 data-continuity audit — 2026-09-26
+The Phase 2A missing-price issue does not apply to the frozen Phase 1 backtest engine. Phase 1 uses src/backtest.py, which maintains a mark_prices series and updates each asset only when a valid execution price exists; held positions continue to be marked at the latest valid price rather than being dropped from equity. Therefore the specific Phase 2A discontinuity found in run_phase2a.py could not have generated the Phase 1 results.
+
+This audit does not reopen or alter Phase 1. It documents the engine-level distinction so Phase 2 corrections remain isolated from the closed Phase 1/1B results.
+
 ## Phase 2 current stage
 Stage 2A is testing the frozen daily ATR/pullback entry engine before initial-capital deployment variants. See docs/PHASE2_PROTOCOL.txt, docs/PHASE2_CHECKLIST.csv and docs/PHASE2_RESULTS_LOG.txt.
 
