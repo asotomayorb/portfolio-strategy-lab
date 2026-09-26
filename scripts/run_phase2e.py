@@ -194,15 +194,32 @@ def external_test(name, tickers):
         mod.ALLOC = alloc
         result = run_engine(mod, "expanding")
         coverage_df = pd.DataFrame(coverage)
-        # Integrity guard: the external/holdout simulation must not extend beyond
-        # the protocol cutoff or beyond the fetched OHLC coverage.
-        observed_end = pd.Timestamp(result["end"].max()) if not result.empty else pd.NaT
-        fetched_end = pd.Timestamp(coverage_df["last"].max()) if not coverage_df.empty else pd.NaT
         protocol_end = pd.Timestamp(END)
+        fetched_end = pd.Timestamp(coverage_df["last"].max()) if not coverage_df.empty else pd.NaT
+
+        # Validate raw download, parsed OHLC dates, and simulation output separately.
+        if pd.notna(fetched_end) and fetched_end > protocol_end:
+            raise RuntimeError(
+                f"{name}: fetched coverage end {fetched_end.date()} exceeds protocol END {END}"
+            )
+        loaded = mod.load_ohlc()
+        loaded_ends = {
+            t: pd.Timestamp(f.index.max()) for t, f in loaded.items() if len(f.index)
+        }
+        bad_loaded = {t: d.date().isoformat() for t, d in loaded_ends.items() if d > protocol_end}
+        if bad_loaded:
+            raise RuntimeError(
+                f"{name}: parsed ticker dates exceed protocol END {END}: {bad_loaded}"
+            )
+
+        observed_end = pd.Timestamp(result["end"].max()) if not result.empty else pd.NaT
+        loaded_end = max(loaded_ends.values()) if loaded_ends else pd.NaT
         if pd.notna(observed_end) and observed_end > protocol_end:
             raise RuntimeError(f"{name}: result end {observed_end.date()} exceeds protocol END {END}")
-        if pd.notna(observed_end) and pd.notna(fetched_end) and observed_end > fetched_end:
-            raise RuntimeError(f"{name}: result end {observed_end.date()} exceeds fetched coverage end {fetched_end.date()}")
+        if pd.notna(observed_end) and pd.notna(loaded_end) and observed_end > loaded_end:
+            raise RuntimeError(
+                f"{name}: result end {observed_end.date()} exceeds parsed OHLC coverage {loaded_end.date()}"
+            )
         result["validation_type"] = name
         result["universe"] = ",".join(tickers)
         return result, coverage_df
