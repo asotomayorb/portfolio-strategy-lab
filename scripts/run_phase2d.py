@@ -1,4 +1,5 @@
 """Phase 2D: run the validated Phase 2A engine with only the cash floor changed to 0%."""
+# Execution marker: keep the frozen Phase 2D logic unchanged while allowing a push-triggered run.
 from pathlib import Path
 import runpy
 import sys
