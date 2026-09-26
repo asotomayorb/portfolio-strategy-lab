@@ -28,3 +28,18 @@ PHASE 1 RESULTS LOG
 
 NEXT
 Quantify statistical uncertainty, then final Phase 1 synthesis. Phase 2 remains blocked.
+
+
+2026-09-26 — STATISTICAL UNCERTAINTY
+- Pre-registered method: circular moving-block bootstrap of monthly time-weighted returns on original development histories only; no external/reserved holdout data used.
+- Block lengths: 3, 6 and 12 months; 6 months primary. 5,000 replicates each; 95% percentile intervals; seed 20260926.
+- Common history: 71 months. Expansive history: 319 months.
+- Primary 6-month results show wide uncertainty. Common-history CAGR 95% intervals: B0 5.0–62.0%, B1 5.1–58.2%, S1 0.7–65.8%, S3 2.7–65.5%, S4 -24.0–30.7%, S5 3.1–45.8%, S6 -22.0–103.1%.
+- Expansive-history CAGR 95% intervals: B0 12.1–112.9%, B1 10.1–103.0%, S1 11.8–49.4%, S3 11.8–48.1%, S4 -4.1–49.6%, S5 11.3–36.3%, S6 17.5–142.8%.
+- Primary paired CAGR intervals versus B0 cross zero for all six comparators in both histories. Example: S5 vs B0 common -45.0 to +25.7 pp; expansive -91.4 to +13.1 pp.
+- Block-length sensitivity (3/6/12 months) changes interval width but not the broad inference: uncertainty is substantial and does not create a statistically clean universal separation between strategy families.
+- Interpretation: statistical uncertainty reinforces, rather than overturns, the existing robustness evidence. No robust winner established.
+- Reports: reports/phase1_statistical_uncertainty_primary.csv and reports/phase1_statistical_pairwise_cagr_primary.csv; full 3/6/12-month artifact retained in CI run 36215002297.
+
+NEXT
+Perform final Phase 1 synthesis. Phase 2 remains blocked.
