@@ -361,7 +361,13 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("--output",default="reports/phase2c_results.csv")
     a=p.parse_args()
-    result = pd.concat(\n        [\n            pd.concat([run("common", deployment=d).assign(deployment=d) for d in DEPLOYMENTS], ignore_index=True),\n            pd.concat([run("expanding", deployment=d).assign(deployment=d) for d in DEPLOYMENTS], ignore_index=True),\n        ],\n        ignore_index=True,\n    )
+    result = pd.concat(
+        [
+            pd.concat([run("common", deployment=d).assign(deployment=d) for d in DEPLOYMENTS], ignore_index=True),
+            pd.concat([run("expanding", deployment=d).assign(deployment=d) for d in DEPLOYMENTS], ignore_index=True),
+        ],
+        ignore_index=True,
+    )
     out=ROOT/a.output
     out.parent.mkdir(parents=True,exist_ok=True)
     result.to_csv(out,index=False)
