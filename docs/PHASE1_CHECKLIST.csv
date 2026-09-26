@@ -8,10 +8,10 @@ cross_history_comparison,done,Completed
 pareto_robustness,done,No robust winner
 walk_forward,done,Completed; no robust winner
 regime_stability,done,Completed
-parameter_neighbor_sensitivity,in_progress,Pre-registered; final CI artifact pending
-universe_sensitivity,in_progress,Leave-one-asset-out; final CI artifact pending
+parameter_neighbor_sensitivity,done,Pre-registered; CI run 36202769069 passed
+universe_sensitivity,done,True leave-one-asset-out; corrected implementation and CI run 36202769069 passed
 cost_slippage_sensitivity,pending,Not started
-concentration_dependence,pending,Not started/synthesis pending
+concentration_dependence,in_progress,Validated universe sensitivity shows material asset dependence; synthesis pending
 independent_oos,pending,Not started
 reserved_holdout,pending,Not started
 statistical_uncertainty,pending,Not started
