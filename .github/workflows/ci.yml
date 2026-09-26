@@ -20,6 +20,8 @@ jobs:
         run: python scripts/run_walkforward_robustness.py
       - name: Parameter-neighbor and universe sensitivity
         run: python scripts/run_phase1_sensitivity.py
+      - name: Cost and slippage sensitivity
+        run: python scripts/run_phase1_cost_sensitivity.py
       - name: Upload Phase 1 baseline
         if: success()
         uses: actions/upload-artifact@v4
@@ -52,4 +54,12 @@ jobs:
             parameter_neighbor_sensitivity_ci.csv
             universe_sensitivity_ci.csv
             phase1_sensitivity_summary.txt
+          retention-days: 14
+      - name: Upload Phase 1 cost sensitivity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-cost-sensitivity
+          path: |
+            cost_slippage_sensitivity_ci.csv
+            cost_slippage_sensitivity_summary.txt
           retention-days: 14
