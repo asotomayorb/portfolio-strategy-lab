@@ -3,26 +3,16 @@
 Reproducible research comparing investment strategy families before any user-specific strategy.
 
 ## START HERE
-Read these files before continuing:
-1. `docs/README_RESEARCH_MAP.txt` — short map, current status and next step.
-2. `docs/PHASE1_PROTOCOL.txt` — complete Phase 1 protocol/checklist.
-3. `docs/PHASE2_PROTOCOL.txt` — future Phase 2; currently **BLOCKED**.
+Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
 
 ## Current status — 2026-09-26
 **Phase 1 is NOT finished. Phase 2 must NOT start.**
 
-Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity.
-Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
+Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
-Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, and corrected leave-one-asset-out universe sensitivity.
+Completed: common/expansive histories, cross-history comparison, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected leave-one-asset-out universe sensitivity, cost/slippage sensitivity, and concentration/dependence synthesis.
 
-The validated universe test shows material dependence on individual assets for Momentum/Rotation and especially Risk Parity. Dynamic Allocation shows narrower dispersion in this test. These are descriptive robustness findings, not a ranking.
-
-Completed: pre-registered cost/slippage sensitivity (six friction scenarios); broad conclusions stable.
-
-Completed: concentration/dependence synthesis; Risk Parity is exceptionally universe-dependent, while Momentum/Rotation have material but bounded sensitivity.
-
-In progress next: independent OOS, independent OOS, reserved holdout, statistical uncertainty, final Phase 1 synthesis.
+**Current step: external-universe validation.** A frozen 12-ETF universe is being evaluated with unchanged Phase 1 definitions. This is an external-universe generalization test, not fully independent temporal OOS, because its calendar period overlaps periods already observed in the original research.
 
 **No robust Phase 1 winner has been established.**
 
@@ -37,12 +27,13 @@ In progress next: independent OOS, independent OOS, reserved holdout, statistica
 - At the end of every step, update the research map/protocol/checklist.
 
 ## Repository
-- `tickers/` — historical CSV inputs.
-- `scripts/run_phase1.py` — baseline Phase 1.
-- `scripts/run_strategy_robustness.py` — robustness comparison.
-- `scripts/run_walkforward_robustness.py` — walk-forward.
-- `scripts/run_phase1_sensitivity.py` — parameter/universe sensitivity.
-- `docs/` — durable protocol, status and results log.
-- `reports/` — reproducible reports/results.
+- tickers/ — historical CSV inputs.
+- scripts/run_phase1.py — baseline Phase 1.
+- scripts/run_strategy_robustness.py — robustness comparison.
+- scripts/run_walkforward_robustness.py — walk-forward.
+- scripts/run_phase1_sensitivity.py — parameter/universe sensitivity.
+- scripts/run_phase1_external_universe.py — frozen external-universe validation.
+- docs/ — durable protocol, status and results log.
+- reports/ — reproducible reports/results.
 
 The ATR/pullback strategy belongs exclusively to Phase 2 and remains blocked.
