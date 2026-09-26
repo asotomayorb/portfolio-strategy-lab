@@ -17,6 +17,11 @@ PHASE 1 RESULTS LOG
 - Corrected universe sensitivity is materially informative: Momentum/Rotation vary meaningfully with individual assets; Dynamic Allocation is narrower; Risk Parity is highly dependent on BTC and the universe.
 - Parameter-neighbor sensitivity confirms that several families have meaningful parameter dispersion; results remain descriptive and no parameter is selected.
 
+2026-09-26 (cost step started)
+- Pre-registered six-scenario cost/slippage grid added: zero, commission-only, slippage-only, baseline, high, stress.
+- Cost sensitivity changes only commission/slippage; strategy definitions, universe, allocation, monthly cadence and next-open execution remain frozen.
+- CI workflow now executes and uploads the cost sensitivity artifact.
+
 NEXT
-Proceed to cost/slippage sensitivity, then concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
+Validate cost/slippage sensitivity, then concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
 Phase 2 remains blocked.
