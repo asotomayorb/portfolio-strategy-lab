@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
 
 ## Current status — 2026-09-26
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A entry-engine research is running.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A initial screen is complete and Stage 2B/later robustness work is pending.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -51,12 +51,18 @@ The Phase 2A missing-price issue does not apply to the frozen Phase 1 backtest e
 
 This audit does not reopen or alter Phase 1. It documents the engine-level distinction so Phase 2 corrections remain isolated from the closed Phase 1/1B results.
 
-## Phase 2 current stage
-Stage 2A is testing the frozen daily ATR/pullback entry engine before initial-capital deployment variants. See docs/PHASE2_PROTOCOL.txt, docs/PHASE2_CHECKLIST.csv and docs/PHASE2_RESULTS_LOG.txt.
+## Phase 2A checkpoint — 2026-09-26
+Run 7 on commit 01fd4a06581fea55e0b815cc4fff826f48633c37 was rejected because held positions could disappear from daily equity when a daily close was unavailable.
 
-## Latest Phase 2A checkpoint — 2026-09-26
-Workflow run 7 on commit 01fd4a06581fea55e0b815cc4fff826f48633c37 completed successfully, but its results were not accepted because common-history metrics showed extreme drawdowns with unusually high Sharpe/Sortino values. The cause was identified as a data-continuity issue: held positions were omitted from daily equity whenever an asset lacked a valid daily close.
+Commit 42391fdfcae01c07d8c6f11d45b8bea80793e761 corrected that data-continuity issue by carrying forward the latest valid close and preserving pending orders when a valid execution open was temporarily unavailable. This was an engine/data-integrity correction, not a strategy or parameter change.
 
-A frozen-engine implementation correction was committed at 42391fdfcae01c07d8c6f11d45b8bea80793e761. It carries forward the latest valid close for mark-to-market continuity and preserves pending orders when a valid execution open is temporarily unavailable. This is a data-integrity correction, not a strategy/parameter change.
+Run 8 completed successfully on the corrected engine and produced finite metrics plus the expected artifact. It tested all frozen S1-S4 strategies under D1/D2/D3 on common and expanding histories. Common-history CAGR was approximately 27.3%-28.5% with max drawdowns approximately -24.7% to -29.6%; expanding-history max drawdowns remained approximately -89.5% to -90.7%. These results are descriptive and do not establish a winner.
 
-A new Stage 2A workflow run is expected automatically from the push. Stage 2A remains blocked from interpretation until that rerun passes the integrity check. Stage 2B and later stages remain blocked.
+Stage 2A is therefore no longer blocked by the previously identified integrity issue, but Phase 2 remains open. Stage 2B rule reconciliation, initial-capital deployment variants, cash-floor sensitivity, walk-forward, universe robustness, cost sensitivity, external holdout and statistical uncertainty remain pending.
+
+## Phase 3 — preliminary
+docs/PHASE3_PROTOCOL.txt defines the preliminary Phase 3 scope: integration of the strategy/rule set selected only after the Phase 1 + Phase 2 robustness gates into the investment platform, with two operating modes:
+- Semi-automatic: generate proposed purchase orders and require explicit user confirmation before broker submission.
+- Automatic: generate and submit orders after all frozen eligibility, allocation, duplicate-order, market-status, reconciliation and safety checks pass, with explicit enable/disable and emergency-stop controls.
+
+Phase 3 is blocked until the research phases identify and freeze a strategy/rule set for integration. Phase 3 must not alter research logic retrospectively.
