@@ -97,11 +97,23 @@ def distribute(needs, budget, dist):
     if not needs:
         return {}
     if dist == "D1_target_weighted":
-        scores = {k:v["need"]*v["target"] for k,v in needs.items()}
-        # target-weighted means priority is proportional to target weight among eligible needs.
-        scores = {k:v["target"] for k,v in needs.items()}
-        s = sum(scores.values())
-        return {k:min(v["need"], budget*scores[k]/s) for k,v in needs.items()}
+        remaining = {k:v["need"] for k,v in needs.items()}
+        out = {k:0.0 for k in needs}
+        left = budget
+        while left > 1e-9 and remaining:
+            s = sum(needs[k]["target"] for k in remaining)
+            if s <= 0: break
+            alloc = {k:left*needs[k]["target"]/s for k in remaining}
+            used = 0.0
+            capped = []
+            for k,a in alloc.items():
+                x=min(remaining[k],a)
+                out[k]+=x; remaining[k]-=x; used+=x
+                if remaining[k] <= 1e-9: capped.append(k)
+            left-=used
+            for k in capped: remaining.pop(k)
+            if used <= 1e-9: break
+        return out
     if dist == "D2_equal_weighted":
         remaining = dict((k,v["need"]) for k,v in needs.items())
         out = {k:0.0 for k in needs}
@@ -188,11 +200,14 @@ def run(mode="expanding", strategy="all", dist="all"):
             available=max(0.0,cash-floor)
 
             # Current position and room.
+            pending_by_t={}
+            for o in pending:
+                pending_by_t[o["ticker"]]=pending_by_t.get(o["ticker"],0.0)+o["amount"]
             room={}
             for t in assets:
                 p=prices[t]
                 cur=shares[t]*p if np.isfinite(p) else 0.0
-                room[t]=max(0.0,targets[t]*equity-cur)
+                room[t]=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
 
             # DCA portion on contribution day, respecting room and 5% cash floor.
             if dca_budget>0 and available>0:
@@ -255,9 +270,9 @@ def run(mode="expanding", strategy="all", dist="all"):
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(atr_needs,available*0.50,distribution)
             elif strat=="S3_DCA50_Dip25_ATR8_25":
-                dip_buys=distribute(needs,available*0.50,distribution)
+                dip_buys=distribute(needs,available*0.25,distribution)
                 atr_needs={t:v for t,v in needs.items() if v["level"]==8.0}
-                atr_buys=distribute(atr_needs,available*0.50,distribution)
+                atr_buys=distribute(atr_needs,available*0.25,distribution)
                 buys={}
                 for t,a in dip_buys.items(): buys[t]=buys.get(t,0)+a
                 for t,a in atr_buys.items(): buys[t]=buys.get(t,0)+a
