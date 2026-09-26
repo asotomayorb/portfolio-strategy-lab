@@ -71,3 +71,9 @@ Phase 3 is blocked until the research phases identify and freeze a strategy/rule
 The first manual GitHub Actions dispatch of Stage 2C failed before research execution because scripts/run_phase2c.py contained literal \\n characters inside the result pd.concat expression, causing a Python syntax error. No Phase 2C results were produced or interpreted from that failed run.
 
 Commit a88ba1b78532b0d5e26a970f69cae30753a09698 corrected only that syntax defect. The frozen Phase 2C protocol, deployment schedules, D3 rule, data and strategy definitions were not changed. The next action is to rerun the existing GitHub Actions workflow; no research definition needs to be revisited.
+
+
+## Phase 2C second-failure checkpoint — 2026-09-26
+The second manual dispatch (run 4, workflow run 36260808659) failed with the same syntax error because the prior correction accidentally wrote the two-character sequence \\n into the Python source rather than real line breaks. The GitHub job log confirms the failure at line 364 with SyntaxError: unexpected character after line continuation character; execution stopped before any Phase 2C calculations.
+
+Commit ff0249456bc2038408bcd5baacdf23c0859a1852 now replaces that entire result-concatenation block with actual Python line breaks. The corrected file was re-read from GitHub and verified in the relevant block. No Phase 2C research definitions were changed.
