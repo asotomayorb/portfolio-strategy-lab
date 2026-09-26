@@ -257,8 +257,9 @@ def run(mode="expanding", strategy="all", dist="all"):
                     need=max(0.0,desired-cur)
                     if need>0:
                         needs[t]={"need":need,"level":trig,"target":targets[t]}
-            # Allocate dip/ATR8 budgets from accumulated cash. Budgets are conceptual shares of available cash,
-            # with unused cash carrying forward; no monthly expiry.
+            # Allocate dip/ATR8 budgets from cash remaining after DCA reservations.
+            # Unused cash carries indefinitely; no monthly expiry.
+            available_for_dip=max(0.0,available-sum(o["amount"] for o in pending))
             active_strategy=strat
             if strat=="S4_ATR8_100_else_S1" and active8:
                 atr_needs={}
@@ -266,46 +267,54 @@ def run(mode="expanding", strategy="all", dist="all"):
                     cur=shares[t]*prices[t]
                     need=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
-                buys=distribute(atr_needs,available,distribution)
+                buys=distribute(atr_needs,available_for_dip,distribution)
             elif strat=="S2_DCA50_ATR8_50":
                 atr_needs={}
                 for t in active8:
                     cur=shares[t]*prices[t]
-                    need=max(0.0,targets[t]*equity-cur)
+                    need=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
-                buys=distribute(atr_needs,available*0.50,distribution)
+                buys=distribute(atr_needs,available_for_dip*0.50,distribution)
             elif strat=="S3_DCA50_Dip25_ATR8_25":
-                dip_buys=distribute(needs,available*0.25,distribution)
+                dip_buys=distribute(needs,available_for_dip*0.25,distribution)
                 atr_needs={t:v for t,v in needs.items() if v["level"]==8.0}
-                atr_buys=distribute(atr_needs,available*0.25,distribution)
+                atr_buys=distribute(atr_needs,available_for_dip*0.25,distribution)
                 buys={}
                 for t,a in dip_buys.items(): buys[t]=buys.get(t,0)+a
                 for t,a in atr_buys.items(): buys[t]=buys.get(t,0)+a
             else:
-                buys=distribute(needs,available*0.50,distribution)
+                buys=distribute(needs,available_for_dip*0.50,distribution)
+            # Enforce the frozen allocation-room rule after combining DCA and dip/ATR8 orders.
             for t,a in buys.items():
                 if a>1e-9:
-                    pending.append({"ticker":t,"amount":a})
+                    room_after_pending=max(0.0,room.get(t,0.0)-pending_by_t.get(t,0.0))
+                    pending.append({"ticker":t,"amount":min(a,room_after_pending)})
             total_pending=sum(o["amount"] for o in pending)
             cash_after=max(0.0,cash-total_pending)
-            daily.append((d,equity,cash_after, 1000.0 if (prev is None or d.to_period("M") != prev.to_period("M")) else 0.0))
+            contribution = 1000.0 if (prev is None or d.to_period("M") != prev.to_period("M")) else 0.0
+            daily.append((d,equity,cash_after,contribution))
         eq=pd.Series({d:e for d,e,ca,cf in daily}).sort_index()
         cf=pd.Series({d:cf for d,e,ca,cf in daily}).sort_index()
         cash_series=pd.Series({d:ca for d,e,ca,cf in daily}).sort_index()
         if len(eq):
-            # Time-weighted daily return: remove external contributions from the
-            # numerator. This avoids treating recurring deposits as investment gains.
+            # Contributions enter at the beginning of the day. Use prior equity
+            # plus contribution as the TWR denominator.
+            # Log wealth avoids overflow on long expanding histories.
             prev_eq=eq.shift(1)
-            ret=((eq-cf)/prev_eq).replace([np.inf,-np.inf],np.nan).dropna()
+            denominator=prev_eq+cf
+            ret=(eq/denominator-1.0).where(denominator>0)
+            ret=ret.replace([np.inf,-np.inf],np.nan).dropna()
             years=max((eq.index[-1]-eq.index[0]).days/365.25,1/365.25)
-            twr=(1.0+ret).prod()**(1/years)-1 if len(ret) else np.nan
-            wealth=(1.0+ret).cumprod()
-            peak=wealth.cummax()
-            dd=wealth/peak-1
+            log_growth=float(np.log1p(ret).sum()) if len(ret) else np.nan
+            twr=float(np.expm1(log_growth/years)) if np.isfinite(log_growth) else np.nan
+            log_wealth=np.log1p(ret).cumsum()
+            peak_log=log_wealth.cummax()
+            dd=np.expm1(log_wealth-peak_log)
             maxdd=float(dd.min()) if len(dd) else np.nan
             sharpe=float(np.sqrt(252)*ret.mean()/ret.std()) if ret.std()>0 else np.nan
-            downside=ret[ret<0].std()
-            sortino=float(np.sqrt(252)*ret.mean()/downside) if downside>0 else np.nan
+            negative=ret[ret<0]
+            downside=float(negative.std()) if len(negative)>1 else np.nan
+            sortino=float(np.sqrt(252)*ret.mean()/downside) if downside and downside>0 else np.nan
             utilization=float((1.0-cash_series/eq.replace(0,np.nan)).mean())
             rows.append(dict(strategy=strat,distribution=distribution,history_mode=mode,
                              start=eq.index[0],end=eq.index[-1],final_equity=eq.iloc[-1],
