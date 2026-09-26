@@ -66,3 +66,8 @@ docs/PHASE3_PROTOCOL.txt defines the preliminary Phase 3 scope: integration of t
 - Automatic: generate and submit orders after all frozen eligibility, allocation, duplicate-order, market-status, reconciliation and safety checks pass, with explicit enable/disable and emergency-stop controls.
 
 Phase 3 is blocked until the research phases identify and freeze a strategy/rule set for integration. Phase 3 must not alter research logic retrospectively.
+
+## Phase 2C failed-dispatch checkpoint — 2026-09-26
+The first manual GitHub Actions dispatch of Stage 2C failed before research execution because scripts/run_phase2c.py contained literal \\n characters inside the result pd.concat expression, causing a Python syntax error. No Phase 2C results were produced or interpreted from that failed run.
+
+Commit a88ba1b78532b0d5e26a970f69cae30753a09698 corrected only that syntax defect. The frozen Phase 2C protocol, deployment schedules, D3 rule, data and strategy definitions were not changed. The next action is to rerun the existing GitHub Actions workflow; no research definition needs to be revisited.
