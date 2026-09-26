@@ -43,3 +43,21 @@ Quantify statistical uncertainty, then final Phase 1 synthesis. Phase 2 remains 
 
 NEXT
 Perform final Phase 1 synthesis. Phase 2 remains blocked.
+
+
+2026-09-26 — FINAL PHASE 1 SYNTHESIS
+- Phase 1 is complete. All pre-registered robustness dimensions are complete except Value, which remains intentionally omitted for lack of comparable point-in-time valuation data.
+- No robust strategy-family winner was established.
+- B0/B1 are strong benchmarks in the original universe but exhibit very large expansive-history drawdowns and weaker generalization to unseen universes.
+- S1/S3 show relatively consistent behavior across several development and unseen-universe tests, but do not dominate across all dimensions.
+- S5 shows comparatively constrained drawdowns in several tests, but does not dominate across all dimensions.
+- S4 is inconsistent across histories/regimes.
+- S6 is highly universe-dependent and can experience very large drawdowns.
+- Statistical uncertainty is broad; primary paired CAGR intervals versus B0 cross zero for all comparators in both common and expansive histories.
+- External validation and reserved holdout are generalization diagnostics, not independent temporal OOS; neither was used to alter strategy definitions or parameters.
+- Phase 2 remains separate and was not used in the Phase 1 research.
+
+FINAL STATE
+Phase 1 COMPLETE.
+Robust winner = NONE.
+Phase 2 has not started.
