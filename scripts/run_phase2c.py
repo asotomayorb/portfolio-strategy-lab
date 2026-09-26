@@ -371,4 +371,4 @@ def main():
 if __name__=="__main__":
     main()
 
-# Trigger Phase 2A CI after workflow installation.
+# Phase 2C workflow installed; subsequent changes trigger the deployment-speed CI run.
