@@ -7,30 +7,24 @@ PHASE 1 RESULTS LOG
 - Pareto robustness returned no robust winner.
 - Walk-forward robustness returned no robust winner.
 - Value omitted because current OHLCV dataset cannot support comparable historical point-in-time valuation signals.
-- Added pre-registered parameter-neighbor sensitivity and leave-one-asset-out universe sensitivity to CI.
+- Added pre-registered parameter-neighbor and leave-one-asset-out universe sensitivity to CI.
 - No parameters are to be selected based on these results.
 
 2026-09-26
-- First sensitivity CI run succeeded, but review found a methodological defect in the universe test: omitted assets were not removed from tactical signal/execution matrices, making all omissions identical for tactical strategies.
-- Corrected scripts/run_phase1_sensitivity.py so the omitted asset is removed from both signal and execution matrices.
-- Re-ran full CI successfully (run 36202769069); parameter-neighbor and corrected universe artifacts were uploaded.
-- Corrected universe sensitivity is materially informative: Momentum/Rotation vary meaningfully with individual assets; Dynamic Allocation is narrower; Risk Parity is highly dependent on BTC and the universe.
-- Parameter-neighbor sensitivity confirms that several families have meaningful parameter dispersion; results remain descriptive and no parameter is selected.
+- Corrected the universe sensitivity defect: omitted assets are removed from both tactical signal and execution matrices.
+- Full CI validation succeeded; Momentum/Rotation show material individual-asset sensitivity and Risk Parity is exceptionally universe-dependent.
+- Cost/slippage sensitivity completed; broad conclusions remain stable.
+- Concentration/dependence synthesis completed as a descriptive dependence diagnostic.
 
-2026-09-26 (cost step started)
-- Pre-registered six-scenario cost/slippage grid added: zero, commission-only, slippage-only, baseline, high, stress.
-- Cost sensitivity changes only commission/slippage; strategy definitions, universe, allocation, monthly cadence and next-open execution remain frozen.
-- CI workflow now executes and uploads the cost sensitivity artifact.
-
-2026-09-26 (cost step completed)
-- Cost/slippage sensitivity CI passed using six pre-registered friction scenarios.
-- Common-history CAGR under stress changed modestly for B0/B1 and more for Momentum/Rotation; Dynamic Allocation changed moderately; Risk Parity changed very little but retained very large drawdowns.
-- Expansive-history conclusions were materially unchanged.
-
-2026-09-26 (concentration/dependence step completed)
-- Synthesized the corrected leave-one-asset-out results. Momentum/Rotation show material but bounded individual-asset sensitivity; Dynamic Allocation is narrower in common history; Risk Parity is exceptionally universe-dependent, with common CAGR falling to 0% when BTC is omitted.
-- This is a dependence diagnostic, not a ranking or parameter-selection step.
+2026-09-26 (external-universe validation registered)
+- Verified the frozen external set is not present as ticker data in the repository: SPY, DIA, IWM, VGK, EEM, TLT, VNQ, XLV, XLP, XLU, XLI, HYG.
+- Registered a 2007-01-01 to 2026-09-24 external-universe generalization test.
+- Frozen external allocation: 95% invested, equal weight across the 12 tickers; 5% cash.
+- Data source: Yahoo Finance daily chart OHLCV retrieved at CI runtime.
+- Added scripts/run_phase1_external_universe.py and CI artifact publication.
+- This is not labeled fully independent temporal OOS because its calendar period overlaps previously observed research periods.
+- No parameter or strategy change is permitted based on the external results.
 
 NEXT
-Run independent OOS, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
+Complete external-universe validation, then run a genuinely reserved holdout, quantify statistical uncertainty, and perform final Phase 1 synthesis.
 Phase 2 remains blocked.
