@@ -168,9 +168,13 @@ def run(mode="expanding", strategy="all", dist="all"):
         for i,d in enumerate(dates):
             # Execute previous-day orders at today's open.
             if pending:
+                pending_next=[]
                 for order in pending:
                     t=order["ticker"]; px=ohlc[t]["Open"].get(d, np.nan)
-                    if not np.isfinite(px) or px<=0: continue
+                    if not np.isfinite(px) or px<=0:
+                        # Preserve the order until a valid next-session open is available.
+                        pending_next.append(order)
+                        continue
                     gross=min(order["amount"], max(0.0,cash))
                     # Phase 1 baseline trading costs: 10 bps commission + 5 bps slippage.
                     if gross > 1e-8:
@@ -184,7 +188,7 @@ def run(mode="expanding", strategy="all", dist="all"):
                         cash-=total_cash
                         shares[t]+=gross/exec_px
                         trades+=1
-                pending=[]
+                pending=pending_next
             # Monthly contribution enters cash on first observed trading day of month.
             prev=dates[i-1] if i else None
             if prev is None or d.to_period("M") != prev.to_period("M"):
@@ -194,7 +198,16 @@ def run(mode="expanding", strategy="all", dist="all"):
             else:
                 dca_budget=0.0
 
-            prices={t:ohlc[t]["Close"].get(d,np.nan) for t in assets}
+            # Mark every held position with the latest valid close. Asset calendars
+            # can have isolated missing observations; dropping a held position from
+            # equity on such a day creates artificial drawdowns and corrupts TWR.
+            if i == 0:
+                last_close={t:np.nan for t in assets}
+            for t in assets:
+                px=ohlc[t]["Close"].get(d,np.nan)
+                if np.isfinite(px) and px>0:
+                    last_close[t]=float(px)
+            prices=dict(last_close)
             equity=cash+sum(shares[t]*prices[t] for t in assets if np.isfinite(prices[t]))
             floor=0.05*equity
             available=max(0.0,cash-floor)
