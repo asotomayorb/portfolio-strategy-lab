@@ -1,0 +1,49 @@
+PHASE 1B FINAL SYNTHESIS — 2026-09-26
+=======================================
+
+STATUS
+Phase 1B fixed-ensemble extension is CLOSED.
+Conclusion: NO ROBUST IMPROVEMENT.
+Phase 1 remains complete with no robust winner. Phase 2 remains separate and can now be considered.
+
+FROZEN ENSEMBLES
+C1 = 50% B0 Buy & Hold + 50% S1 Momentum.
+C2 = 50% S1 Momentum + 50% S5 Dynamic Allocation.
+C3 = 1/3 B0 + 1/3 S1 Momentum + 1/3 S5 Dynamic Allocation.
+No weight or parameter optimization was performed.
+
+DEVELOPMENT RESULTS
+Common history:
+C1 CAGR 29.00%, DD -73.76%, Sharpe 0.820.
+C2 CAGR 25.82%, DD -28.72%, Sharpe 0.966.
+C3 CAGR 25.16%, DD -74.86%, Sharpe 1.082.
+
+Expansive history:
+C1 CAGR 46.01%, DD -99.49%, Sharpe 1.246.
+C2 CAGR 26.80%, DD -55.70%, Sharpe 0.762.
+C3 CAGR 43.20%, DD -99.28%, Sharpe 1.207.
+
+The common-history improvement in C2 drawdown does not persist against S5 in the expansive history. C1 and C3 exhibit severe drawdowns in the expansive history.
+
+WALK-FORWARD MEDIANS
+Common:
+C1 CAGR 12.05%, Sharpe 0.757, DD -65.63%, recovery 8 months.
+C2 CAGR 23.09%, Sharpe 0.834, DD -15.33%, recovery 4 months.
+C3 CAGR 18.28%, Sharpe 1.031, DD -66.79%, recovery 8 months.
+
+Expansive:
+C1 CAGR 23.34%, Sharpe 1.252, DD -93.09%, recovery 38.5 months.
+C2 CAGR 28.37%, Sharpe 0.746, DD -37.81%, recovery 23 months.
+C3 CAGR 24.16%, Sharpe 1.166, DD -93.40%, recovery 36 months.
+
+INTERPRETATION
+C2 is the only ensemble with materially more controlled drawdown than C1/C3 and reasonable behavior across both histories. However, it does not consistently improve on its strongest constituent, S5 Dynamic Allocation: S5 had lower development drawdowns and lower expansive walk-forward median drawdown. C2 also does not provide a consistent return/Sharpe improvement across both histories.
+
+Therefore no ensemble meets the project's robustness standard for promotion as a Phase 1 benchmark.
+
+LIMITATION
+Because no ensemble survived the common/expansive development plus walk-forward robustness gate, later Phase 1B tests (cost sensitivity, external universe, reserved holdout, bootstrap) were not used to promote a candidate. This is a screening conclusion, not evidence that later tests would have produced identical results.
+
+DECISION
+Do not add ensemble complexity to Phase 2 as a research-derived default.
+Proceed to Phase 2 separately, carrying Phase 1 families as descriptive reference benchmarks only.
