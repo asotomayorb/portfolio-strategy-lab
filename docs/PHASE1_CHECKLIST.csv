@@ -14,7 +14,7 @@ cost_slippage_sensitivity,done,Six pre-registered friction scenarios; CI validat
 concentration_dependence,done,Validated leave-one-asset-out dependence synthesized; Risk Parity most universe-dependent
 external_universe_validation,done,Frozen 12-ETF unseen universe; generalization test; no strategy changes permitted
 reserved_holdout,done,Frozen 10-ETF unseen ticker universe; 2007-01-01 to 2026-09-24; equal-weight 95% invested plus 5% cash; CI run 36213806968 succeeded
-statistical_uncertainty,pending,Not started
+statistical_uncertainty,done,Circular moving-block bootstrap; 3/6/12-month blocks; 6-month primary; 5000 replicates; original development histories only
 final_phase1_synthesis,pending,Not started
 robust_winner,pending,Must remain NONE if evidence is insufficient
 phase2,blocked,Explicitly forbidden until Phase 1 closes
