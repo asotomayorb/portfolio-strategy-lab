@@ -203,8 +203,12 @@ def main():
     out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(out, index=False)
-    print(result.to_string(index=False))\n    print("\nWALK-FORWARD MEDIANS")\n    print(med.to_string(index=False))
-    print(f"\nWrote {out}")
+    print(result.to_string(index=False))
+    print("
+WALK-FORWARD MEDIANS")
+    print(med.to_string(index=False))
+    print(f"
+Wrote {out}")
 
 
 if __name__ == "__main__":
