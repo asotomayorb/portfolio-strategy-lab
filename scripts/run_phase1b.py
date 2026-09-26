@@ -109,15 +109,101 @@ def run(history_mode: str = "expanding"):
     return pd.DataFrame(rows)
 
 
+def make_blocks(index, n_blocks=4):
+    months = list(pd.DatetimeIndex(index).to_period("M").unique())
+    out = []
+    for i in range(n_blocks):
+        lo = (len(months) * i) // n_blocks
+        hi = (len(months) * (i + 1)) // n_blocks
+        if lo < hi:
+            out.append((months[lo], months[hi - 1]))
+    return out
+
+
+def run_walkforward():
+    rows = []
+    for history_mode in ("common", "expanding"):
+        cfg = load_config(CONFIG)
+        prices, execution_prices = prepare_price_matrices(TICKER_DIR)
+        if history_mode == "common":
+            prices = prices.loc[prices.index >= common_history_start(prices)].copy()
+            execution_prices = execution_prices.reindex(prices.index).copy()
+
+        targets = load_targets(cfg, allocation_path(cfg))
+        invest_targets = {k: v for k, v in targets.items() if k != "CASH"}
+        signals = _signals(prices, targets, cfg)
+        invest_total = sum(invest_targets.values())
+        for name in list(signals):
+            if name not in {"B0_buy_hold", "B1_dca"} and invest_total < 1.0:
+                signals[name] = signals[name] * invest_total
+
+        initial = cfg["portfolio"]["initial_capital"]
+        monthly = cfg["portfolio"]["monthly_contribution"]
+        curves = {}
+        for sleeve in {s for e in ENSEMBLES.values() for s in e}:
+            is_b0 = sleeve == "B0_buy_hold"
+            curves[sleeve] = simulate(
+                prices, signals[sleeve], initial,
+                monthly if not is_b0 else 0.0,
+                cfg["costs"]["commission_bps"], cfg["costs"]["slippage_bps"],
+                invest_contributions=not is_b0,
+                rebalance=not is_b0,
+                execution_prices=execution_prices,
+            )[0]
+
+        ensemble_curves = {}
+        for ensemble, weights in ENSEMBLES.items():
+            pieces = []
+            for sleeve, weight in weights.items():
+                x = curves[sleeve][["equity","contribution","cash"]].copy() * weight
+                pieces.append(x)
+            combo = pieces[0].copy()
+            for x in pieces[1:]:
+                combo = combo.add(x, fill_value=0.0)
+            ensemble_curves[ensemble] = combo
+
+        for ensemble, eq in ensemble_curves.items():
+            for fold, (start, end) in enumerate(make_blocks(prices.index, 4), 1):
+                part = eq[(eq.index.to_period("M") >= start) & (eq.index.to_period("M") <= end)]
+                if len(part) < 3:
+                    continue
+                m = summarize(
+                    part["equity"],
+                    external_cashflows=part["contribution"],
+                    initial_capital=float(part["equity"].iloc[0] - part["contribution"].iloc[0]),
+                    cash=part["cash"],
+                )
+                rows.append({
+                    "history_mode": history_mode,
+                    "fold": fold,
+                    "fold_start": str(start),
+                    "fold_end": str(end),
+                    "strategy": ensemble,
+                    "CAGR": m["CAGR"],
+                    "Sharpe": m["Sharpe"],
+                    "Sortino": m["Sortino"],
+                    "Calmar": m["Calmar"],
+                    "max_drawdown": m["max_drawdown"],
+                    "longest_recovery_months": m["longest_recovery_months"],
+                })
+    data = pd.DataFrame(rows)
+    data.to_csv(ROOT / "reports/phase1b_walkforward.csv", index=False)
+    med = data.groupby(["history_mode","strategy"], as_index=False)[
+        ["CAGR","Sharpe","Sortino","Calmar","max_drawdown","longest_recovery_months"]
+    ].median()
+    return med
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--output", default="reports/phase1b_results.csv")
     args = p.parse_args()
     result = pd.concat([run("common"), run("expanding")], ignore_index=True)
+    med = run_walkforward()
     out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(out, index=False)
-    print(result.to_string(index=False))
+    print(result.to_string(index=False))\n    print("\nWALK-FORWARD MEDIANS")\n    print(med.to_string(index=False))
     print(f"\nWrote {out}")
 
 
