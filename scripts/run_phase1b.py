@@ -211,3 +211,5 @@ if __name__ == "__main__":
     main()
 
 # Phase 1B frozen runner: trigger CI after workflow installation.
+
+# Trigger CI with walk-forward artifact configuration.
