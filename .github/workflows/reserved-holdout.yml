@@ -1,0 +1,27 @@
+name: Phase 1 reserved holdout
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run frozen reserved holdout
+        run: python scripts/run_phase1_reserved_holdout.py
+      - name: Upload reserved holdout
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-reserved-holdout
+          path: |
+            reserved_holdout_results_ci.csv
+            reserved_holdout_data_coverage_ci.csv
+            reserved_holdout_summary.txt
+          if-no-files-found: error
+          retention-days: 14
