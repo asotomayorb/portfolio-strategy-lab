@@ -204,11 +204,9 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(out, index=False)
     print(result.to_string(index=False))
-    print("
-WALK-FORWARD MEDIANS")
+    print("\nWALK-FORWARD MEDIANS")
     print(med.to_string(index=False))
-    print(f"
-Wrote {out}")
+    print(f"\nWrote {out}")
 
 
 if __name__ == "__main__":
