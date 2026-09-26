@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
 
 ## Current status — 2026-09-26
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 has not started.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A entry-engine research is running.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -45,3 +45,7 @@ Final Phase 1B synthesis: reports/PHASE1B_FINAL_SYNTHESIS_2026-09-26.txt
 - reports/ — reproducible reports.
 
 The ATR/pullback strategy belongs exclusively to Phase 2 and was not used in Phase 1 or Phase 1B.
+
+
+## Phase 2 current stage
+Stage 2A is testing the frozen daily ATR/pullback entry engine before initial-capital deployment variants. See docs/PHASE2_PROTOCOL.txt, docs/PHASE2_CHECKLIST.csv and docs/PHASE2_RESULTS_LOG.txt.
