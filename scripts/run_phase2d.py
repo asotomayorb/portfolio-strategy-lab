@@ -15,6 +15,7 @@ def main():
     if src.count(old) != 1:
         raise RuntimeError("Phase 2A source did not match the frozen cash-floor expression exactly.")
     patched = src.replace(old, "floor=0.0*equity")
+    patched = patched.replace("ROOT = Path(__file__).resolve().parents[1]", f"ROOT = Path({str(ROOT)!r})")
     with tempfile.TemporaryDirectory() as td:
         p = Path(td) / "phase2a_floor0.py"
         p.write_text(patched, encoding="utf-8")
