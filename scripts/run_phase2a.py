@@ -93,7 +93,7 @@ def build_daily_features(ohlc):
 def distribute(needs, budget, dist):
     if budget <= 0 or not needs:
         return {}
-    needs = {k:max(0.0,v) for k,v in needs.items() if v > 0}
+    needs = {k:v for k,v in needs.items() if v.get("need", 0.0) > 0}
     if not needs:
         return {}
     if dist == "D1_target_weighted":
@@ -159,10 +159,19 @@ def run(mode="expanding", strategy="all", dist="all"):
                 for order in pending:
                     t=order["ticker"]; px=ohlc[t]["Open"].get(d, np.nan)
                     if not np.isfinite(px) or px<=0: continue
-                    buy=min(order["amount"], max(0.0,cash))
-                    cash-=buy
-                    shares[t]+=buy/px
-                    trades+=1 if buy>1e-8 else 0
+                    gross=min(order["amount"], max(0.0,cash))
+                    # Phase 1 baseline trading costs: 10 bps commission + 5 bps slippage.
+                    if gross > 1e-8:
+                        exec_px=px*(1.0+0.0005)
+                        commission=gross*0.0010
+                        total_cash=gross+commission
+                        if total_cash > cash:
+                            gross=max(0.0,cash/1.0010)
+                            commission=gross*0.0010
+                            total_cash=gross+commission
+                        cash-=total_cash
+                        shares[t]+=gross/exec_px
+                        trades+=1
                 pending=[]
             # Monthly contribution enters cash on first observed trading day of month.
             prev=dates[i-1] if i else None
