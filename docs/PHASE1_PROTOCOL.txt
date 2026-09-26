@@ -12,7 +12,7 @@ STATUS AT 2026-09-26
 - Pareto robustness and walk-forward robustness completed; no robust winner.
 - Parameter-neighbor and true leave-one-asset-out universe sensitivity are now completed and validated by CI.
 - Universe sensitivity implementation was corrected before acceptance: the omitted asset is now removed from both signal and execution matrices.
-- Cost/slippage sensitivity is now pre-registered and in execution; no results have been used for selection.
+- Cost/slippage sensitivity is complete and validated; friction does not change the broad Phase 1 conclusions.
 - Next after cost validation: concentration/dependence analysis, independent OOS, reserved holdout, statistical uncertainty, final synthesis.
 - Phase 2 is BLOCKED until Phase 1 checklist is complete.
 
@@ -58,7 +58,7 @@ ROBUSTNESS CHECKLIST
 [done] Regime stability analysis
 [done] Parameter-neighbor sensitivity (pre-registered; CI run 36202769069 passed)
 [done] Universe sensitivity (true leave-one-asset-out; CI run 36202769069 passed)
-[in_progress] Cost/slippage sensitivity (pre-registered CI execution)
+[done] Cost/slippage sensitivity (six pre-registered friction scenarios; CI validated)
 [pending] Concentration/dependence synthesis
 [pending] Independent OOS
 [pending] Truly reserved holdout
@@ -88,3 +88,8 @@ Pre-registered scenarios:
 - high: 20 bps, 10 bps
 - stress: 30 bps, 20 bps
 No scenario is selected after observing results; the purpose is to measure friction sensitivity and whether conclusions materially depend on the baseline cost assumption.
+
+COST/SLIPPAGE RESULT
+- Common-history CAGR under baseline -> stress: B0 31.34% -> 31.32%; B1 29.61% -> 29.58%; S1 28.78% -> 26.95%; S3 30.17% -> 28.14%; S4 -0.42% -> -1.28%; S5 22.34% -> 21.47%; S6 25.73% -> 25.64%.
+- Expansive-history CAGR under baseline -> stress: B0/B1 essentially unchanged; S1 28.71% -> 26.74%; S3 28.23% -> 26.09%; S4 17.78% -> 16.55%; S5 22.82% -> 21.95%; S6 65.73% -> 64.95%.
+- The stress grid does not produce a robust winner or overturn the existing robustness conclusions.
