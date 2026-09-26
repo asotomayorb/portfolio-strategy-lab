@@ -43,8 +43,7 @@ LATEST SENSITIVITY RESULT
 These observations are descriptive robustness evidence, not rankings.
 
 NEXT EXECUTION ORDER
-1. Synthesize concentration/dependence using the validated universe results.
-2. Run independent OOS.
+1. Run independent OOS.
 3. Run independent OOS.
 4. Run truly reserved holdout.
 5. Quantify statistical uncertainty.
