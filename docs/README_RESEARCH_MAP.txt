@@ -10,7 +10,7 @@ Phase 1B fixed-ensemble extension is CLOSED.
 No robust Phase 1 winner has been established.
 No robust Phase 1B ensemble improvement has been established.
 Value is omitted until comparable point-in-time historical valuation data are available.
-Phase 2 is ACTIVE — Stage 2A entry-engine research is running.
+Phase 2 is ACTIVE — Stage 2A is complete and Stage 2B is reconciled; Stage 2C deployment-variant research is next.
 
 PHASE 1B RESULT
 Frozen combinations:
@@ -37,6 +37,8 @@ Freeze Phase 2 definitions before evaluating its results.
 
 PHASE 2 CURRENT STATE
 Stage 2A protocol is frozen in docs/PHASE2_PROTOCOL.txt.
+Stage 2A has completed the contribution-only S1-S4 x D1-D3 screen on common and expanding histories after the data-continuity correction. Stage 2B has frozen D3 (deepest-first, then residual target weight) as the operational simultaneous-capital rule for subsequent stages; this is a design reconciliation, not a performance ranking.
+Stage 2C is next: initial/extraordinary capital deployment speeds (immediate, 3m, 6m, 12m, 24m, opportunities-only), pre-registered before results.
 Baseline engine: daily triggers, weekly confirmed HH52 + Wilder ATR20W, ATR 1.5/3/5/8, cumulative 25/50/75/100%, S1-S4 matrix, 5% cash floor, no leverage, unused cash carries.
 Initial capital deployment is intentionally isolated; Stage 2A uses recurring contributions only.
 Simultaneous-trigger distribution is explicitly tested as D1 target-weighted, D2 equal-weighted and D3 deepest-first.
