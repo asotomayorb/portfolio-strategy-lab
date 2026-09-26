@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
 
 ## Current status — 2026-09-26
-**Phase 1 is NOT finished. Phase 2 must NOT start.**
+**Phase 1 is COMPLETE. Phase 2 has not started.**
 
 Evaluated: Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation, Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -17,6 +17,8 @@ External-universe validation used a frozen unseen 12-ETF set and confirmed mater
 Statistical uncertainty used a circular moving-block bootstrap of monthly time-weighted returns, with fixed 3/6/12-month block sensitivity and 6-month primary, 5,000 replicates and 95% percentile intervals. It found broad uncertainty and no clean separation in paired CAGR differences versus B0.
 
 **No robust Phase 1 winner has been established.**
+
+Final synthesis: no strategy family is supported as a universal robust winner across historical performance, walk-forward, parameter/universe sensitivity, costs, dependence, unseen-universe validation, reserved holdout, and statistical uncertainty. See `reports/PHASE1_FINAL_SYNTHESIS_2026-09-26.txt`.
 
 ## Research rules
 - Freeze definitions/config/data before evaluating results.
@@ -38,4 +40,4 @@ Statistical uncertainty used a circular moving-block bootstrap of monthly time-w
 - docs/ — durable protocol, status and results log.
 - reports/ — reproducible reports/results.
 
-The ATR/pullback strategy belongs exclusively to Phase 2 and remains blocked.
+The ATR/pullback strategy belongs exclusively to Phase 2 and was not used in Phase 1.
