@@ -1,0 +1,64 @@
+PHASE 1B — FIXED ENSEMBLE / COMBINATION EXTENSION
+=================================================
+
+PURPOSE
+Test whether combining a small number of Phase 1 strategy families improves robustness without introducing post-result optimization. Phase 1 itself remains CLOSED; Phase 1B is a separate optional extension before Phase 2.
+
+STATUS AT 2026-09-26
+- Phase 1 core comparison: COMPLETE; robust winner = NONE.
+- Phase 1B: NOT YET EXECUTED.
+- Phase 2: NOT STARTED.
+- No Phase 2 concepts are permitted in Phase 1B.
+
+FROZEN DESIGN
+Use independent strategy sleeves. Each sleeve receives a fixed share of initial capital and each monthly contribution. Sleeve equity curves are summed to form the ensemble portfolio. This avoids ambiguous blending of B0's no-contribution behavior with tactical sleeves.
+
+Common protocol inherited unchanged from Phase 1:
+- Monthly evaluation.
+- Next-open execution.
+- No leverage and no shorting.
+- 5% cash reserve through the existing 95% investable allocation.
+- Same historical data and transaction-cost model as Phase 1.
+- No parameter changes.
+- No post-result optimization.
+- Robustness > peak CAGR.
+- Value remains omitted.
+- External validation and reserved holdout cannot alter definitions.
+
+FROZEN COMBINATIONS
+C1_B0_Momentum: 50% B0 Buy & Hold sleeve + 50% S1 Momentum sleeve.
+C2_Momentum_Dynamic: 50% S1 Momentum sleeve + 50% S5 Dynamic Allocation sleeve.
+C3_B0_Momentum_Dynamic: 1/3 B0 + 1/3 S1 Momentum + 1/3 S5 Dynamic Allocation.
+
+Rationale for the fixed set
+- B0 is the principal Phase 1 benchmark.
+- S1 and S5 are included because they showed useful but non-dominant robustness characteristics.
+- S4 and S6 are excluded from combinations because Phase 1 showed greater inconsistency/dependence.
+- S3 Rotation is not separately combined because its Phase 1 behavior is close to S1; including both would add redundancy and another degree of freedom without a pre-specified economic mechanism.
+- No alternative weights will be searched.
+
+PRIMARY QUESTION
+Does fixed combination reduce drawdown and/or improve robustness relative to the constituent families and B0 without sacrificing performance across independent robustness dimensions?
+
+EVALUATION ORDER
+1. Development common and expansive histories.
+2. Walk-forward.
+3. Parameter/universe stability is inherited for constituents; ensemble sensitivity is tested through fixed constituent leave-one-out where appropriate.
+4. Cost/slippage sensitivity.
+5. External-universe generalization.
+6. Reserved holdout.
+7. Statistical uncertainty.
+8. Final synthesis.
+
+SELECTION RULE
+There is no ranking or score. A combination may be described as robustly improved only if it provides consistent improvement across multiple independent dimensions and does not fail materially in another dimension. Otherwise conclusion = NO ROBUST IMPROVEMENT.
+
+NO-LEAKAGE
+Results from any later robustness or holdout test cannot be used to modify the frozen combinations or weights.
+
+DELIVERABLES
+- scripts/run_phase1b.py
+- .github/workflows/phase1b.yml
+- reports/phase1b_results.csv
+- docs/PHASE1B_CHECKLIST.csv
+- docs/PHASE1B_RESULTS_LOG.txt
