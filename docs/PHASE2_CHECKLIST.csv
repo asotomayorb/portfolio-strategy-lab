@@ -9,7 +9,7 @@ simultaneous_distribution_d2,done,Equal-weight pooled allocation tested
 simultaneous_distribution_d3,done,Deepest-first pooled allocation tested
 common_expansive,done,All frozen S1-S4 x D1-D3 tested on common and expanding histories
 stage2b_rule_reconciliation,done,D3 frozen for subsequent stages based on pre-existing capital-priority design, not performance ranking
-deployment_variants,pending,Frozen and implemented: immediate/3m/6m/12m/24m/opportunities-only; first manual dispatch failed due to a script syntax error; corrected in commit a88ba1b78532b0d5e26a970f69cae30753a09698; rerun pending
+deployment_variants,pending,Frozen and implemented: immediate/3m/6m/12m/24m/opportunities-only; two dispatches failed before execution due to script line-ending syntax; corrected in commit ff0249456bc2038408bcd5baacdf23c0859a1852; awaiting next workflow run
 cash_floor,pending,5% baseline then 0% sensitivity
 walk_forward,pending,After definitions frozen
 universe_robustness,pending,After definitions frozen
