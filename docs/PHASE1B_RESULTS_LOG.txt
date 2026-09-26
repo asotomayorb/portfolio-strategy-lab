@@ -2,10 +2,11 @@ PHASE 1B RESULTS LOG
 ===================
 
 2026-09-26 — Protocol frozen.
-Phase 1 is closed with no robust winner. Phase 1B is a separate, pre-registered extension testing only three fixed ensembles:
-C1 = 50% B0 + 50% Momentum
-C2 = 50% Momentum + 50% Dynamic Allocation
-C3 = 1/3 B0 + 1/3 Momentum + 1/3 Dynamic Allocation
+C1 = 50% B0 + 50% Momentum.
+C2 = 50% Momentum + 50% Dynamic Allocation.
+C3 = 1/3 B0 + 1/3 Momentum + 1/3 Dynamic Allocation.
 
-No parameter optimization or weight search is permitted.
-Development results are pending.
+2026-09-26 — Development and walk-forward completed.
+C2 was the only combination with comparatively controlled drawdown across both histories, but it did not consistently improve the strongest constituent S5 Dynamic Allocation. C1 and C3 showed severe expansive-history drawdowns.
+
+Decision: NO ROBUST IMPROVEMENT. Phase 1B closed as a screening extension; no ensemble is promoted into Phase 2 as a default strategy.
