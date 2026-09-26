@@ -10,7 +10,7 @@ STATUS AT 2026-09-26
 - Common/expansive histories, Pareto robustness, walk-forward, regime analysis, parameter-neighbor sensitivity, corrected universe sensitivity, cost/slippage sensitivity and concentration/dependence synthesis are complete.
 - External-universe validation is complete.
 - Reserved holdout is complete.
-- Statistical uncertainty and final synthesis remain pending.
+- Statistical uncertainty is complete; final synthesis remains pending.
 - Phase 2 is BLOCKED until Phase 1 closes.
 
 FROZEN PRINCIPLES
@@ -65,4 +65,7 @@ S6 Risk Parity: CAGR 3.59%, Max DD -20.65%, Sharpe 0.378.
 INTERPRETATION
 The reserved universe again shows that strategy-family behavior depends on the investable universe. Several tactical families have positive and comparatively moderate drawdowns here, but the holdout is one validation sample and does not establish a universal winner. It is descriptive evidence only. Holdout results must not be used for parameter or strategy selection.
 
-NEXT: quantify statistical uncertainty, then final Phase 1 synthesis.
+STATISTICAL UNCERTAINTY
+Method was frozen before execution: circular moving-block bootstrap on monthly time-weighted returns, using the original development universe only. Block lengths 3, 6 and 12 months were all evaluated; 6 months was the primary analysis. 5,000 bootstrap replicates per strategy/history/block length and 95% percentile intervals were used. Contributions were handled as r_t = equity_t / (equity_{t-1} + contribution_t) - 1. Paired CAGR differences used identical bootstrap resamples across strategies. Results are stored in reports/phase1_statistical_uncertainty_primary.csv and reports/phase1_statistical_pairwise_cagr_primary.csv. Primary paired CAGR intervals versus B0 crossed zero for every comparator in both common and expansive histories. Block-length sensitivity did not alter the broad conclusion.
+
+NEXT: final Phase 1 synthesis. Phase 2 remains blocked.
