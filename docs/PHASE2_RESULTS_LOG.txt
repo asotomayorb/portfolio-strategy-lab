@@ -20,36 +20,26 @@ Stage 2A frozen:
 - Run 7 was rejected because missing daily closes could temporarily remove held positions from daily equity.
 - Commit 42391fdfcae01c07d8c6f11d45b8bea80793e761 corrected mark-to-market continuity and preserved pending orders when a valid execution open was unavailable.
 - Run 8 completed successfully on the corrected engine.
-- The corrected run produced finite metrics, nonzero drawdowns and complete artifacts; the previous discontinuity signature is no longer present.
-- Run 8 covered S1-S4 x D1-D3 on common history (2020-09-30 to 2026-09-24) and expanding history (2000-01-03 to 2026-09-24).
-- Common-history results:
-  S1 CAGR 27.66%-27.87%, max DD about -29.2% to -29.6%, Sharpe 1.051-1.059, cash utilization about 80.0%.
-  S2 CAGR 27.26%-27.29%, max DD about -24.7%, Sharpe about 1.114, cash utilization about 70.7%.
-  S3 CAGR 27.65%-27.83%, max DD about -29.2% to -29.4%, Sharpe about 1.053-1.059, cash utilization about 80.0%.
-  S4 CAGR 28.40%-28.46%, max DD -25.69%, Sharpe 1.117-1.119, cash utilization 76.2%-76.5%.
-- Expanding-history results remain materially more severe: all strategies show approximately -89.5% to -90.7% max drawdown. S1/S3 have CAGR about 49.0%, S2 about 39.1%, and S4 about 48.9%. These long-history results are descriptive only and are not treated as a strategy-selection verdict.
-- Trigger events are identical within each history across strategies (11,384 common; 40,715 expanding), as expected because triggers are market events independent of strategy. Trade counts and cash utilization vary by strategy/distribution.
-- No strategy/distribution winner is declared from this Stage 2A screen. Robustness, deployment, cash-floor, walk-forward, universe, cost, holdout and statistical checks remain required.
-
-Stage 2A checkpoint status:
-- Contribution-only isolation: complete.
-- D1/D2/D3 comparison: complete.
-- Common/expanding screen: complete.
-- Integrity rerun: passed at engine-run level.
-- Stage 2B rule reconciliation: pending.
+- Common-history results were approximately 27.3%-28.5% CAGR with max drawdown approximately -24.7% to -29.6%; expanding-history max drawdowns remained approximately -89.5% to -90.7%.
+- No strategy/distribution winner was declared.
 
 2026-09-26 — Stage 2C initial/extraordinary capital deployment speeds.
-- Protocol frozen before execution in docs/PHASE2C_PROTOCOL.txt; initial-capital test amount USD 12,000, normalized to 12 months of the frozen USD 1,000 recurring contribution.
-- Run 5 (36260873980), commit ff0249456bc2038408bcd5baacdf23c0859a1852, completed successfully and produced artifact phase2c-deployment-speeds.
+- Protocol frozen in docs/PHASE2C_PROTOCOL.txt; initial-capital test amount USD 12,000.
+- Run 5 (36260873980) completed successfully and produced artifact phase2c-deployment-speeds.
 - Tested immediate, 3m, 6m, 12m, 24m and opportunities-only under frozen S1-S4, D3, 5% cash floor, costs and histories.
-- Common history (2020-09-30 to 2026-09-24): immediate CAGR 26.3%-27.9%; 3m 44.9%-46.3%; 6m 51.5%-52.7%; 12m 52.6%-53.6%; 24m 49.0%-49.9%; opportunities-only 27.3%-28.4%. Max DD ranges were approximately -22.2% to -29.9%, with S2 consistently shallower than S1/S3 and S4 intermediate.
-- The broad timing effect is descriptive: scheduled deployment improved contribution-flow-adjusted return metrics versus immediate deployment, with the strongest common-history results around 6-12 months and moderation at 24 months.
-- Expanding history retains approximately -89.4% to -90.7% max drawdown, so long-history results remain descriptive and require robustness/holdout checks.
-- Opportunities-only is the pre-registered control where the USD 12,000 initial capital is not calendar-forced into the market.
-- No strategy or deployment schedule is declared a winner. Stage 2C is complete; later robustness stages remain required.
+- Results were descriptive only; no strategy or deployment schedule was declared a winner.
 
-Stage 2C checkpoint status:
-- Protocol freeze: complete.
-- Code/execution/integrity: complete.
-- Results extraction: complete.
-- Interpretation: descriptive only; no winner.
+2026-09-26 — Stage 2D cash-floor sensitivity.
+- Run 2 (36263161838) completed successfully and produced artifact phase2d-cash-floor.
+- Compared 0% versus the validated 5% baseline using frozen S1-S4, D3, daily triggers, weekly HH52/Wilder ATR20W, USD 1,000/month contributions and baseline costs.
+- Common-history 0% floor results were approximately: S1 28.37% CAGR/-29.27% DD; S2 27.27%/-24.73%; S3 28.41%/-29.26%; S4 28.93%/-25.69%.
+- Expanding-history drawdowns remained approximately -89.6% to -90.7%.
+- Phase 2D is sensitivity only; 5% remains the core Phase 2E baseline.
+
+2026-09-26 — Stage 2E protocol freeze.
+- docs/PHASE2E_PROTOCOL.txt frozen before execution.
+- Candidate set: S1-S4 with D3, 5% cash floor, zero initial capital and USD 1,000/month contribution.
+- Frozen robustness tests: four chronological walk-forward/regime folds; leave-one-asset-out universe sensitivity; six pre-registered friction scenarios; external 12-ETF generalization; newly reserved 10-ETF holdout; circular moving-block bootstrap with 3/6/12-month blocks, 6-month primary, 5,000 replicates and seed 20260926.
+- Newly reserved holdout tickers: VUG, VTV, VEA, BND, LQD, SHY, DBC, XLF, XLK, VOO.
+- No Stage 2E result may alter definitions after inspection.
+- Phase 3 remains blocked until the complete Phase 2 robustness gate and final synthesis are complete.
