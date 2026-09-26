@@ -93,3 +93,12 @@ COST/SLIPPAGE RESULT
 - Common-history CAGR under baseline -> stress: B0 31.34% -> 31.32%; B1 29.61% -> 29.58%; S1 28.78% -> 26.95%; S3 30.17% -> 28.14%; S4 -0.42% -> -1.28%; S5 22.34% -> 21.47%; S6 25.73% -> 25.64%.
 - Expansive-history CAGR under baseline -> stress: B0/B1 essentially unchanged; S1 28.71% -> 26.74%; S3 28.23% -> 26.09%; S4 17.78% -> 16.55%; S5 22.82% -> 21.95%; S6 65.73% -> 64.95%.
 - The stress grid does not produce a robust winner or overturn the existing robustness conclusions.
+
+CONCENTRATION / DEPENDENCE SYNTHESIS — 2026-09-26
+The validated leave-one-asset-out experiment provides a dependence screen. It is not itself a portfolio-weight concentration measure.
+- Common-history CAGR ranges across individual asset omissions: S1 27.69–35.90%, S3 24.50–37.36%, S5 19.84–24.09%, S6 0–25.73%. S6 can collapse to 0% when BTC is omitted.
+- Expansive-history CAGR ranges: S1 18.58–30.58%, S3 18.14–29.24%, S5 14.39–23.16%, S6 0.75–69.00%. S6 is exceptionally universe-dependent.
+- Momentum/Rotation have material but bounded sensitivity to individual assets; Dynamic Allocation is narrower in common history; Risk Parity is the most universe-dependent of the evaluated tactical families.
+- The sensitivity result should be interpreted together with the earlier drawdown/regime tests. It does not create a winner or justify changing the frozen universe.
+- Buy & Hold and DCA are not re-evaluated here as tactical leave-one-asset-out signal sensitivity is not the appropriate diagnostic for their fixed target construction.
+NEXT: independent OOS.
