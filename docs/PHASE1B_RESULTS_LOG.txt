@@ -1,0 +1,11 @@
+PHASE 1B RESULTS LOG
+===================
+
+2026-09-26 — Protocol frozen.
+Phase 1 is closed with no robust winner. Phase 1B is a separate, pre-registered extension testing only three fixed ensembles:
+C1 = 50% B0 + 50% Momentum
+C2 = 50% Momentum + 50% Dynamic Allocation
+C3 = 1/3 B0 + 1/3 Momentum + 1/3 Dynamic Allocation
+
+No parameter optimization or weight search is permitted.
+Development results are pending.
