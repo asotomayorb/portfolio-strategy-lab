@@ -87,3 +87,19 @@ Stage 2C executed successfully in GitHub Actions run 5 (36260873980) after the l
 Phase 2D workflow run 1 (36263098087) reached the research script but failed before calculations because the temporary runpy copy of run_phase2a.py recomputed ROOT from its /tmp location, causing portfolio_allocation.csv to be searched under /tmp. No Phase 2D results were produced or interpreted from this run.
 
 Commit eaa69b7a845e718f2c5cc9dd15d9a9bc8ee3a1a7 corrected only the Phase 2D wrapper so the patched temporary engine retains the repository ROOT. The frozen Phase 2A engine, Phase 2D protocol, strategy definitions, D3 rule, data and cash-floor comparison remain unchanged. The next push-triggered Phase 2D run must be validated before interpreting results.
+
+
+## Phase 2D completion checkpoint — 2026-09-26
+Stage 2D run 2 (workflow 36263161838) completed successfully after the wrapper root-path correction. The artifact phase2d-cash-floor was extracted and validated.
+
+The frozen comparison tested 0% cash floor versus the validated 5% baseline using the same S1-S4 strategies, D3 deepest-first allocation, daily trigger evaluation, weekly HH52/Wilder ATR20W, USD 1,000/month recurring contributions, zero initial capital, costs and universe. The 0% run itself completed with finite metrics.
+
+On the common 2020-09-30 to 2026-09-24 history, 0% cash-floor results were:
+- S1: CAGR ~28.37%, max drawdown ~-29.27%, Sharpe ~1.068, cash utilization ~81.0%.
+- S2: CAGR ~27.27%, max drawdown ~-24.73%, Sharpe ~1.115, cash utilization ~70.7%.
+- S3: CAGR ~28.41%, max drawdown ~-29.26%, Sharpe ~1.069, cash utilization ~80.9%.
+- S4: CAGR ~28.93%, max drawdown ~-25.69%, Sharpe ~1.127, cash utilization ~77.1%.
+
+The corresponding expanding-history results remain subject to the previously observed extreme drawdowns (~-89.6% to -90.7%), so they are descriptive rather than evidence of robustness.
+
+Phase 2D does not promote a strategy or alter the frozen baseline. Its role is to establish whether conclusions are materially sensitive to removing the 5% cash floor. Full interpretation requires direct comparison with the validated 5% baseline and then the remaining pre-registered robustness gates (walk-forward, universe, cost, external holdout and statistical uncertainty).
