@@ -1,0 +1,31 @@
+PHASE 2D — CASH FLOOR SENSITIVITY
+================================
+
+STATUS
+FROZEN before execution.
+
+PURPOSE
+Test whether the frozen Phase 2 engine's conclusions are sensitive to the baseline 5% cash floor. This is a sensitivity test only; it does not alter Stage 2A or Stage 2C.
+
+FROZEN COMPARISON
+- Baseline: existing validated Stage 2 engine with 5% cash floor.
+- Sensitivity: identical engine with cash floor = 0%.
+- Same S1-S4 strategies.
+- Same D3 deepest-first simultaneous allocation rule.
+- Same daily trigger evaluation and weekly HH52 / Wilder ATR20W.
+- Same common and expanding histories.
+- Same recurring contribution = USD 1,000/month.
+- Initial capital = 0, matching Stage 2A contribution-only isolation.
+- Same costs: 10 bps commission + 5 bps slippage.
+- No leverage or shorting.
+- Same universe and target allocations.
+- Unused cash carries.
+- No parameter or schedule changes after results.
+
+METHOD
+The 0% sensitivity is implemented as a wrapper around the validated Phase 2A engine source. The wrapper changes only the cash-floor expression from 5% to 0% at runtime and writes a separate Phase 2D artifact. The frozen Phase 2A source file is not modified.
+
+INTERPRETATION
+Compare 0% against the already validated 5% baseline on CAGR/TWR-style return, maximum drawdown, Sharpe, Sortino, cash utilization, trades and trigger events. The purpose is to identify sensitivity, not select a winner.
+
+No strategy is promoted from this test alone. Results must pass subsequent walk-forward, universe, cost, holdout and statistical robustness checks.
