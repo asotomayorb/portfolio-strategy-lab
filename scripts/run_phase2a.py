@@ -223,6 +223,11 @@ def run(mode="expanding", strategy="all", dist="all"):
                             if a*scale>1e-9: pending.append({"ticker":t,"amount":a*scale})
                         available-=total
 
+            # Recompute pending after DCA so ATR8/other orders also respect room.
+            pending_by_t={}
+            for o in pending:
+                pending_by_t[o["ticker"]]=pending_by_t.get(o["ticker"],0.0)+o["amount"]
+
             # Determine deepest trigger from today's intraday low.
             needs={}
             active8=[]
@@ -259,7 +264,7 @@ def run(mode="expanding", strategy="all", dist="all"):
                 atr_needs={}
                 for t in active8:
                     cur=shares[t]*prices[t]
-                    need=max(0.0,targets[t]*equity-cur)
+                    need=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(atr_needs,available,distribution)
             elif strat=="S2_DCA50_ATR8_50":
@@ -283,21 +288,30 @@ def run(mode="expanding", strategy="all", dist="all"):
                     pending.append({"ticker":t,"amount":a})
             total_pending=sum(o["amount"] for o in pending)
             cash_after=max(0.0,cash-total_pending)
-            daily.append((d,equity,cash_after))
-        eq=pd.Series({d:e for d,e,c in daily}).sort_index()
+            daily.append((d,equity,cash_after, 1000.0 if (prev is None or d.to_period("M") != prev.to_period("M")) else 0.0))
+        eq=pd.Series({d:e for d,e,ca,cf in daily}).sort_index()
+        cf=pd.Series({d:cf for d,e,ca,cf in daily}).sort_index()
+        cash_series=pd.Series({d:ca for d,e,ca,cf in daily}).sort_index()
         if len(eq):
-            ret=eq.pct_change().replace([np.inf,-np.inf],np.nan).dropna()
+            # Time-weighted daily return: remove external contributions from the
+            # numerator. This avoids treating recurring deposits as investment gains.
+            prev_eq=eq.shift(1)
+            ret=((eq-cf)/prev_eq).replace([np.inf,-np.inf],np.nan).dropna()
             years=max((eq.index[-1]-eq.index[0]).days/365.25,1/365.25)
-            cagr=(eq.iloc[-1]/max(eq.iloc[0],1e-12))**(1/years)-1 if eq.iloc[0]>0 else np.nan
-            peak=eq.cummax()
-            dd=eq/peak-1
-            maxdd=float(dd.min())
+            twr=(1.0+ret).prod()**(1/years)-1 if len(ret) else np.nan
+            wealth=(1.0+ret).cumprod()
+            peak=wealth.cummax()
+            dd=wealth/peak-1
+            maxdd=float(dd.min()) if len(dd) else np.nan
             sharpe=float(np.sqrt(252)*ret.mean()/ret.std()) if ret.std()>0 else np.nan
-            sortino=float(np.sqrt(252)*ret.mean()/ret[ret<0].std()) if ret[ret<0].std()>0 else np.nan
+            downside=ret[ret<0].std()
+            sortino=float(np.sqrt(252)*ret.mean()/downside) if downside>0 else np.nan
+            utilization=float((1.0-cash_series/eq.replace(0,np.nan)).mean())
             rows.append(dict(strategy=strat,distribution=distribution,history_mode=mode,
                              start=eq.index[0],end=eq.index[-1],final_equity=eq.iloc[-1],
-                             CAGR=cagr,max_drawdown=maxdd,Sharpe=sharpe,Sortino=sortino,
-                             contributions=contribution_total,trades=trades,trigger_events=triggers))
+                             CAGR=twr,max_drawdown=maxdd,Sharpe=sharpe,Sortino=sortino,
+                             cash_utilization=utilization,contributions=contribution_total,
+                             trades=trades,trigger_events=triggers))
     return pd.DataFrame(rows)
 
 def main():
