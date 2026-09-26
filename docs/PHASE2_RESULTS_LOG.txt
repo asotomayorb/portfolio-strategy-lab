@@ -16,4 +16,24 @@ Stage 2A frozen:
 - Initial capital excluded (0) to isolate entry mechanics; deployment tested separately later.
 - Simultaneous-trigger allocation remains an explicit D1/D2/D3 comparison, not an optimized parameter.
 
-Results pending.
+2026-09-26 — Stage 2A engine correction and rerun.
+- Run 7 was rejected because missing daily closes could temporarily remove held positions from daily equity.
+- Commit 42391fdfcae01c07d8c6f11d45b8bea80793e761 corrected mark-to-market continuity and preserved pending orders when a valid execution open was unavailable.
+- Run 8 completed successfully on the corrected engine.
+- The corrected run produced finite metrics, nonzero drawdowns and complete artifacts; the previous discontinuity signature is no longer present.
+- Run 8 covered S1-S4 x D1-D3 on common history (2020-09-30 to 2026-09-24) and expanding history (2000-01-03 to 2026-09-24).
+- Common-history results:
+  S1 CAGR 27.66%-27.87%, max DD about -29.2% to -29.6%, Sharpe 1.051-1.059, cash utilization about 80.0%.
+  S2 CAGR 27.26%-27.29%, max DD about -24.7%, Sharpe about 1.114, cash utilization about 70.7%.
+  S3 CAGR 27.65%-27.83%, max DD about -29.2% to -29.4%, Sharpe about 1.053-1.059, cash utilization about 80.0%.
+  S4 CAGR 28.40%-28.46%, max DD -25.69%, Sharpe 1.117-1.119, cash utilization 76.2%-76.5%.
+- Expanding-history results remain materially more severe: all strategies show approximately -89.5% to -90.7% max drawdown. S1/S3 have CAGR about 49.0%, S2 about 39.1%, and S4 about 48.9%. These long-history results are descriptive only and are not treated as a strategy-selection verdict.
+- Trigger events are identical within each history across strategies (11,384 common; 40,715 expanding), as expected because triggers are market events independent of strategy. Trade counts and cash utilization vary by strategy/distribution.
+- No strategy/distribution winner is declared from this Stage 2A screen. Robustness, deployment, cash-floor, walk-forward, universe, cost, holdout and statistical checks remain required.
+
+Stage 2A checkpoint status:
+- Contribution-only isolation: complete.
+- D1/D2/D3 comparison: complete.
+- Common/expanding screen: complete.
+- Integrity rerun: passed at engine-run level.
+- Stage 2B rule reconciliation: pending.
