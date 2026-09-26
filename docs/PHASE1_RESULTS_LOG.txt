@@ -10,6 +10,13 @@ PHASE 1 RESULTS LOG
 - Added pre-registered parameter-neighbor sensitivity and leave-one-asset-out universe sensitivity to CI.
 - No parameters are to be selected based on these results.
 
+2026-09-26
+- First sensitivity CI run succeeded, but review found a methodological defect in the universe test: omitted assets were not removed from tactical signal/execution matrices, making all omissions identical for tactical strategies.
+- Corrected scripts/run_phase1_sensitivity.py so the omitted asset is removed from both signal and execution matrices.
+- Re-ran full CI successfully (run 36202769069); parameter-neighbor and corrected universe artifacts were uploaded.
+- Corrected universe sensitivity is materially informative: Momentum/Rotation vary meaningfully with individual assets; Dynamic Allocation is narrower; Risk Parity is highly dependent on BTC and the universe.
+- Parameter-neighbor sensitivity confirms that several families have meaningful parameter dispersion; results remain descriptive and no parameter is selected.
+
 NEXT
-The earlier CI run (36177518921) predates the sensitivity workflow step and therefore did not execute it. Current workflow includes the sensitivity step; a fresh CI run is required before marking these tests complete.
-After validated sensitivity artifacts: continue with cost/slippage -> concentration -> OOS -> holdout -> uncertainty -> final synthesis.
+Proceed to cost/slippage sensitivity, then concentration/dependence synthesis, independent OOS, reserved holdout, statistical uncertainty, and final Phase 1 synthesis.
+Phase 2 remains blocked.
