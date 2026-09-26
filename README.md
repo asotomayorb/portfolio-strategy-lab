@@ -50,8 +50,8 @@ The ATR/pullback strategy belongs exclusively to Phase 2 and was not used in Pha
 Stage 2A is testing the frozen daily ATR/pullback entry engine before initial-capital deployment variants. See docs/PHASE2_PROTOCOL.txt, docs/PHASE2_CHECKLIST.csv and docs/PHASE2_RESULTS_LOG.txt.
 
 ## Latest Phase 2A checkpoint — 2026-09-26
-The corrected Stage 2A run completed successfully on commit 01fd4a06581fea55e0b815cc4fff826f48633c37 (workflow run 7). The prior invalid metric overflow was removed, and the frozen cash-room corrections executed successfully.
+Workflow run 7 on commit 01fd4a06581fea55e0b815cc4fff826f48633c37 completed successfully, but its results were not accepted because common-history metrics showed extreme drawdowns with unusually high Sharpe/Sortino values. The cause was identified as a data-continuity issue: held positions were omitted from daily equity whenever an asset lacked a valid daily close.
 
-The rerun still requires a metric/data-integrity correction before Stage 2A can be accepted: the reported common-history results show extreme drawdowns together with unusually high Sharpe/Sortino values, indicating that the equity time series likely has discontinuities when an asset lacks a valid daily price. The current engine omits a held position from daily equity whenever that day's price is missing. This must be corrected by carrying forward the last valid mark (and preserving pending orders when execution data are temporarily unavailable) before interpreting S1-S4 or D1-D3.
+A frozen-engine implementation correction was committed at 42391fdfcae01c07d8c6f11d45b8bea80793e761. It carries forward the latest valid close for mark-to-market continuity and preserves pending orders when a valid execution open is temporarily unavailable. This is a data-integrity correction, not a strategy/parameter change.
 
-No Phase 2 strategy or allocation parameter has been changed in response to the results. Stage 2B and later stages remain blocked until Stage 2A passes this integrity check.
+A new Stage 2A workflow run is expected automatically from the push. Stage 2A remains blocked from interpretation until that rerun passes the integrity check. Stage 2B and later stages remain blocked.
