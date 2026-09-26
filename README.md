@@ -3,10 +3,10 @@
 Reproducible research comparing investment strategy families before any user-specific strategy.
 
 ## START HERE
-Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
+Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution also read docs/PHASE2E_PROTOCOL.txt.
 
 ## Current status — 2026-09-26
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A and 2B are complete, Stage 2C is complete, and Stage 2D cash-floor sensitivity is in execution; Stage 2E robustness work remains pending.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A and 2B are complete, Stage 2C is complete, and Stage 2D cash-floor sensitivity is complete; Stage 2E robustness/generalization/uncertainty is frozen and pending execution.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -103,3 +103,7 @@ On the common 2020-09-30 to 2026-09-24 history, 0% cash-floor results were:
 The corresponding expanding-history results remain subject to the previously observed extreme drawdowns (~-89.6% to -90.7%), so they are descriptive rather than evidence of robustness.
 
 Phase 2D does not promote a strategy or alter the frozen baseline. Its role is to establish whether conclusions are materially sensitive to removing the 5% cash floor. Full interpretation requires direct comparison with the validated 5% baseline and then the remaining pre-registered robustness gates (walk-forward, universe, cost, external holdout and statistical uncertainty).
+
+
+## Phase 2E protocol-freeze checkpoint — 2026-09-26
+Stage 2E was frozen before execution in docs/PHASE2E_PROTOCOL.txt. The robustness set covers temporal folds, leave-one-asset-out universe sensitivity, six pre-registered friction scenarios, external-universe generalization, a newly reserved holdout, and circular moving-block bootstrap uncertainty. No Stage 2E result may change frozen definitions after inspection. Phase 3 remains blocked until the complete Phase 2 robustness gate is synthesized.
