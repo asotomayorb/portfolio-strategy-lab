@@ -37,3 +37,19 @@ Stage 2A checkpoint status:
 - Common/expanding screen: complete.
 - Integrity rerun: passed at engine-run level.
 - Stage 2B rule reconciliation: pending.
+
+2026-09-26 — Stage 2C initial/extraordinary capital deployment speeds.
+- Protocol frozen before execution in docs/PHASE2C_PROTOCOL.txt; initial-capital test amount USD 12,000, normalized to 12 months of the frozen USD 1,000 recurring contribution.
+- Run 5 (36260873980), commit ff0249456bc2038408bcd5baacdf23c0859a1852, completed successfully and produced artifact phase2c-deployment-speeds.
+- Tested immediate, 3m, 6m, 12m, 24m and opportunities-only under frozen S1-S4, D3, 5% cash floor, costs and histories.
+- Common history (2020-09-30 to 2026-09-24): immediate CAGR 26.3%-27.9%; 3m 44.9%-46.3%; 6m 51.5%-52.7%; 12m 52.6%-53.6%; 24m 49.0%-49.9%; opportunities-only 27.3%-28.4%. Max DD ranges were approximately -22.2% to -29.9%, with S2 consistently shallower than S1/S3 and S4 intermediate.
+- The broad timing effect is descriptive: scheduled deployment improved contribution-flow-adjusted return metrics versus immediate deployment, with the strongest common-history results around 6-12 months and moderation at 24 months.
+- Expanding history retains approximately -89.4% to -90.7% max drawdown, so long-history results remain descriptive and require robustness/holdout checks.
+- Opportunities-only is the pre-registered control where the USD 12,000 initial capital is not calendar-forced into the market.
+- No strategy or deployment schedule is declared a winner. Stage 2C is complete; later robustness stages remain required.
+
+Stage 2C checkpoint status:
+- Protocol freeze: complete.
+- Code/execution/integrity: complete.
+- Results extraction: complete.
+- Interpretation: descriptive only; no winner.
