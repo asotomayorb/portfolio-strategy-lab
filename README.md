@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing.
 
 ## Current status — 2026-09-26
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A initial screen is complete and Stage 2B/later robustness work is pending.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A and 2B are complete, Stage 2C is complete, and Stage 2D cash-floor sensitivity is in execution; Stage 2E robustness work remains pending.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -81,3 +81,9 @@ Commit ff0249456bc2038408bcd5baacdf23c0859a1852 now replaces that entire result-
 
 ## Phase 2C completion checkpoint — 2026-09-26
 Stage 2C executed successfully in GitHub Actions run 5 (36260873980) after the line-ending correction in commit ff0249456bc2038408bcd5baacdf23c0859a1852. The artifact phase2c-deployment-speeds was extracted and validated. All six pre-registered deployment schedules were tested across S1-S4 with D3, 5% cash floor and common/expanding histories. Common-history results show a material deployment-speed effect, with scheduled 6-12 month deployment producing higher contribution-flow-adjusted return metrics than immediate deployment; 24 months moderates, and opportunities-only serves as the pre-registered no-forced-deployment control. No strategy or schedule is declared a winner. Stage 2C is now complete; Stage 2D cash-floor sensitivity is next. Research definitions remain frozen.
+
+
+## Phase 2D first execution checkpoint — 2026-09-26
+Phase 2D workflow run 1 (36263098087) reached the research script but failed before calculations because the temporary runpy copy of run_phase2a.py recomputed ROOT from its /tmp location, causing portfolio_allocation.csv to be searched under /tmp. No Phase 2D results were produced or interpreted from this run.
+
+Commit eaa69b7a845e718f2c5cc9dd15d9a9bc8ee3a1a7 corrected only the Phase 2D wrapper so the patched temporary engine retains the repository ROOT. The frozen Phase 2A engine, Phase 2D protocol, strategy definitions, D3 rule, data and cash-floor comparison remain unchanged. The next push-triggered Phase 2D run must be validated before interpreting results.
