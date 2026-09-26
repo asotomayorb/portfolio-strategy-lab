@@ -6,7 +6,7 @@ Test whether combining a small number of Phase 1 strategy families improves robu
 
 STATUS AT 2026-09-26
 - Phase 1 core comparison: COMPLETE; robust winner = NONE.
-- Phase 1B: NOT YET EXECUTED.
+- Phase 1B: CLOSED; no robust ensemble improvement established.
 - Phase 2: NOT STARTED.
 - No Phase 2 concepts are permitted in Phase 1B.
 
@@ -62,3 +62,8 @@ DELIVERABLES
 - reports/phase1b_results.csv
 - docs/PHASE1B_CHECKLIST.csv
 - docs/PHASE1B_RESULTS_LOG.txt
+
+
+CLOSURE
+Development and walk-forward were completed for all three frozen ensembles. C2 was the closest candidate but did not consistently improve S5 across common and expansive histories. C1 and C3 showed severe expansive-history drawdowns. No ensemble is promoted.
+Later ensemble robustness tests were not run because no candidate survived the initial development plus walk-forward robustness gate; this is a screening conclusion, not a claim about those untested results.
