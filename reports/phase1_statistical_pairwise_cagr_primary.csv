@@ -1,0 +1,13 @@
+history_mode,strategy_vs_B0,CAGR_diff_point,CAGR_diff_CI95_low,CAGR_diff_CI95_high,bootstrap_prob_strategy_gt_B0,n_boot,block_months
+common,B1_dca,-0.017301,-0.406615,0.365877,0.4664,5000,6
+common,S1_momentum,-0.025844,-0.435194,0.417252,0.4464,5000,6
+common,S3_rotation,-0.011993,-0.431276,0.436827,0.4790,5000,6
+common,S4_moving_average,-0.317880,-0.700811,0.091232,0.0590,5000,6
+common,S5_dynamic_allocation,-0.090274,-0.449710,0.256896,0.3050,5000,6
+common,S6_risk_parity,-0.056408,-0.631156,0.747976,0.4432,5000,6
+expanding,B1_dca,-0.046106,-0.768131,0.616936,0.4468,5000,6
+expanding,S1_momentum,-0.241147,-0.863985,0.221375,0.1744,5000,6
+expanding,S3_rotation,-0.245904,-0.875155,0.204534,0.1602,5000,6
+expanding,S4_moving_average,-0.350395,-0.977763,0.168168,0.0904,5000,6
+expanding,S5_dynamic_allocation,-0.299995,-0.914124,0.131154,0.1002,5000,6
+expanding,S6_risk_parity,0.129047,-0.649738,1.015679,0.6188,5000,6
