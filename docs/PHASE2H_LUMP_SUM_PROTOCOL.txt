@@ -1,0 +1,68 @@
+PHASE 2H — LUMP SUM / TEN-YEAR HOLD
+Status: post-Phase-2 descriptive extension.
+Date: 2026-09-27
+
+PURPOSE
+Measure the historical growth of a single initial USD 12,000 investment with zero
+future contributions over an approximately 10-year cohort. This is a separate
+sensitivity and must not be inferred from recurring-contribution CAGR or Phase 2G.
+
+SCOPE
+- Test all frozen S1-S4 candidates.
+- No frozen Phase 2 trigger, allocation, D3, cash-floor, cost or execution rule is changed.
+- No rebalancing overlay.
+- This extension is descriptive and does not select a Phase 2 winner.
+- Historical results are not forecasts or expected future returns.
+
+LUMP-SUM ADAPTATION
+- USD 12,000 is deposited on the first observed trading day of each cohort.
+- Zero future contributions.
+- To preserve the frozen 50% DCA / 50% opportunity structure in a meaningful
+  single-deposit setting, the DCA half (USD 6,000) is deployed immediately,
+  target-weighted, at the first valid session open.
+- The remaining USD 6,000 is retained as the opportunity sleeve and follows the
+  frozen Dip/ATR8 allocation logic of each strategy.
+- S1: immediate 50% target-weighted sleeve + 50% Dip.
+- S2: immediate 50% target-weighted sleeve + 50% ATR8.
+- S3: immediate 50% target-weighted sleeve + 25% Dip + 25% ATR8.
+- S4: immediate 50% target-weighted sleeve + remaining 50% ATR8 when active,
+  otherwise the S1 opportunity behavior.
+- This is a registered lump-sum adaptation, not a post-result optimization.
+
+HORIZON
+- Approximately 10 calendar years per cohort.
+- Annual historical cohort starts plus the most recent available decade.
+- Full common-history 10-year cohorts are unavailable at the current 2026 cutoff;
+  expanding-history repository data are therefore used.
+
+TRADING ENGINE
+- Daily trigger evaluation.
+- Weekly HH52 from confirmed weekly swing highs using 3 candles each side.
+- Wilder/RMA ATR20W.
+- ATR% = ATR20W / HH52.
+- Trigger multiples 1.5 / 3 / 5 / 8.
+- Cumulative targets 25% / 50% / 75% / 100%.
+- One cumulative order when multiple levels are crossed.
+- Normal room = max(0, target - current - pending).
+- D3 deepest-first simultaneous-capital allocation.
+- 5% cash floor.
+- Next valid session open execution.
+- Unused cash carries.
+- Costs: 10 bps commission + 5 bps slippage.
+- No leverage or short positions.
+
+METRICS
+- Total-period CAGR.
+- Final equity.
+- Final-equity multiple versus USD 12,000.
+- Maximum drawdown.
+- Sharpe.
+- Cash utilization.
+- Cohort median and range.
+
+INTERPRETATION
+- Do not call historical CAGR an expected return.
+- Compare cohort dispersion rather than extrapolating one cohort.
+- Phase 2H is not a replacement for frozen Phase 2.
+- Phase 2H is directly comparable to the “capital available now, then wait” question,
+  but not to a recurring-contribution CAGR.
