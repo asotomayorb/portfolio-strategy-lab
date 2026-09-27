@@ -1,0 +1,26 @@
+name: Phase 2H Lump Sum
+on:
+  push:
+    paths:
+      - "scripts/run_phase2h_lump_sum.py"
+      - "docs/PHASE2H_LUMP_SUM_PROTOCOL.txt"
+      - ".github/workflows/phase2h_lump_sum.yml"
+      - "portfolio_allocation.csv"
+      - "tickers/**"
+      - "src/**"
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt
+      - run: python scripts/run_phase2h_lump_sum.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase2h-lump-sum
+          path: |
+            reports/phase2h_lump_sum.csv
+            reports/PHASE2H_LUMP_SUM_2026-09-27.txt
