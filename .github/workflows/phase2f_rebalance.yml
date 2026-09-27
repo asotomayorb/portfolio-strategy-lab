@@ -1,0 +1,43 @@
+name: Phase 2F hybrid rebalancing sensitivity
+
+on:
+  push:
+    paths:
+      - "scripts/run_phase2f_rebalance.py"
+      - "src/data_loader.py"
+      - "portfolio_allocation.csv"
+      - "tickers/**"
+      - ".github/workflows/phase2f_rebalance.yml"
+  workflow_dispatch:
+
+jobs:
+  phase2f:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas numpy
+      - name: Run post-Phase-2 rebalancing sensitivity
+        run: python scripts/run_phase2f_rebalance.py
+      - name: Validate artifact
+        run: |
+          test -s reports/phase2f_rebalance.csv
+          python - <<'PY'
+          import pandas as pd
+          p = pd.read_csv("reports/phase2f_rebalance.csv")
+          assert set(p["rebalance_mode"]) == {"baseline","hybrid20","hybrid30"}
+          assert set(p["strategy"]) == {
+              "S1_DCA50_Dip50","S2_DCA50_ATR8_50",
+              "S3_DCA50_Dip25_ATR8_25","S4_ATR8_100_else_S1"
+          }
+          assert set(p["history_mode"]) == {"common","expanding"}
+          assert p["CAGR"].notna().all()
+          assert p["max_drawdown"].notna().all()
+          print("Phase 2F artifact validation passed.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase2f-rebalance
+          path: reports/phase2f_rebalance.csv
