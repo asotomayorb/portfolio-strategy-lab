@@ -1,0 +1,76 @@
+PHASE 2F PROTOCOL — HYBRID REBALANCING SENSITIVITY
+=====================================================
+
+Status: POST-PHASE-2 EXTENSION
+Frozen Phase 2E definitions are not modified.
+
+Purpose
+-------
+Test whether the previously discussed "contribution-first, sell-only-beyond-threshold"
+rebalancing overlay changes the behavior of the frozen Phase 2 candidates.
+
+Candidates
+----------
+All four frozen Phase 2E candidates are retained because Phase 2E did not establish
+a robust universal separation:
+- S1: 50% DCA + 50% Dip
+- S2: 50% DCA + 50% ATR8
+- S3: 50% DCA + 25% Dip + 25% ATR8
+- S4: 100% ATR8 when active, otherwise S1
+
+D3 deepest-first simultaneous-capital allocation is retained.
+
+Comparison modes
+----------------
+1. baseline
+   No rebalancing overlay.
+
+2. hybrid20
+   - The monthly USD 1,000 contribution remains unchanged.
+   - The DCA half (USD 500) is allocated to current target deficits first.
+   - Any unused portion of that DCA budget is allocated by target weight.
+   - Existing holdings are sold only when current weight is more than 20%
+     above target weight.
+   - Sales target the amount needed to return the holding to target weight.
+   - Sales execute at the next valid session open.
+
+3. hybrid30
+   Same as hybrid20, but the sale threshold is more than 30% above target.
+
+The 50% DCA / remaining dip-or-ATR8 split is preserved. No contribution is
+created or destroyed by the overlay.
+
+Frozen mechanics retained
+-------------------------
+- Daily trigger evaluation.
+- Weekly HH52 and Wilder/RMA ATR20W.
+- Three weekly candles on each side for swing-high confirmation.
+- ATR levels 1.5 / 3 / 5 / 8 with cumulative 25 / 50 / 75 / 100%.
+- D3 deepest-first allocation.
+- 5% cash floor.
+- No leverage and no shorting.
+- Unused cash carries.
+- Next-session-open execution.
+- 10 bps commission + 5 bps slippage.
+- Historical inputs from tickers/*.csv and portfolio_allocation.csv.
+
+Evaluation
+----------
+Both common and expanding histories are tested.
+
+Metrics:
+- CAGR / contribution-flow-adjusted TWR-derived annualized growth.
+- Maximum drawdown.
+- Sharpe.
+- Cash utilization.
+- Number of sell trades caused by the overlay.
+- Rebalancing turnover.
+
+Interpretation rules
+--------------------
+- This is a sensitivity/implementation extension, not a reopening of Phase 2E.
+- Baseline control must be validated before interpreting hybrid differences.
+- No threshold is selected from the results as an optimized parameter.
+- Results are descriptive unless a consistent effect is demonstrated across
+  histories and candidates.
+- A rebalancing overlay cannot retroactively change the frozen Phase 2E conclusion.
