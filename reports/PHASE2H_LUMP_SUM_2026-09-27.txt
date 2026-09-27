@@ -1,0 +1,23 @@
+PHASE 2H — LUMP SUM / TEN-YEAR HOLD
+Date: 2026-09-27
+Historical descriptive research only.
+
+Workflow run: 36331676669
+Validation: successful; artifact phase2h-lump-sum contained 18 cohorts x 4 frozen S1-S4 strategies.
+
+Design
+- USD 12,000 deposited on the first observed trading day of each cohort.
+- Zero future contributions for approximately 10 years.
+- The frozen 50% DCA sleeve is adapted to immediate target-weighted deployment; the remaining 50% follows each strategy's frozen Dip/ATR8 opportunity logic.
+- No rebalancing overlay; 5% cash floor, D3, costs and execution rules unchanged.
+
+10-YEAR CAGR (median across 18 cohorts)
+- S1 DCA50/Dip50: 68.17%; range 3.83%–194.36%; median final equity $2.188M; median final multiple 182.31x; median max drawdown -87.57%.
+- S2 DCA50/ATR8 50: 51.09%; range 1.01%–194.36%; median final equity $0.755M; median final multiple 62.88x; median max drawdown -85.44%.
+- S3 DCA50/Dip25/ATR8 25: 68.17%; range 3.83%–194.36%; median final equity $2.188M; median final multiple 182.29x; median max drawdown -87.54%.
+- S4 ATR8 100 else S1: 67.50%; range 3.52%–194.36%; median final equity $2.105M; median final multiple 175.39x; median max drawdown -87.66%.
+
+Interpretation
+This is the correct separate sensitivity for a single USD 12,000 investment followed by a decade with no contributions. It demonstrates why the earlier recurring-contribution CAGR figures could not be extrapolated to a lump sum. Historical outcomes are extremely cohort-dependent and include very large drawdowns; they are not forecasts or expected future returns and do not select a Phase 2 winner.
+
+Phase 2 remains frozen; Phase 2G and 2H are post-Phase-2 descriptive extensions.
