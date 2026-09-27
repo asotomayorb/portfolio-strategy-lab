@@ -1,0 +1,82 @@
+PHASE 2G — FIRST-YEAR CONTRIBUTIONS / NINE-YEAR HOLD
+Status: extension after frozen Phase 2E and Phase 2F.
+Date: 2026-09-27
+
+PURPOSE
+Measure the long-run growth of the capital accumulated during an initial contribution
+year when no further contributions are made for the remaining nine years. This is
+intended to answer the user's "contribute during year 1, then wait" question without
+misusing a CAGR calculated from recurring contributions.
+
+SCOPE
+- Test all frozen S1-S4 candidates.
+- No strategy, parameter, allocation, trigger, cash-floor, D3, cost or execution
+  definition is changed.
+- No rebalancing overlay is applied.
+- This extension is descriptive and does not select a Phase 2 winner.
+- Historical cohort results are not forecasts or expected future returns.
+
+CONTRIBUTION SCHEDULE
+- Initial capital: USD 0.
+- USD 1,000 contribution on the first observed trading day of each of the first
+  12 calendar months in a cohort.
+- No contributions after month 12.
+- Total nominal contributions per cohort: USD 12,000.
+
+HORIZON
+- Each cohort covers approximately 10 calendar years.
+- Cohorts are anchored to January 1 of each calendar year for which a full
+  10-year window is available, using the first available trading day on/after
+  the anchor.
+- A final recent-decade cohort is also included when the repository data permit it.
+- Because the common Phase 2 universe begins in 2020, a full 10-year common-history
+  cohort is not available at the current 2026 cutoff. The cohort analysis therefore
+  uses the repository's available expanding-history data and records each actual
+  cohort start/end date.
+- Assets are included when repository OHLC data are available, consistent with the
+  existing Phase 2 expanding-history treatment.
+
+TRADING ENGINE
+- Daily trigger evaluation.
+- Weekly HH52 from confirmed weekly swing highs using 3 candles on each side.
+- Wilder/RMA ATR20W.
+- ATR% = ATR20W / HH52.
+- Trigger multiples: 1.5 / 3 / 5 / 8.
+- Cumulative target levels: 25% / 50% / 75% / 100%.
+- One cumulative order when multiple levels are crossed.
+- Normal allocation room = max(0, target - current - pending).
+- S1: 50% DCA + 50% Dip.
+- S2: 50% DCA + 50% ATR8.
+- S3: 50% DCA + 25% Dip + 25% ATR8.
+- S4: 100% ATR8 when active, otherwise S1.
+- D3 deepest-first simultaneous-capital allocation.
+- 5% cash floor.
+- Orders execute next valid session open.
+- Unused cash carries.
+- Costs: 10 bps commission + 5 bps slippage.
+- No leverage or short positions.
+
+METRICS
+1. Total-period contribution-adjusted TWR/CAGR:
+   annualized time-weighted return across the full approximately 10-year window,
+   removing the effect of the monthly contributions.
+2. Post-contribution CAGR:
+   annualized time-weighted return from the final contribution date through the
+   end of the 10-year cohort. This is the cleanest measure of how the accumulated
+   capital grew after contributions stopped.
+3. Final equity.
+4. Total contributions (USD 12,000).
+5. Final-equity / total-contributions multiple.
+6. Maximum drawdown over the full cohort.
+7. Sharpe.
+8. Cash utilization.
+9. Contribution-year ending equity, used as the base capital for the post-contribution
+   growth calculation.
+
+INTERPRETATION
+- Do not call a cohort CAGR an "expected return".
+- Compare cohorts and summarize median/range to show historical dispersion.
+- The post-contribution CAGR is not the same as the CAGR of the first-year contribution
+  phase.
+- A lump-sum-at-day-one scenario is a separate future sensitivity and must not be
+  inferred from this test.
