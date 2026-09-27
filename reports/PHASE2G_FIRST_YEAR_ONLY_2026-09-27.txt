@@ -1,0 +1,24 @@
+PHASE 2G — FIRST-YEAR CONTRIBUTIONS / NINE-YEAR HOLD
+Date: 2026-09-27
+Historical descriptive research only.
+
+Workflow run: 36331032068
+Validation: successful; artifact phase2g-first-year-only contained 18 cohorts x 4 frozen S1-S4 strategies.
+
+Design
+- USD 1,000 on the first observed trading day of each of the first 12 calendar months.
+- USD 12,000 total contributions, then zero new contributions for approximately 9 additional years.
+- All frozen S1-S4 definitions reused without modification.
+- No rebalancing overlay.
+- 5% cash floor, D3 deepest-first allocation, costs and execution rules unchanged.
+
+POST-CONTRIBUTION CAGR (median across 18 cohorts)
+- S1 DCA50/Dip50: 60.25%; range 3.69%–168.59%; median final equity $1.103M; median final multiple 91.95x; median max drawdown -86.34%.
+- S2 DCA50/ATR8 50: 42.42%; range 2.41%–146.33%; median final equity $0.303M; median final multiple 25.21x; median max drawdown -76.53%.
+- S3 DCA50/Dip25/ATR8 25: 60.24%; range 3.69%–168.59%; median final equity $1.103M; median final multiple 91.93x; median max drawdown -86.34%.
+- S4 ATR8 100 else S1: 59.40%; range 3.37%–168.28%; median final equity $1.060M; median final multiple 88.30x; median max drawdown -86.33%.
+
+Interpretation
+The result confirms that recurring-contribution CAGR cannot be extrapolated to a "contribute for one year, then hold" scenario. The historical post-contribution growth rates are highly dispersed and the expanding-history cohorts contain severe drawdowns. S1 and S3 are nearly identical in this test; S4 is close; S2 has materially lower historical growth but also lower median drawdown. These are descriptive historical observations, not expected future returns and do not select a Phase 2 winner.
+
+A separate lump-sum-at-day-one sensitivity is Phase 2H.
