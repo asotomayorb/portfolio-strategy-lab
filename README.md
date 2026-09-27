@@ -143,3 +143,11 @@ Phase 2F is a separate sensitivity extension defined in docs/PHASE2F_REBALANCE_P
 All frozen S1-S4 candidates are tested because Phase 2E did not establish a robust winner. The comparison is baseline/no overlay versus contribution-first hybrid rebalancing with sale thresholds of 20% and 30% relative overweight. The monthly USD 1,000 contribution and 50% DCA / 50% dip-or-ATR8 structure are preserved; the DCA half is directed to current underweights first, while existing holdings are sold only beyond the registered threshold.
 
 Phase 2F results must first pass artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
+
+
+## Phase 2F execution results — 2026-09-27
+The post-Phase-2 hybrid rebalancing sensitivity completed successfully in GitHub Actions run 36291833551. The artifact passed validation with 24 rows covering S1-S4, baseline/hybrid20/hybrid30 and common/expanding histories. Durable results are recorded in reports/PHASE2F_REBALANCE_2026-09-27.txt.
+
+On the common 2020-09-30 to 2026-09-24 history, baseline CAGR was approximately 27.87%-28.13% with max drawdown -25.20% to -29.41%. Hybrid20 reduced CAGR to approximately 22.76%-23.67% while leaving max drawdown almost unchanged (-25.16% to -29.37%). Hybrid30 produced approximately 23.09%-24.16% CAGR with similarly little drawdown change (-25.16% to -29.37%). Sharpe was modestly higher in the hybrid cases, but cumulative rebalance turnover was substantial (~0.31-0.39 in the common history).
+
+The expanding-history hybrid overlays materially reduced the previously observed ~-89% to -91% drawdowns to roughly -30% to -35%, but also reduced CAGR substantially. These are descriptive observations, not a basis for selecting a threshold. Phase 2F therefore provides no evidence that contribution-first hybrid rebalancing should replace the frozen Phase 2 baseline for the recurring-contribution case. It remains an implementation sensitivity where tighter weight control is preferred despite lower historical growth and additional sales.
