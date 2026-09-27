@@ -165,3 +165,16 @@ The expanding-history hybrid overlays materially reduced the previously observed
 Phase 2H is a separate post-Phase-2 sensitivity for a single initial USD 12,000 investment followed by zero contributions for approximately ten years. Because the frozen S1-S4 labels contain a 50% DCA sleeve, the registered lump-sum adaptation deploys that 50% sleeve immediately, target-weighted, while the remaining 50% follows the corresponding frozen dip/ATR8 opportunity logic. This adaptation is documented in docs/PHASE2H_LUMP_SUM_PROTOCOL.txt and implemented in scripts/run_phase2h_lump_sum.py with workflow .github/workflows/phase2h_lump_sum.yml.
 
 The validated run covered 18 cohorts. Ten-year CAGR medians were approximately 68.17% (S1), 51.09% (S2), 68.17% (S3), and 67.50% (S4). Median final-equity multiples were 182.31x, 62.88x, 182.29x and 175.39x respectively. Median max drawdowns were approximately -87.57%, -85.44%, -87.54% and -87.66%. The results are highly cohort-dependent and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
+
+
+## Phase 1 + Phase 2 synthesis — 2026-09-27
+The complete research set is now synthesized. Phase 1 does not produce a robust universal winner, and Phase 2E likewise does not establish a robust universal separation among S1-S4. Therefore the research does not justify declaring a single historically superior strategy from the frozen evidence.
+
+For the user's stated decision priorities — (1) CAGR, (2) lower drawdown, (3) implementation simplicity — the evidence can be narrowed without pretending that the robustness gate selected a winner:
+- Phase 1: S5 Dynamic Allocation provides the lowest common-history drawdown among the main families (about -21.2%) but lower common-history CAGR (about 22.3%). Momentum/Rotation and Buy & Hold have higher historical CAGR in some development histories but materially different drawdown/generalization behavior. No Phase 1 family is promoted as the universal choice.
+- Phase 2 common-history baseline: S4 has the highest CAGR among S1-S4 (about 28.13%) and S2 has the lowest max drawdown (about -25.20%); S1 and S3 are effectively indistinguishable. These differences are small relative to the robustness uncertainty and must not be treated as a winner declaration.
+- Phase 2F shows that contribution-first selling/rebalancing reduced common-history CAGR substantially while leaving drawdown almost unchanged; it is therefore an implementation sensitivity rather than an improvement to the frozen baseline.
+- Phase 2G/2H show that the recurring-contribution CAGR cannot be reused for one-year-only contributions or a lump sum. Those extensions are scenario sensitivities, not candidate-selection tests.
+- Phase 3 remains blocked until a human decision explicitly accepts the non-separating robustness evidence and freezes the operating rule set.
+
+Practical research shortlist for the next decision step: retain S2 and S4 as the two materially distinct Phase 2 profiles (lower-drawdown profile versus higher-CAGR profile), while treating S1/S3 as near-duplicates for decision purposes. This is a descriptive shortlist, not a statistical or historical winner selection.
