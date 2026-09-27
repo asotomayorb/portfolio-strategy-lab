@@ -9,7 +9,7 @@ branch. The artifact contained all 24 expected rows (4 strategies x 3 modes x
 
 Common history: 2020-09-30 to 2026-09-24
 ----------------------------------------
-Baseline:
+Baseline / contribution-only (no sales):
 - S1: CAGR 27.88%, max DD -29.41%, Sharpe 1.061
 - S2: CAGR 28.01%, max DD -25.20%, Sharpe 1.110
 - S3: CAGR 27.87%, max DD -29.41%, Sharpe 1.061
@@ -50,10 +50,14 @@ Interpretation
 5. S2 continues to show a lower common-history drawdown than S1/S3, while S4
    retains a higher CAGR than S1-S3 in the tested baseline and hybrid cases;
    no universal dominance is established.
-6. The hybrid rebalancing overlay therefore does not provide evidence for
-   replacing the frozen Phase 2 baseline in the recurring-contribution case.
-   It remains a possible implementation choice when tighter weight control is
-   desired and the investor accepts lower historical growth and more sales.
+6. The baseline is already a contribution-only reweighting implementation: the
+   DCA half of each monthly contribution is directed to current target deficits
+   first, with no sales. Therefore the hybrid20/hybrid30 cases isolate the
+   incremental effect of adding sales. They do not show a benefit from replacing
+   contribution-only reweighting in the recurring-contribution case.
+7. The hybrid overlays remain possible implementation choices when tighter weight
+   control is desired and the investor accepts lower historical growth and more
+   sales.
 
 Important scope
 ---------------
