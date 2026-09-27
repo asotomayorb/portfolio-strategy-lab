@@ -1,0 +1,29 @@
+name: Phase 2G First-Year Contributions
+
+on:
+  push:
+    paths:
+      - "scripts/run_phase2g_first_year_only.py"
+      - "docs/PHASE2G_FIRST_YEAR_ONLY_PROTOCOL.txt"
+      - ".github/workflows/phase2g_first_year_only.yml"
+      - "src/**"
+      - "tickers/**"
+      - "portfolio_allocation.csv"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python scripts/run_phase2g_first_year_only.py --output reports/phase2g_first_year_only.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase2g-first-year-only
+          path: |
+            reports/phase2g_first_year_only.csv
+            reports/PHASE2G_FIRST_YEAR_ONLY_2026-09-27.txt
