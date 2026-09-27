@@ -145,6 +145,15 @@ All frozen S1-S4 candidates are tested because Phase 2E did not establish a robu
 Phase 2F results must first pass artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
 
 
+## Phase 2G — first-year contributions then nine-year hold — 2026-09-27
+Phase 2G is a separate post-Phase-2 deployment-pattern extension defined in docs/PHASE2G_FIRST_YEAR_ONLY_PROTOCOL.txt and implemented in scripts/run_phase2g_first_year_only.py with workflow .github/workflows/phase2g_first_year_only.yml.
+
+The frozen S1-S4 definitions are reused without modification. Each historical cohort receives USD 1,000 on the first observed trading day of each of its first 12 calendar months (USD 12,000 total), followed by zero new contributions for the remainder of an approximately 10-year horizon. Cohorts are annual historical windows plus the most recent available decade when the repository data permit it.
+
+The key metric is post-contribution CAGR: annualized time-weighted growth from the final contribution date through the end of the cohort. This avoids incorrectly applying the recurring-contribution CAGR to a no-contribution holding period. Final-equity multiple, contribution-year ending equity and full-cohort drawdown are also recorded.
+
+The Phase 2G implementation is complete; results must be validated from the GitHub Actions artifact before interpretation. A lump-sum-at-day-one scenario remains a separate sensitivity.
+ 
 ## Phase 2F execution results — 2026-09-27
 The post-Phase-2 hybrid rebalancing sensitivity completed successfully in GitHub Actions run 36291833551. The artifact passed validation with 24 rows covering S1-S4, baseline/hybrid20/hybrid30 and common/expanding histories. Durable results are recorded in reports/PHASE2F_REBALANCE_2026-09-27.txt.
 
