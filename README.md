@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
 ## Current status — 2026-09-27
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 frozen robustness gate is COMPLETE: Stage 2A, 2B, 2C, 2D and 2E are complete. Phase 2E did not establish a robust universal separation among S1-S4, so no Phase 2 strategy winner is declared. A separate post-Phase-2 hybrid rebalancing sensitivity (Phase 2F) is now being executed; it does not modify the frozen Phase 2 definitions.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 frozen robustness gate is COMPLETE: Stage 2A, 2B, 2C, 2D and 2E are complete. Phase 2E did not establish a robust universal separation among S1-S4, so no Phase 2 strategy winner is declared. Post-Phase-2 extensions 2F, 2G and 2H are complete; they do not modify the frozen Phase 2 definitions.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -142,17 +142,17 @@ Phase 2F is a separate sensitivity extension defined in docs/PHASE2F_REBALANCE_P
 
 All frozen S1-S4 candidates are tested because Phase 2E did not establish a robust winner. The comparison is baseline/no overlay versus contribution-first hybrid rebalancing with sale thresholds of 20% and 30% relative overweight. The monthly USD 1,000 contribution and 50% DCA / 50% dip-or-ATR8 structure are preserved; the DCA half is directed to current underweights first, while existing holdings are sold only beyond the registered threshold.
 
-Phase 2F results must first pass artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
+Phase 2F results passed artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
 
 
 ## Phase 2G — first-year contributions then nine-year hold — 2026-09-27
 Phase 2G is a separate post-Phase-2 deployment-pattern extension defined in docs/PHASE2G_FIRST_YEAR_ONLY_PROTOCOL.txt and implemented in scripts/run_phase2g_first_year_only.py with workflow .github/workflows/phase2g_first_year_only.yml.
 
-The frozen S1-S4 definitions are reused without modification. Each historical cohort receives USD 1,000 on the first observed trading day of each of its first 12 calendar months (USD 12,000 total), followed by zero new contributions for the remainder of an approximately 10-year horizon. Cohorts are annual historical windows plus the most recent available decade when the repository data permit it.
+The frozen S1-S4 definitions are reused without modification. Each historical cohort receives USD 1,000 on the first observed trading day of each of its first 12 calendar months (USD 12,000 total), followed by zero new contributions for the remainder of an approximately 10-year horizon. The validated run covered 18 cohorts.
 
-The key metric is post-contribution CAGR: annualized time-weighted growth from the final contribution date through the end of the cohort. This avoids incorrectly applying the recurring-contribution CAGR to a no-contribution holding period. Final-equity multiple, contribution-year ending equity and full-cohort drawdown are also recorded.
+Post-contribution CAGR medians across the 18 cohorts were approximately 60.25% (S1), 42.42% (S2), 60.24% (S3), and 59.40% (S4). Median final-equity multiples were 91.95x, 25.21x, 91.93x and 88.30x respectively. Median full-cohort max drawdowns were approximately -86.34%, -76.53%, -86.34% and -86.33%. The outcomes are highly dispersed and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
 
-The Phase 2G implementation is complete; results must be validated from the GitHub Actions artifact before interpretation. A lump-sum-at-day-one scenario remains a separate sensitivity.
+A separate lump-sum-at-day-one scenario is Phase 2H.
  
 ## Phase 2F execution results — 2026-09-27
 The post-Phase-2 hybrid rebalancing sensitivity completed successfully in GitHub Actions run 36291833551. The artifact passed validation with 24 rows covering S1-S4, baseline/hybrid20/hybrid30 and common/expanding histories. Durable results are recorded in reports/PHASE2F_REBALANCE_2026-09-27.txt.
@@ -164,4 +164,4 @@ The expanding-history hybrid overlays materially reduced the previously observed
 ## Phase 2H — lump sum / ten-year hold — 2026-09-27
 Phase 2H is a separate post-Phase-2 sensitivity for a single initial USD 12,000 investment followed by zero contributions for approximately ten years. Because the frozen S1-S4 labels contain a 50% DCA sleeve, the registered lump-sum adaptation deploys that 50% sleeve immediately, target-weighted, while the remaining 50% follows the corresponding frozen dip/ATR8 opportunity logic. This adaptation is documented in docs/PHASE2H_LUMP_SUM_PROTOCOL.txt and implemented in scripts/run_phase2h_lump_sum.py with workflow .github/workflows/phase2h_lump_sum.yml.
 
-Phase 2H results must be validated from the GitHub Actions artifact before interpretation. They are historical descriptive results, not forecasts, and are not directly inferred from recurring-contribution CAGR or Phase 2G.
+The validated run covered 18 cohorts. Ten-year CAGR medians were approximately 68.17% (S1), 51.09% (S2), 68.17% (S3), and 67.50% (S4). Median final-equity multiples were 182.31x, 62.88x, 182.29x and 175.39x respectively. Median max drawdowns were approximately -87.57%, -85.44%, -87.54% and -87.66%. The results are highly cohort-dependent and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
