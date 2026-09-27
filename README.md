@@ -178,3 +178,17 @@ For the user's stated decision priorities — (1) CAGR, (2) lower drawdown, (3) 
 - Phase 3 remains blocked until a human decision explicitly accepts the non-separating robustness evidence and freezes the operating rule set.
 
 Practical research shortlist for the next decision step: retain S2 and S4 as the two materially distinct Phase 2 profiles (lower-drawdown profile versus higher-CAGR profile), while treating S1/S3 as near-duplicates for decision purposes. This is a descriptive shortlist, not a statistical or historical winner selection.
+
+
+## Phase 2I — operational comparison — 2026-09-27
+The completed research is now reduced to an operational comparison of S2 and S4 without reopening the frozen Phase 2E robustness gate. Durable details are recorded in docs/PHASE2I_OPERATIONAL_COMPARISON_2026-09-27.txt.
+
+For the recurring-contribution implementation, the validated baseline is contribution-only reweighting: future DCA contributions correct current underweights first, with no existing-position sales. Phase 2F found that adding sales materially reduced common-history CAGR while changing drawdown very little.
+
+The two retained profiles are:
+- S2: 50% DCA + 50% ATR8; common-history CAGR 28.01%, max drawdown -25.20%, Sharpe 1.110.
+- S4: 100% ATR8 when active, otherwise S1; common-history CAGR 28.13%, max drawdown -27.85%, Sharpe 1.091.
+
+S2 therefore has the lower observed drawdown and simpler state structure; S4 has the slightly higher observed CAGR and a more conditional rule. These are descriptive differences, not a robust statistical winner. Phase 2G/2H remain separate capital-deployment sensitivities.
+
+Phase 3 remains blocked until the human freezes the operating rule set.
