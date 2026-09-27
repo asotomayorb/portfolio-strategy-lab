@@ -142,8 +142,13 @@ def run(start,end,strategy,ohlc,feat,targets):
             for t,x in b.items():buys[t]=buys.get(t,0)+x
         else: buys=distribute(needs,avail*.50)
         for t,a in buys.items():
-            room=max(0,targets[t]*equity*LEVELS.get(8,1)-shares[t]*last[t]-pb.get(t,0)) if False else max(0,targets[t]*equity*LEVELS[next(k for k in LEVELS if abs(k-(8 if t in active8 else next((v["level"] for v in needs.values() if False),1.5)))<1e-9)]-shares[t]*last[t]-pb.get(t,0))
-            if a>1e-9:pending.append({"ticker":t,"side":"buy","amount":a})
+            if t in active8:
+                room=max(0,targets[t]*equity-shares[t]*last[t]-pb.get(t,0))
+            elif t in needs:
+                room=max(0,targets[t]*equity*LEVELS[needs[t]["level"]]-shares[t]*last[t]-pb.get(t,0))
+            else:
+                room=0.0
+            if a>1e-9:pending.append({"ticker":t,"side":"buy","amount":min(a,room)})
         cash_after=max(0,cash-sum(o["amount"] for o in pending if o["side"]=="buy"))
         daily.append((d,equity,cash_after))
     eq=pd.Series({d:e for d,e,_ in daily}).sort_index()
