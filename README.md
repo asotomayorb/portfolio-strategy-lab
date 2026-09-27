@@ -140,7 +140,7 @@ Phase 3 remains blocked. Any further research is a separate extension and must n
 ## Phase 2F — post-Phase-2 hybrid rebalancing sensitivity — 2026-09-27
 Phase 2F is a separate sensitivity extension defined in docs/PHASE2F_REBALANCE_PROTOCOL.txt and implemented in scripts/run_phase2f_rebalance.py with workflow .github/workflows/phase2f_rebalance.yml.
 
-All frozen S1-S4 candidates are tested because Phase 2E did not establish a robust winner. The comparison is baseline/no overlay versus contribution-first hybrid rebalancing with sale thresholds of 20% and 30% relative overweight. The monthly USD 1,000 contribution and 50% DCA / 50% dip-or-ATR8 structure are preserved; the DCA half is directed to current underweights first, while existing holdings are sold only beyond the registered threshold.
+All frozen S1-S4 candidates are tested because Phase 2E did not establish a robust winner. The comparison is contribution-only reweighting (future contributions correct current underweights, with no sales) versus contribution-first hybrid rebalancing with sale thresholds of 20% and 30% relative overweight. The monthly USD 1,000 contribution and 50% DCA / 50% dip-or-ATR8 structure are preserved; the DCA half is directed to current underweights first, while existing holdings are sold only beyond the registered threshold.
 
 Phase 2F results passed artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
 
@@ -155,7 +155,7 @@ Post-contribution CAGR medians across the 18 cohorts were approximately 60.25% (
 A separate lump-sum-at-day-one scenario is Phase 2H.
  
 ## Phase 2F execution results — 2026-09-27
-The post-Phase-2 hybrid rebalancing sensitivity completed successfully in GitHub Actions run 36291833551. The artifact passed validation with 24 rows covering S1-S4, baseline/hybrid20/hybrid30 and common/expanding histories. Durable results are recorded in reports/PHASE2F_REBALANCE_2026-09-27.txt.
+The post-Phase-2 hybrid rebalancing sensitivity completed successfully in GitHub Actions run 36291833551. The artifact passed validation with 24 rows covering S1-S4, contribution-only/hybrid20/hybrid30 and common/expanding histories. Durable results are recorded in reports/PHASE2F_REBALANCE_2026-09-27.txt.
 
 On the common 2020-09-30 to 2026-09-24 history, baseline CAGR was approximately 27.87%-28.13% with max drawdown -25.20% to -29.41%. Hybrid20 reduced CAGR to approximately 22.76%-23.67% while leaving max drawdown almost unchanged (-25.16% to -29.37%). Hybrid30 produced approximately 23.09%-24.16% CAGR with similarly little drawdown change (-25.16% to -29.37%). Sharpe was modestly higher in the hybrid cases, but cumulative rebalance turnover was substantial (~0.31-0.39 in the common history).
 
@@ -173,7 +173,7 @@ The complete research set is now synthesized. Phase 1 does not produce a robust 
 For the user's stated decision priorities — (1) CAGR, (2) lower drawdown, (3) implementation simplicity — the evidence can be narrowed without pretending that the robustness gate selected a winner:
 - Phase 1: S5 Dynamic Allocation provides the lowest common-history drawdown among the main families (about -21.2%) but lower common-history CAGR (about 22.3%). Momentum/Rotation and Buy & Hold have higher historical CAGR in some development histories but materially different drawdown/generalization behavior. No Phase 1 family is promoted as the universal choice.
 - Phase 2 common-history baseline: S4 has the highest CAGR among S1-S4 (about 28.13%) and S2 has the lowest max drawdown (about -25.20%); S1 and S3 are effectively indistinguishable. These differences are small relative to the robustness uncertainty and must not be treated as a winner declaration.
-- Phase 2F shows that contribution-first selling/rebalancing reduced common-history CAGR substantially while leaving drawdown almost unchanged; it is therefore an implementation sensitivity rather than an improvement to the frozen baseline.
+- Phase 2F shows that adding sales to the contribution-only reweighting baseline reduced common-history CAGR substantially while leaving drawdown almost unchanged; it is therefore an implementation sensitivity rather than an improvement to the no-sale baseline.
 - Phase 2G/2H show that the recurring-contribution CAGR cannot be reused for one-year-only contributions or a lump sum. Those extensions are scenario sensitivities, not candidate-selection tests.
 - Phase 3 remains blocked until a human decision explicitly accepts the non-separating robustness evidence and freezes the operating rule set.
 
