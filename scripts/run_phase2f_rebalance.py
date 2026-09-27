@@ -1,4 +1,4 @@
-"""Post-Phase-2 hybrid rebalancing sensitivity.
+"""Post-Phase-2 hybrid rebalancing sensitivity.\n\nValidation branch: execute the registered sensitivity before merging.
 
 Separate extension after the frozen Phase 2E gate. The frozen Phase 2 engine and
 definitions are not modified.
