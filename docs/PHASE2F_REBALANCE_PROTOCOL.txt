@@ -22,8 +22,11 @@ D3 deepest-first simultaneous-capital allocation is retained.
 
 Comparison modes
 ----------------
-1. baseline
-   No rebalancing overlay.
+1. baseline / contribution-only
+   - The monthly USD 1,000 contribution remains unchanged.
+   - The DCA half (USD 500) is allocated to current target deficits first.
+   - Any unused portion of that DCA budget is allocated by target weight.
+   - No existing holdings are sold by the overlay.
 
 2. hybrid20
    - The monthly USD 1,000 contribution remains unchanged.
@@ -73,4 +76,8 @@ Interpretation rules
 - No threshold is selected from the results as an optimized parameter.
 - Results are descriptive unless a consistent effect is demonstrated across
   histories and candidates.
+- The baseline is specifically the contribution-only implementation: future
+  contributions correct underweights first, but no existing positions are sold.
+  Therefore the hybrid cases isolate the incremental effect of adding sales
+  beyond the contribution-only reweighting rule.
 - A rebalancing overlay cannot retroactively change the frozen Phase 2E conclusion.
