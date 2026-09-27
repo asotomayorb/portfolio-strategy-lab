@@ -3,10 +3,10 @@
 Reproducible research comparing investment strategy families before any user-specific strategy.
 
 ## START HERE
-Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution also read docs/PHASE2E_PROTOCOL.txt.
+Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
-## Current status — 2026-09-26
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is ACTIVE — Stage 2A and 2B are complete, Stage 2C is complete, and Stage 2D cash-floor sensitivity is complete; Stage 2E robustness/generalization/uncertainty is frozen and pending execution.
+## Current status — 2026-09-27
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 frozen robustness gate is COMPLETE: Stage 2A, 2B, 2C, 2D and 2E are complete. Phase 2E did not establish a robust universal separation among S1-S4, so no Phase 2 strategy winner is declared. A separate post-Phase-2 hybrid rebalancing sensitivity (Phase 2F) is now being executed; it does not modify the frozen Phase 2 definitions.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -128,3 +128,18 @@ The frozen Stage 2E rerun (workflow 36267441523) failed at the new integrity gua
 The diagnosis points to the shared OHLC date-normalization boundary as the next integrity point. The loader now parses ISO/YMD dates explicitly with ISO8601 while retaining day-first parsing for legacy exports, and Phase 2E now validates raw Yahoo coverage, parsed ticker coverage, and simulation result dates separately. A regression test was added for both ISO and legacy D/M/Y inputs. No strategy definitions, parameters, weights, data windows or candidate rules were changed.
 
 The next action is to validate the new loader/diagnostic commit through GitHub Actions before interpreting any Stage 2E result.
+
+
+## Phase 2E completion — 2026-09-26
+The frozen Phase 2E robustness gate completed successfully in run 5 (commit dc74ce1381e59b7e1e3972fd781e7af14f6f0d35). Calendar integrity passed through the 2026-09-24 cutoff. Walk-forward, leave-one-asset-out universe sensitivity, six friction scenarios, external 12-ETF generalization, reserved 10-ETF holdout and 5,000-replicate circular moving-block bootstrap all completed.
+
+The combined evidence does not establish a robust universal separation among S1-S4. S1 and S3 remain nearly indistinguishable; S2 and S4 show different return/drawdown/cash-utilization profiles rather than consistent dominance. No post-result parameter, strategy, allocation, cash-floor or deployment definition was changed.
+
+Phase 3 remains blocked. Any further research is a separate extension and must not reopen the frozen Phase 2E definitions.
+
+## Phase 2F — post-Phase-2 hybrid rebalancing sensitivity — 2026-09-27
+Phase 2F is a separate sensitivity extension defined in docs/PHASE2F_REBALANCE_PROTOCOL.txt and implemented in scripts/run_phase2f_rebalance.py with workflow .github/workflows/phase2f_rebalance.yml.
+
+All frozen S1-S4 candidates are tested because Phase 2E did not establish a robust winner. The comparison is baseline/no overlay versus contribution-first hybrid rebalancing with sale thresholds of 20% and 30% relative overweight. The monthly USD 1,000 contribution and 50% DCA / 50% dip-or-ATR8 structure are preserved; the DCA half is directed to current underweights first, while existing holdings are sold only beyond the registered threshold.
+
+Phase 2F results must first pass artifact and baseline-control validation. Thresholds are sensitivity cases, not post-result optimization parameters.
