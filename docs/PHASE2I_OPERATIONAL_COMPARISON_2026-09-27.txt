@@ -1,0 +1,169 @@
+PHASE 2I — OPERATIONAL COMPARISON: S2 VS S4
+================================================
+Date: 2026-09-27
+Status: decision-support extension after completed Phase 2 robustness gate.
+
+PURPOSE
+-------
+Translate the completed Phase 2, 2F, 2G and 2H evidence into an operational
+comparison of the two materially distinct Phase 2 profiles retained for human
+decision: S2 and S4.
+
+This document does not declare a statistical or historical winner. It freezes
+the factual differences that matter for implementation.
+
+CANDIDATES
+----------
+S2 = 50% DCA + 50% ATR8.
+S4 = 100% ATR8 when ATR8 is active; otherwise S1
+     (50% DCA + 50% Dip).
+
+COMMON FROZEN MECHANICS
+-----------------------
+- Current portfolio targets from portfolio_allocation.csv.
+- No leverage and no shorting.
+- Daily trigger evaluation.
+- Weekly HH52 using confirmed weekly swing highs with 3 weekly candles on each side.
+- Wilder/RMA 20-week ATR.
+- ATR trigger levels: 1.5 / 3 / 5 / 8.
+- Cumulative target levels: 25% / 50% / 75% / 100%.
+- One cumulative order when several levels are crossed in one day.
+- Normal room = max(0, target - current position - pending orders).
+- D3 deepest-first simultaneous-capital allocation.
+- 5% cash floor.
+- Next-session-open execution.
+- Unused cash carries.
+- 10 bps commission + 5 bps slippage.
+- Contribution-only reweighting: future DCA contributions correct current
+  underweights first; existing holdings are not sold.
+
+OPERATIONAL DIFFERENCE
+----------------------
+S2:
+1. Half of the monthly contribution is the DCA sleeve.
+2. The other half is reserved for ATR8 opportunities.
+3. When an ATR8 trigger occurs, eligible capital is allocated under D3.
+4. The strategy does not switch to the broader four-level Dip mechanism.
+
+S4:
+1. When at least one ATR8 opportunity is active, the full strategy allocation
+   is directed to ATR8 opportunities under D3.
+2. When no ATR8 opportunity is active, S4 falls back to S1:
+   50% DCA + 50% Dip across the four cumulative ATR levels.
+3. Therefore S4 has a conditional state transition that S2 does not have.
+
+MONTHLY CONTRIBUTION / NO-SALE RULE
+-----------------------------------
+For the recurring-contribution implementation:
+- USD 1,000 arrives monthly.
+- The DCA sleeve is directed first toward assets below target weight.
+- Any unused DCA budget is allocated by target weight.
+- No existing position is sold solely to rebalance.
+- ATR8/dip opportunity capital remains subject to the frozen allocation-room
+  and simultaneous-trigger rules.
+- Cash not deployed remains available for future opportunities.
+
+This is the validated Phase 2F contribution-only baseline.
+
+COMMON-HISTORY EVIDENCE
+-----------------------
+Contribution-only baseline, 2020-09-30 to 2026-09-24:
+
+S2:
+- CAGR: 28.01%
+- Maximum drawdown: -25.20%
+- Sharpe: 1.110
+
+S4:
+- CAGR: 28.13%
+- Maximum drawdown: -27.85%
+- Sharpe: 1.091
+
+The observed CAGR difference is 0.12 percentage points in favor of S4.
+The observed maximum-drawdown difference is 2.65 percentage points, with S2
+having the smaller drawdown.
+
+Phase 2E bootstrap uncertainty did not establish robust separation among S1-S4.
+Therefore these common-history differences are descriptive and must not be
+interpreted as a proven superiority of either candidate.
+
+REBAlANCING / SALES EVIDENCE
+----------------------------
+Phase 2F compared the contribution-only baseline with hybrid20 and hybrid30,
+which add sales when holdings exceed target weight by the registered threshold.
+
+In the common history:
+- Adding sales materially reduced CAGR.
+- Maximum drawdown changed very little.
+- Sharpe increased modestly.
+- Turnover became substantial.
+
+Therefore the evidence does not support replacing contribution-only reweighting
+with recurring sales for this use case. Hybrid sales remain an optional
+implementation sensitivity rather than a research-selected improvement.
+
+FIRST-YEAR-ONLY AND LUMP-SUM CAPITAL
+------------------------------------
+Phase 2G and 2H show that the financing schedule materially changes the
+historical outcomes.
+
+Phase 2G:
+- USD 1,000/month for 12 months, then zero contributions.
+- S2 median post-contribution CAGR: 42.42%.
+- S4 median post-contribution CAGR: 59.40%.
+- S2 median final-equity multiple: 25.21x.
+- S4 median final-equity multiple: 88.30x.
+- These are 18 historical cohorts and descriptive, not forecasts.
+
+Phase 2H:
+- USD 12,000 initially, then zero contributions.
+- S2 median CAGR: 51.09%.
+- S4 median CAGR: 67.50%.
+- S2 median final-equity multiple: 62.88x.
+- S4 median final-equity multiple: 175.39x.
+- These are 18 historical cohorts and descriptive, not forecasts.
+
+These scenarios must not be merged with the recurring-contribution CAGR. They
+answer different capital-deployment questions and have high cohort dependence.
+
+IMPLEMENTATION TRADE-OFF
+------------------------
+S2 has the simpler state machine:
+- fixed 50/50 DCA + ATR8 structure;
+- no conditional fallback.
+
+S4 has a more conditional state machine:
+- ATR8-active state -> 100% ATR8;
+- no ATR8-active state -> S1 behavior.
+
+Thus implementation simplicity is a factual difference even though both use the
+same underlying trigger, target-room and D3 mechanisms.
+
+DECISION FRAME
+--------------
+The completed research leaves two non-equivalent profiles:
+
+S2:
+- lower observed common-history maximum drawdown;
+- slightly lower observed common-history CAGR;
+- simpler rule structure.
+
+S4:
+- slightly higher observed common-history CAGR;
+- somewhat higher observed common-history maximum drawdown;
+- more conditional implementation.
+
+No metric is designated as a winner. The human decision is to choose which
+operating profile to freeze, if any, while accepting that Phase 2E did not
+provide robust statistical separation.
+
+PHASE 3 GATE
+------------
+Phase 3 remains blocked until the human freezes:
+1. S2 or S4 (or explicitly decides not to proceed);
+2. contribution-only reweighting versus an explicitly chosen sales overlay;
+3. recurring-contribution operating mode and, if needed, separate treatment of
+   initial/lump-sum capital;
+4. the final cash-floor and execution assumptions already frozen by research.
+
+No Phase 2 definitions are reopened by this document.
