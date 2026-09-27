@@ -1,0 +1,62 @@
+PHASE 2F REBALANCING SENSITIVITY — 2026-09-27
+================================================
+
+Execution
+---------
+GitHub Actions run 36291833551 completed successfully on the Phase 2F validation
+branch. The artifact contained all 24 expected rows (4 strategies x 3 modes x
+2 history modes) and passed workflow validation.
+
+Common history: 2020-09-30 to 2026-09-24
+----------------------------------------
+Baseline:
+- S1: CAGR 27.88%, max DD -29.41%, Sharpe 1.061
+- S2: CAGR 28.01%, max DD -25.20%, Sharpe 1.110
+- S3: CAGR 27.87%, max DD -29.41%, Sharpe 1.061
+- S4: CAGR 28.13%, max DD -27.85%, Sharpe 1.091
+
+Hybrid 20%:
+- S1: CAGR 23.61%, max DD -29.37%, Sharpe 1.079
+- S2: CAGR 22.76%, max DD -25.16%, Sharpe 1.124
+- S3: CAGR 23.61%, max DD -29.37%, Sharpe 1.078
+- S4: CAGR 23.67%, max DD -27.80%, Sharpe 1.118
+
+Hybrid 30%:
+- S1: CAGR 24.02%, max DD -29.37%, Sharpe 1.080
+- S2: CAGR 23.09%, max DD -25.16%, Sharpe 1.133
+- S3: CAGR 24.01%, max DD -29.37%, Sharpe 1.080
+- S4: CAGR 24.16%, max DD -27.80%, Sharpe 1.116
+
+Expanding history
+-----------------
+The no-rebalancing baselines reproduce the previously observed very large
+expanding-history drawdowns (about -89% to -91%). The hybrid overlays materially
+reduce those historical drawdowns to roughly -30% to -35%, but also reduce CAGR
+substantially. Because the expanding history contains a severe early-history
+regime and the common-history is the more directly comparable Phase 2 window,
+these are descriptive robustness observations, not a basis for parameter
+selection.
+
+Interpretation
+--------------
+1. In the common history, both hybrid overlays materially reduce CAGR while
+   leaving maximum drawdown almost unchanged.
+2. The 30% threshold retains more CAGR than 20% for all four candidates, but
+   this is a sensitivity observation, not a post-result optimization.
+3. Sharpe is modestly higher under the hybrid overlays, while realized turnover
+   is substantial: approximately 0.31-0.39 cumulative turnover in the common
+   history.
+4. S1 and S3 remain practically indistinguishable, consistent with Phase 2E.
+5. S2 continues to show a lower common-history drawdown than S1/S3, while S4
+   retains a higher CAGR than S1-S3 in the tested baseline and hybrid cases;
+   no universal dominance is established.
+6. The hybrid rebalancing overlay therefore does not provide evidence for
+   replacing the frozen Phase 2 baseline in the recurring-contribution case.
+   It remains a possible implementation choice when tighter weight control is
+   desired and the investor accepts lower historical growth and more sales.
+
+Important scope
+---------------
+Phase 2F does not alter or reopen the frozen Phase 2E definitions. It is a
+post-Phase-2 implementation sensitivity. No threshold was optimized after
+seeing the results.
