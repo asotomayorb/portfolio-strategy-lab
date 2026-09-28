@@ -56,3 +56,7 @@ Circular moving-block bootstrap; block lengths 3, 6, 12 months; 6-month primary;
 
 REPORTING / GATE
 Publish raw and summary artifacts for every completed test plus a final synthesis. The synthesis reports completion/blockage, stability/dispersion, material sensitivities, generalization evidence and uncertainty. It does not select by highest CAGR/Sharpe or any single metric. No final Phase 2 strategy/rule set is selected until Phase 2E is complete and Stages 2A-2E are synthesized. Phase 3 remains blocked until that freeze.
+
+
+Revalidation note — 2026-09-28
+The Stage 2E robustness suite must be repeated after the S3 fallback correction. Any run whose head commit predates the corrected S3 implementation is superseded for S3-related evidence. The pre-correction Phase 2E state remains available in Git history.
