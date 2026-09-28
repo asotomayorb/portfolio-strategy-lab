@@ -1,0 +1,142 @@
+# Phase 1 + Phase 2 Final Synthesis — 2026-09-28
+
+This report supersedes the pre-correction Phase 2 synthesis and Phase 2I operational comparison. It uses the corrected S2/S3 definitions and completed corrected Phase 2A/2C/2D/2E/2F/2G/2H runs.
+
+## Corrected definitions
+- S1 = 50% DCA + 50% Dip.
+- S2 = 50% DCA + 50% ATR8 when ATR8 is active; otherwise exactly S1.
+- S3 = 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active; otherwise exactly S1.
+- S4 = 100% ATR8 when active; otherwise exactly S1.
+
+## Corrected common-history baseline
+2020-09-30 to 2026-09-24; USD 1,000/month; zero initial capital; D3; 5% cash floor; 10 bps commission + 5 bps slippage.
+
+| Strategy | CAGR | Max DD | Sharpe |
+|---|---:|---:|---:|
+| S1 | 27.8700% | -29.2161% | 1.0594 |
+| S2 | 28.4706% | -25.5163% | 1.1189 |
+| S3 | 27.8623% | -29.2117% | 1.0593 |
+| S4 | 28.4223% | -25.6900% | 1.1176 |
+
+S1/S3 are effectively indistinguishable. S2/S4 form a second, very similar profile. The S2-versus-S4 difference is small.
+
+## Phase 2C — deployment speed
+Common-history results for S2/S4:
+- Immediate: S2 28.47% CAGR / -25.52% DD / 1.119 Sharpe; S4 28.42% / -25.69% / 1.118.
+- 3m: S2 46.37% / -24.71% / 0.976; S4 46.30% / -24.93% / 0.975.
+- 6m: S2 52.77% / -24.81% / 1.189; S4 52.69% / -25.02% / 1.188.
+- 12m: S2 53.68% / -24.29% / 1.407; S4 53.60% / -24.50% / 1.406.
+- 24m: S2 49.94% / -23.06% / 1.534; S4 49.87% / -23.05% / 1.533.
+
+Deployment timing materially changes contribution-flow-adjusted historical outcomes; it is a capital-deployment sensitivity, not a strategy-selection result.
+
+## Phase 2D — cash floor
+At 0% cash floor:
+- S1: 28.37% / -29.27%.
+- S2: 28.98% / -25.57%.
+- S3: 28.41% / -29.26%.
+- S4: 28.93% / -25.69%.
+
+Removing the 5% floor does not materially change the relative structure.
+
+## Phase 2E — robustness gate
+The corrected suite passed calendar integrity and completed 4 chronological walk-forward folds, leave-one-asset-out sensitivity, six cost scenarios, external 12-ETF generalization, a reserved 10-ETF holdout and 5,000-replicate circular moving-block bootstrap using 3/6/12-month blocks.
+
+### Walk-forward
+Common-history median CAGR across four folds:
+- S1/S3: 28.35%.
+- S2: 28.07%.
+- S4: 28.09%.
+
+Expanding-history folds can show drawdowns around -91%; these are descriptive path-risk observations.
+
+### Leave-one-asset-out
+Median CAGR:
+- S1/S3: 28.23%.
+- S2: 28.79%.
+- S4: 28.74%.
+
+Ranges overlap materially.
+
+### Cost sensitivity
+Common-history CAGR ranges across registered cost cases:
+- S1/S3: 27.68%-27.95%.
+- S2: 28.29%-28.55%.
+- S4: 28.24%-28.50%.
+
+The relative structure is stable under higher costs, but differences remain small.
+
+### External generalization
+Frozen 12-ETF universe:
+- S1/S3: 4.771% CAGR / -42.75% DD.
+- S2: 4.823% / -42.15%.
+- S4: 4.803% / -42.25%.
+
+### Reserved holdout
+Frozen 10-ETF holdout:
+- S1/S3: 5.718% CAGR / -36.84% DD.
+- S2: 5.797% / -35.72%.
+- S4: 5.793% / -35.73%.
+
+### Bootstrap uncertainty
+Primary 6-month block bootstrap, pairwise versus S1:
+- S2: +0.60 percentage-point point estimate; 95% CI -27.06 to +27.92 pp; probability S2 > S1 = 51.76%.
+- S3: 0.00 pp; probability S3 > S1 = 49.74%.
+- S4: +0.55 pp; 95% CI -26.82 to +29.56 pp; probability S4 > S1 = 52.46%.
+
+Thus the corrected robustness evidence does not establish statistically robust separation among S1-S4.
+
+## Phase 2F — rebalancing
+Corrected contribution-only common-history baseline:
+- S1 27.88% / -29.41%.
+- S2 28.19% / -27.73%.
+- S3 27.88% / -29.41%.
+- S4 28.13% / -27.85%.
+
+Hybrid sale overlays at 20% and 30% relative overweight reduced CAGR materially while leaving common-history drawdown almost unchanged. They remain implementation sensitivities rather than improvements to the contribution-only baseline.
+
+## Phase 2G — first-year contributions, then no new contributions
+Corrected 18-cohort medians:
+- S1: 60.25% CAGR; 91.95x final multiple; -86.34% DD.
+- S2: 59.40%; 88.29x; -86.33%.
+- S3: 60.24%; 91.93x; -86.34%.
+- S4: 59.40%; 88.30x; -86.33%.
+
+Recurring-contribution CAGR cannot be reused for this capital-deployment pattern.
+
+## Phase 2H — lump sum
+Corrected 18-cohort medians:
+- S1: 68.17% CAGR; 182.31x final multiple; -87.57% DD.
+- S2: 67.50%; 175.39x; -87.65%.
+- S3: 68.17%; 182.29x; -87.59%.
+- S4: 67.50%; 175.39x; -87.66%.
+
+Cohort dispersion is very large and drawdowns are extreme; these are historical observations, not forecasts.
+
+## Phase 1 versus Phase 2
+Phase 1 did not establish a robust universal winner. Main common-history profiles were approximately:
+- B0 Buy & Hold: 31.3% CAGR / -36.0% DD.
+- B1 DCA: 29.6% / -31.5%.
+- S5 Dynamic Allocation: 22.3% / -21.2%.
+
+Phase 2 S1-S4 produce about 27.9%-28.5% CAGR with about -25.5% to -29.2% drawdown on their common recurring-contribution history. These are descriptive comparisons, not a direct winner test because mechanics, universes and evaluation structures differ.
+
+## Decision-oriented interpretation
+Using the stated priorities of CAGR, then drawdown, then implementation simplicity, the corrected evidence produces two descriptive pairs:
+
+1. S1/S3: ~27.9% CAGR and ~-29.2% DD.
+2. S2/S4: ~28.4%-28.5% CAGR and ~-25.5% to -25.7% DD.
+
+The robustness gate does not establish the second profile as a statistically robust improvement: bootstrap probabilities remain near 50%, confidence intervals are wide, and external/holdout differences are small.
+
+For implementation, S2 and S4 differ in how capital is split while ATR8 is active; S1 and S3 retain the dip component. Phase 2F provides no evidence that taxable sales for rebalancing improve the recurring-contribution baseline.
+
+## Final status
+- Phase 1: closed; no robust universal winner.
+- Phase 1B: closed; no robust improvement.
+- Corrected Phase 2A/2C/2D/2E/2F/2G/2H: completed and validated.
+- Corrected Phase 2 robustness gate: does not establish a statistically robust universal winner among S1-S4.
+- Pre-correction S2/S3 results remain historical only.
+- Phase 3 remains blocked until the human explicitly freezes an operating rule set.
+
+No strategy ranking or winner is declared by this report.
