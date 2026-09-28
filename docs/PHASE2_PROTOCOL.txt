@@ -36,7 +36,7 @@ Weekly structural inputs:
 S1–S4 STRATEGY MATRIX
 S1 = 50% DCA + 50% Dip.
   Dip uses all four cumulative ATR levels.
-S2 = 50% DCA + 50% ATR8.
+S2 = 50% DCA + 50% ATR8 when ATR8 is active; otherwise S1 (50% DCA + 50% Dip).
 S3 = 50% DCA + 25% Dip + 25% ATR8.
 S4 = 100% ATR8 when ATR8 is active; otherwise S1.
 
