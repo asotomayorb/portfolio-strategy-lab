@@ -209,7 +209,9 @@ def run(history,mode):
                 trig=next((k for k in (8.0,5.0,3.0,1.5) if low<=hh-k*atr),None)
                 if trig is None: continue
                 if trig==8.0: active8.append(t)
-                if strat=="S2_DCA50_ATR8_50" and trig!=8.0: continue
+                if strat=="S2_DCA50_ATR8_50" and trig!=8.0:
+                    # No ATR8 today; S2 falls back to S1 opportunity behavior.
+                    pass
                 if strat in ("S1_DCA50_Dip50","S3_DCA50_Dip25_ATR8_25","S4_ATR8_100_else_S1"):
                     need=max(0.0,targets[t]*equity*LEVELS[trig]-shares[t]*prices[t]-pending_buy.get(t,0.0))
                     if need>0: needs[t]={"need":need,"level":trig,"target":targets[t]}
@@ -225,7 +227,7 @@ def run(history,mode):
                     need=max(0.0,targets[t]*equity-shares[t]*prices[t]-pending_buy.get(t,0.0))
                     if need>0: n[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(n,available_dip)
-            elif strat=="S2_DCA50_ATR8_50":
+            elif strat=="S2_DCA50_ATR8_50" and active8:
                 n={}
                 for t in active8:
                     need=max(0.0,targets[t]*equity-shares[t]*prices[t]-pending_buy.get(t,0.0))
