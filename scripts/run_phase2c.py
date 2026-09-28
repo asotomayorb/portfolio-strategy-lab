@@ -279,12 +279,14 @@ def run(mode="expanding", strategy="all", deployment="immediate"):
                 if trig is None: continue
                 triggers+=1
                 if trig==8.0: active8.append(t)
-                if strat=="S2_DCA50_ATR8_50" and trig!=8.0: continue
+                if strat=="S2_DCA50_ATR8_50" and trig!=8.0:
+                    # No ATR8 today; S2 falls back to S1 opportunity behavior.
+                    pass
                 if strat=="S3_DCA50_Dip25_ATR8_25" and trig<8.0: pass
                 if strat=="S4_ATR8_100_else_S1" and trig<8.0:
                     # fallback S1 handled below
                     pass
-                if strat=="S1_DCA50_Dip50" or strat=="S3_DCA50_Dip25_ATR8_25" or strat=="S4_ATR8_100_else_S1":
+                if strat in ("S1_DCA50_Dip50","S2_DCA50_ATR8_50","S3_DCA50_Dip25_ATR8_25","S4_ATR8_100_else_S1"):
                     cum=LEVELS[trig]
                     cur=shares[t]*prices[t] if np.isfinite(prices[t]) else 0
                     desired=targets[t]*equity*cum
@@ -302,13 +304,16 @@ def run(mode="expanding", strategy="all", deployment="immediate"):
                     need=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(atr_needs,available_for_dip,distribution)
-            elif strat=="S2_DCA50_ATR8_50":
+            elif strat=="S2_DCA50_ATR8_50" and active8:
                 atr_needs={}
                 for t in active8:
                     cur=shares[t]*prices[t]
                     need=max(0.0,targets[t]*equity-cur-pending_by_t.get(t,0.0))
                     if need>0: atr_needs[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(atr_needs,available_for_dip*0.50,distribution)
+            elif strat=="S2_DCA50_ATR8_50":
+                # No ATR8 anywhere today: exact S1 opportunity behavior.
+                buys=distribute(needs,available_for_dip*0.50,distribution)
             elif strat=="S3_DCA50_Dip25_ATR8_25":
                 dip_buys=distribute(needs,available_for_dip*0.25,distribution)
                 atr_needs={t:v for t,v in needs.items() if v["level"]==8.0}
