@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
 ## Current status — 2026-09-27
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 frozen robustness gate is COMPLETE: Stage 2A, 2B, 2C, 2D and 2E are complete. Phase 2E did not establish a robust universal separation among S1-S4, so no Phase 2 strategy winner is declared. Post-Phase-2 extensions 2F, 2G and 2H are complete; they do not modify the frozen Phase 2 definitions.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is being revalidated after a definition correction to S2 discovered on 2026-09-28. The corrected rule is: S2 uses 50% DCA + 50% ATR8 when any ATR8 opportunity is active; when no ATR8 is active, S2 behaves exactly as S1 (50% DCA + 50% Dip). Phase 2A and 2D have been rerun successfully with the corrected engine. Phase 2F and 2G have also been rerun successfully; 2C, 2E and 2H reruns remain in progress. All prior S2 results from the affected runs are superseded and must not be used. No Phase 2 strategy winner is declared until the corrected robustness set is complete.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -96,7 +96,7 @@ The frozen comparison tested 0% cash floor versus the validated 5% baseline usin
 
 On the common 2020-09-30 to 2026-09-24 history, 0% cash-floor results were:
 - S1: CAGR ~28.37%, max drawdown ~-29.27%, Sharpe ~1.068, cash utilization ~81.0%.
-- S2: CAGR ~27.27%, max drawdown ~-24.73%, Sharpe ~1.115, cash utilization ~70.7%.
+- S2: corrected rerun (D3) CAGR ~28.98%, max drawdown ~-25.57%, Sharpe ~1.128, cash utilization ~77.1%.
 - S3: CAGR ~28.41%, max drawdown ~-29.26%, Sharpe ~1.069, cash utilization ~80.9%.
 - S4: CAGR ~28.93%, max drawdown ~-25.69%, Sharpe ~1.127, cash utilization ~77.1%.
 
@@ -186,9 +186,21 @@ The completed research is now reduced to an operational comparison of S2 and S4 
 For the recurring-contribution implementation, the validated baseline is contribution-only reweighting: future DCA contributions correct current underweights first, with no existing-position sales. Phase 2F found that adding sales materially reduced common-history CAGR while changing drawdown very little.
 
 The two retained profiles are:
-- S2: 50% DCA + 50% ATR8; common-history CAGR 28.01%, max drawdown -25.20%, Sharpe 1.110.
+- S2: corrected rule as above; prior common-history metrics are superseded pending the corrected full Phase 2 rerun.
 - S4: 100% ATR8 when active, otherwise S1; common-history CAGR 28.13%, max drawdown -27.85%, Sharpe 1.091.
 
 S2 therefore has the lower observed drawdown and simpler state structure; S4 has the slightly higher observed CAGR and a more conditional rule. These are descriptive differences, not a robust statistical winner. Phase 2G/2H remain separate capital-deployment sensitivities.
 
 Phase 3 remains blocked until the human freezes the operating rule set.
+
+
+## S2 definition correction and revalidation — 2026-09-28
+A definition error was found in the original Phase 2 implementation: S2 was treated as ATR8-only even on days when no ATR8 opportunity was active. The intended frozen behavior is conditional: S2 = 50% DCA + 50% ATR8 when at least one ATR8 opportunity is active; otherwise S2 must behave exactly as S1 = 50% DCA + 50% Dip.
+
+The repository protocols, Phase 2 engine and affected post-Phase-2 extensions were corrected. Successfully completed corrected reruns so far:
+- Phase 2A, common D3: S2 CAGR ~28.47%, max drawdown ~-25.52%, Sharpe ~1.119; expanding D3 CAGR ~48.90%, max drawdown ~-90.72%.
+- Phase 2D, common D3 at 0% cash floor: S2 CAGR ~28.98%, max drawdown ~-25.57%, Sharpe ~1.128.
+- Phase 2F, common contribution-only baseline: S2 CAGR ~28.19%, max drawdown ~-27.73%, Sharpe ~1.093.
+- Phase 2G, 18 cohorts: median post-contribution CAGR ~59.40%, median final multiple ~88.29x, median max drawdown ~-86.33%.
+
+These results are descriptive. The corrected 2C, 2E and 2H reruns remain in progress; no Phase 2 synthesis or S2/S4 operational conclusion should use the superseded S2 results until those runs are validated.
