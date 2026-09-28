@@ -120,7 +120,7 @@ def run(start,end,strategy,ohlc,feat,targets):
             if trig is None:continue
             if trig==8:active8.append(t)
             if strategy=="S2_DCA50_ATR8_50" and trig!=8:continue
-            if strategy in ("S1_DCA50_Dip50","S3_DCA50_Dip25_ATR8_25","S4_ATR8_100_else_S1"):
+            if strategy in ("S1_DCA50_Dip50","S2_DCA50_ATR8_50","S3_DCA50_Dip25_ATR8_25","S4_ATR8_100_else_S1"):
                 need=max(0,targets[t]*equity*LEVELS[trig]-shares[t]*last[t]-pb.get(t,0))
                 if need>0:needs[t]={"need":need,"level":trig,"target":targets[t]}
         pb={}
@@ -132,7 +132,7 @@ def run(start,end,strategy,ohlc,feat,targets):
         if strategy=="S4_ATR8_100_else_S1" and active8:
             n={t:{"need":max(0,targets[t]*equity-shares[t]*last[t]-pb.get(t,0)),"level":8,"target":targets[t]} for t in active8}
             n={t:v for t,v in n.items() if v["need"]>0}; buys=distribute(n,avail)
-        elif strategy=="S2_DCA50_ATR8_50":
+        elif strategy=="S2_DCA50_ATR8_50" and active8:
             n={t:{"need":max(0,targets[t]*equity-shares[t]*last[t]-pb.get(t,0)),"level":8,"target":targets[t]} for t in active8}
             n={t:v for t,v in n.items() if v["need"]>0}; buys=distribute(n,avail*.50)
         elif strategy=="S3_DCA50_Dip25_ATR8_25":
