@@ -24,7 +24,7 @@ LUMP-SUM ADAPTATION
   frozen Dip/ATR8 allocation logic of each strategy.
 - S1: immediate 50% target-weighted sleeve + 50% Dip.
 - S2: immediate 50% target-weighted sleeve + 50% ATR8.
-- S3: immediate 50% target-weighted sleeve + 25% Dip + 25% ATR8.
+- S3: immediate 50% target-weighted sleeve + 25% Dip + 25% ATR8 when ATR8 is active; when no ATR8 is active, use the S1 fallback adaptation.
 - S4: immediate 50% target-weighted sleeve + remaining 50% ATR8 when active,
   otherwise the S1 opportunity behavior.
 - This is a registered lump-sum adaptation, not a post-result optimization.
