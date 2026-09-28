@@ -150,7 +150,7 @@ Phase 2G is a separate post-Phase-2 deployment-pattern extension defined in docs
 
 The frozen S1-S4 definitions are reused without modification. Each historical cohort receives USD 1,000 on the first observed trading day of each of its first 12 calendar months (USD 12,000 total), followed by zero new contributions for the remainder of an approximately 10-year horizon. The validated run covered 18 cohorts.
 
-Post-contribution CAGR medians across the 18 cohorts were approximately 60.25% (S1), 42.42% (S2), 60.24% (S3), and 59.40% (S4). Median final-equity multiples were 91.95x, 25.21x, 91.93x and 88.30x respectively. Median full-cohort max drawdowns were approximately -86.34%, -76.53%, -86.34% and -86.33%. The outcomes are highly dispersed and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
+Post-contribution CAGR medians across the 18 cohorts were approximately 60.25% (S1), 59.40% (S2), 60.24% (S3), and 59.40% (S4). Median final-equity multiples were 91.95x, 88.29x, 91.93x and 88.30x respectively. Median full-cohort max drawdowns were approximately -86.34%, -86.33%, -86.34% and -86.33%. The outcomes are highly dispersed and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
 
 A separate lump-sum-at-day-one scenario is Phase 2H.
  
