@@ -140,13 +140,13 @@ def run(start,end,strategy,ohlc,feat,targets):
         elif strategy=="S3_DCA50_Dip25_ATR8_25":
             if not active8:
                 # No ATR8 anywhere today: exact S1 opportunity behavior.
-                b=distribute(needs,avail*0.50)
+                buys=distribute(needs,avail*0.50)
             else:
                 a=distribute(needs,avail*0.25)
                 n={t:v for t,v in needs.items() if v["level"]==8}
-                b8=distribute(n,avail*0.25); b={}
-                for t,x in a.items(): b[t]=b.get(t,0)+x
-                for t,x in b8.items(): b[t]=b.get(t,0)+x
+                b8=distribute(n,avail*0.25); buys={}
+                for t,x in a.items(): buys[t]=buys.get(t,0)+x
+                for t,x in b8.items(): buys[t]=buys.get(t,0)+x
         else: buys=distribute(needs,avail*.50)
         for t,a in buys.items():
             if t in active8:
