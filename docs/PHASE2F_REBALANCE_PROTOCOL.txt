@@ -14,7 +14,7 @@ Candidates
 All four frozen Phase 2E candidates are retained because Phase 2E did not establish
 a robust universal separation:
 - S1: 50% DCA + 50% Dip
-- S2: 50% DCA + 50% ATR8
+- S2: 50% DCA + 50% ATR8 when ATR8 is active; otherwise S1.
 - S3: 50% DCA + 25% Dip + 25% ATR8
 - S4: 100% ATR8 when active, otherwise S1
 
