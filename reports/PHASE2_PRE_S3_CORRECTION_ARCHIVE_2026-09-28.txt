@@ -1,0 +1,34 @@
+PHASE 2 PRE-S3-CORRECTION ARCHIVE — 2026-09-28
+
+Purpose
+Preserve the pre-S3-correction Phase 2 state for direct comparison with the corrected rerun.
+
+Baseline commit
+7f1836c2fc — Add FFMM Risky norris (2026-09-28 01:59:27Z)
+The complete pre-correction state remains permanently available in Git history.
+
+Definition issue
+S2 was incorrectly treated as ATR8-only when no ATR8 opportunity was active.
+S3 was also incorrectly prevented from falling back to S1 when no ATR8 opportunity was active.
+
+Correct definitions for the rerun
+S1 = 50% DCA + 50% Dip.
+S2 = 50% DCA + 50% ATR8 when ATR8 is active; otherwise exact S1 behavior.
+S3 = 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active; otherwise exact S1 behavior.
+S4 = 100% ATR8 when ATR8 is active; otherwise exact S1 behavior.
+
+Pre-correction reference results
+Phase 2F common contribution-only:
+S1 27.88% CAGR / -29.41% DD
+S2 28.01% / -25.20%
+S3 27.87% / -29.41%
+S4 28.13% / -27.85%
+
+Phase 2G median post-contribution CAGR:
+S1 60.25%; S2 42.42%; S3 60.24%; S4 59.40%.
+
+Phase 2H median ten-year CAGR:
+S1 68.17%; S2 51.09%; S3 68.17%; S4 67.50%.
+
+These values are retained only as the pre-correction comparison baseline.
+Corrected reruns must be evaluated independently and must not use the old results to tune parameters or weights.
