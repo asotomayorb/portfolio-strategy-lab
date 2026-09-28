@@ -137,7 +137,7 @@ def run(start,end,strategy,ohlc,feat,targets):
         elif strategy=="S2_DCA50_ATR8_50" and active8:
             n={t:{"need":max(0,targets[t]*equity-shares[t]*last[t]-pb.get(t,0)),"level":8,"target":targets[t]} for t in active8}
             n={t:v for t,v in n.items() if v["need"]>0}; buys=distribute(n,avail*.50)
-                elif strategy=="S3_DCA50_Dip25_ATR8_25":
+        elif strategy=="S3_DCA50_Dip25_ATR8_25":
             if not active8:
                 # No ATR8 anywhere today: exact S1 opportunity behavior.
                 b=dist(needs,budget*0.50)
@@ -147,7 +147,7 @@ def run(start,end,strategy,ohlc,feat,targets):
                 b8=dist(n,budget*0.25); b={}
                 for t,x in a.items(): b[t]=b.get(t,0)+x
                 for t,x in b8.items(): b[t]=b.get(t,0)+x
-        else: buys=distribute(needs,avail*.50)
+        else: buys=distribute(needs,available_dip*.50)
         for t,a in buys.items():
             if t in active8:
                 room=max(0,targets[t]*equity-shares[t]*last[t]-pb.get(t,0))
