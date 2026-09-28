@@ -5,7 +5,7 @@ Status: FROZEN before execution.
 
 Purpose
 -------
-Test how a pre-existing initial capital balance should be phased into the frozen Phase 2 entry engine. This stage does not change the ATR/HH52 trigger definitions, S1-S4 strategy definitions, D3 simultaneous-capital rule, costs, or cash-floor definition.
+Test how a pre-existing initial capital balance should be phased into the frozen Phase 2 entry engine. The frozen S3 fallback is S1 whenever no ATR8 opportunity is active. This stage does not change the ATR/HH52 trigger definitions, S1-S4 strategy definitions, D3 simultaneous-capital rule, costs, or cash-floor definition.
 
 Pre-registered deployment variants
 ----------------------------------
