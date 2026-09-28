@@ -167,7 +167,15 @@ Phase 2H is a separate post-Phase-2 sensitivity for a single initial USD 12,000 
 The validated run covered 18 cohorts. Ten-year CAGR medians were approximately 68.17% (S1), 51.09% (S2), 68.17% (S3), and 67.50% (S4). Median final-equity multiples were 182.31x, 62.88x, 182.29x and 175.39x respectively. Median max drawdowns were approximately -87.57%, -85.44%, -87.54% and -87.66%. The results are highly cohort-dependent and descriptive historical observations, not forecasts or expected returns; no Phase 2 winner is declared.
 
 
-## Phase 1 + Phase 2 synthesis — 2026-09-27
+## Phase 1 + Phase 2 synthesis — 2026-09-27 — SUPERSEDED FOR PHASE 2
+
+The following Phase 2 synthesis was produced before the S2/S3 definition corrections and is retained only as historical comparison. It must not be used as the current Phase 2 conclusion.
+
+## Phase 1 + Phase 2 synthesis — 2026-09-28 — PENDING CORRECTED RERUN
+
+The corrected Phase 2 synthesis is intentionally pending until the corrected 2C/2E/2G/2H runs are validated. Phase 1 remains closed and unchanged.
+
+## Historical pre-correction Phase 2 synthesis — 2026-09-27
 The complete research set is now synthesized. Phase 1 does not produce a robust universal winner, and Phase 2E likewise does not establish a robust universal separation among S1-S4. Therefore the research does not justify declaring a single historically superior strategy from the frozen evidence.
 
 For the user's stated decision priorities — (1) CAGR, (2) lower drawdown, (3) implementation simplicity — the evidence can be narrowed without pretending that the robustness gate selected a winner:
@@ -180,7 +188,11 @@ For the user's stated decision priorities — (1) CAGR, (2) lower drawdown, (3) 
 Practical research shortlist for the next decision step: retain S2 and S4 as the two materially distinct Phase 2 profiles (lower-drawdown profile versus higher-CAGR profile), while treating S1/S3 as near-duplicates for decision purposes. This is a descriptive shortlist, not a statistical or historical winner selection.
 
 
-## Phase 2I — operational comparison — 2026-09-27
+## Phase 2I — operational comparison — 2026-09-27 — SUPERSEDED FOR PHASE 2
+
+The following operational comparison used the pre-correction S2 definition and is retained only for historical comparison. It must not be used for the corrected S2/S3 decision.
+
+## Historical Phase 2I — operational comparison — 2026-09-27
 The completed research is now reduced to an operational comparison of S2 and S4 without reopening the frozen Phase 2E robustness gate. Durable details are recorded in docs/PHASE2I_OPERATIONAL_COMPARISON_2026-09-27.txt.
 
 For the recurring-contribution implementation, the validated baseline is contribution-only reweighting: future DCA contributions correct current underweights first, with no existing-position sales. Phase 2F found that adding sales materially reduced common-history CAGR while changing drawdown very little.
@@ -203,4 +215,4 @@ The repository protocols, Phase 2 engine and affected post-Phase-2 extensions we
 - Phase 2F, common contribution-only baseline: S2 CAGR ~28.19%, max drawdown ~-27.73%, Sharpe ~1.093.
 - Phase 2G, 18 cohorts: median post-contribution CAGR ~59.40%, median final multiple ~88.29x, median max drawdown ~-86.33%.
 
-These results are descriptive. The corrected 2C, 2E and 2H reruns remain in progress; no Phase 2 synthesis or S2/S4 operational conclusion should use the superseded S2 results until those runs are validated.
+These results are descriptive. Corrected S2/S3 reruns are now being executed across Phase 2A/2C/2D/2E/2F/2G/2H. Corrected 2A, 2D and 2F have completed successfully; corrected 2C/2E/2G/2H remain in progress. The earlier Phase 2 synthesis and S2/S4 operational comparison are explicitly superseded.
