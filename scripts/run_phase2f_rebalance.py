@@ -234,11 +234,15 @@ def run(history,mode):
                     if need>0: n[t]={"need":need,"level":8.0,"target":targets[t]}
                 buys=distribute(n,available_dip*0.50)
             elif strat=="S3_DCA50_Dip25_ATR8_25":
-                a=distribute(needs,available_dip*0.25)
-                n={t:v for t,v in needs.items() if v["level"]==8.0}
-                b=distribute(n,available_dip*0.25); buys={}
-                for t,x in a.items(): buys[t]=buys.get(t,0)+x
-                for t,x in b.items(): buys[t]=buys.get(t,0)+x
+                if not active8:
+                    # No ATR8 anywhere today: exact S1 opportunity behavior.
+                    buys=distribute(needs,available_dip*0.50)
+                else:
+                    a=distribute(needs,available_dip*0.25)
+                    n={t:v for t,v in needs.items() if v["level"]==8.0}
+                    b=distribute(n,available_dip*0.25); buys={}
+                    for t,x in a.items(): buys[t]=buys.get(t,0)+x
+                    for t,x in b.items(): buys[t]=buys.get(t,0)+x
             else:
                 buys=distribute(needs,available_dip*0.50)
 
