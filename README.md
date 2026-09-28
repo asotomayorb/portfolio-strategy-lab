@@ -6,7 +6,7 @@ Reproducible research comparing investment strategy families before any user-spe
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
 ## Current status — 2026-09-27
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is being revalidated after a definition correction to S2 discovered on 2026-09-28. The corrected rule is: S2 uses 50% DCA + 50% ATR8 when any ATR8 opportunity is active; when no ATR8 is active, S2 behaves exactly as S1 (50% DCA + 50% Dip). Phase 2A and 2D have been rerun successfully with the corrected engine. Phase 2F and 2G have also been rerun successfully; 2C, 2E and 2H reruns remain in progress. All prior S2 results from the affected runs are superseded and must not be used. No Phase 2 strategy winner is declared until the corrected robustness set is complete.
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is being revalidated after definition corrections to S2 and S3 discovered on 2026-09-28. The corrected rules are: S2 uses 50% DCA + 50% ATR8 when any ATR8 opportunity is active; when no ATR8 is active, S2 behaves exactly as S1. S3 uses 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active; when no ATR8 is active, S3 behaves exactly as S1. The prior Phase 2 state is preserved in Git history and in reports/PHASE2_PRE_S3_CORRECTION_ARCHIVE_2026-09-28.txt. The Phase 2A, 2C, 2D, 2E, 2F, 2G and 2H stages are being rerun under the corrected definitions. All prior S2/S3 results from affected runs are superseded and must not be used for the new synthesis. No Phase 2 strategy winner is declared until the corrected robustness set is complete.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -194,8 +194,8 @@ S2 therefore has the lower observed drawdown and simpler state structure; S4 has
 Phase 3 remains blocked until the human freezes the operating rule set.
 
 
-## S2 definition correction and revalidation — 2026-09-28
-A definition error was found in the original Phase 2 implementation: S2 was treated as ATR8-only even on days when no ATR8 opportunity was active. The intended frozen behavior is conditional: S2 = 50% DCA + 50% ATR8 when at least one ATR8 opportunity is active; otherwise S2 must behave exactly as S1 = 50% DCA + 50% Dip.
+## S2/S3 definition correction and full Phase 2 revalidation — 2026-09-28
+Definition errors were found in the original Phase 2 implementation: S2 was treated as ATR8-only when no ATR8 opportunity was active, and S3 did not fall back to S1 when no ATR8 opportunity was active. The intended frozen behavior is conditional: S2 = 50% DCA + 50% ATR8 when ATR8 is active, otherwise S1; S3 = 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active, otherwise S1.
 
 The repository protocols, Phase 2 engine and affected post-Phase-2 extensions were corrected. Successfully completed corrected reruns so far:
 - Phase 2A, common D3: S2 CAGR ~28.47%, max drawdown ~-25.52%, Sharpe ~1.119; expanding D3 CAGR ~48.90%, max drawdown ~-90.72%.
