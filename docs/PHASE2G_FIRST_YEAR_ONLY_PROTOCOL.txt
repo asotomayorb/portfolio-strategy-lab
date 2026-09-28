@@ -47,7 +47,7 @@ TRADING ENGINE
 - Normal allocation room = max(0, target - current - pending).
 - S1: 50% DCA + 50% Dip.
 - S2: 50% DCA + 50% ATR8 when ATR8 is active; otherwise S1.
-- S3: 50% DCA + 25% Dip + 25% ATR8.
+- S3: 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active; otherwise S1.
 - S4: 100% ATR8 when active, otherwise S1.
 - D3 deepest-first simultaneous-capital allocation.
 - 5% cash floor.
