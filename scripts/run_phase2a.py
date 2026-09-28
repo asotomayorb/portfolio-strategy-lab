@@ -294,12 +294,8 @@ def run(mode="expanding", strategy="all", dist="all"):
                 # No ATR8 anywhere today: exact S1 opportunity behavior.
                 buys=distribute(needs,available_for_dip*0.50,distribution)
             elif strat=="S3_DCA50_Dip25_ATR8_25":
-                dip_buys=distribute(needs,available_for_dip*0.25,distribution)
-                atr_needs={t:v for t,v in needs.items() if v["level"]==8.0}
-                atr_buys=distribute(atr_needs,available_for_dip*0.25,distribution)
-                buys={}
-                for t,a in dip_buys.items(): buys[t]=buys.get(t,0)+a
-                for t,a in atr_buys.items(): buys[t]=buys.get(t,0)+a
+                # No ATR8 anywhere today: exact S1 opportunity behavior.
+                buys=distribute(needs,available_for_dip*0.50,distribution)
             else:
                 buys=distribute(needs,available_for_dip*0.50,distribution)
             # Enforce the frozen allocation-room rule after combining DCA and dip/ATR8 orders.
