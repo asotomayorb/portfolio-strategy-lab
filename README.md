@@ -5,8 +5,8 @@ Reproducible research comparing investment strategy families before any user-spe
 ## START HERE
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
-## Current status — 2026-09-27
-Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 is being revalidated after definition corrections to S2 and S3 discovered on 2026-09-28. The corrected rules are: S2 uses 50% DCA + 50% ATR8 when any ATR8 opportunity is active; when no ATR8 is active, S2 behaves exactly as S1. S3 uses 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active; when no ATR8 is active, S3 behaves exactly as S1. The prior Phase 2 state is preserved in Git history and in reports/PHASE2_PRE_S3_CORRECTION_ARCHIVE_2026-09-28.txt. The Phase 2A, 2C, 2D, 2E, 2F, 2G and 2H stages are being rerun under the corrected definitions. All prior S2/S3 results from affected runs are superseded and must not be used for the new synthesis. No Phase 2 strategy winner is declared until the corrected robustness set is complete.
+## Current status — 2026-09-28
+Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 has completed the full corrected revalidation after the S2/S3 definition errors discovered on 2026-09-28. Corrected rules: S2 uses 50% DCA + 50% ATR8 when ATR8 is active and otherwise exactly S1; S3 uses 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active and otherwise exactly S1. All corrected Phase 2A/2C/2D/2E/2F/2G/2H runs completed successfully and passed validation. The prior Phase 2 state is preserved in Git history and reports/PHASE2_PRE_S3_CORRECTION_ARCHIVE_2026-09-28.txt. The corrected robustness gate does not establish statistically robust separation among S1-S4. The final corrected synthesis is reports/PHASE2_FINAL_SYNTHESIS_2026-09-28.txt. Phase 3 remains blocked until a human explicitly freezes an operating rule set.
 
 Phase 1 compared Buy & Hold, DCA, Momentum, Rotation, Moving Average, Dynamic Allocation and Risk Parity. Value is intentionally omitted until comparable point-in-time historical valuation data are available; it is not treated as a failed strategy.
 
@@ -171,9 +171,9 @@ The validated run covered 18 cohorts. Ten-year CAGR medians were approximately 6
 
 The following Phase 2 synthesis was produced before the S2/S3 definition corrections and is retained only as historical comparison. It must not be used as the current Phase 2 conclusion.
 
-## Phase 1 + Phase 2 synthesis — 2026-09-28 — PENDING CORRECTED RERUN
+## Phase 1 + Phase 2 synthesis — 2026-09-28 — COMPLETE
 
-The corrected Phase 2 synthesis is intentionally pending until the corrected 2C/2E/2G/2H runs are validated. Phase 1 remains closed and unchanged.
+The corrected Phase 2 synthesis is complete after validation of corrected 2C/2E/2G/2H. The durable report is reports/PHASE2_FINAL_SYNTHESIS_2026-09-28.txt. The corrected robustness evidence does not establish a statistically robust universal winner among S1-S4.
 
 ## Historical pre-correction Phase 2 synthesis — 2026-09-27
 The complete research set is now synthesized. Phase 1 does not produce a robust universal winner, and Phase 2E likewise does not establish a robust universal separation among S1-S4. Therefore the research does not justify declaring a single historically superior strategy from the frozen evidence.
@@ -209,10 +209,4 @@ Phase 3 remains blocked until the human freezes the operating rule set.
 ## S2/S3 definition correction and full Phase 2 revalidation — 2026-09-28
 Definition errors were found in the original Phase 2 implementation: S2 was treated as ATR8-only when no ATR8 opportunity was active, and S3 did not fall back to S1 when no ATR8 opportunity was active. The intended frozen behavior is conditional: S2 = 50% DCA + 50% ATR8 when ATR8 is active, otherwise S1; S3 = 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active, otherwise S1.
 
-The repository protocols, Phase 2 engine and affected post-Phase-2 extensions were corrected. Successfully completed corrected reruns so far:
-- Phase 2A, common D3: S2 CAGR ~28.47%, max drawdown ~-25.52%, Sharpe ~1.119; expanding D3 CAGR ~48.90%, max drawdown ~-90.72%.
-- Phase 2D, common D3 at 0% cash floor: S2 CAGR ~28.98%, max drawdown ~-25.57%, Sharpe ~1.128.
-- Phase 2F, common contribution-only baseline: S2 CAGR ~28.19%, max drawdown ~-27.73%, Sharpe ~1.093.
-- Phase 2G, 18 cohorts: median post-contribution CAGR ~59.40%, median final multiple ~88.29x, median max drawdown ~-86.33%.
-
-These results are descriptive. Corrected S2/S3 reruns are now being executed across Phase 2A/2C/2D/2E/2F/2G/2H. Corrected 2A, 2D and 2F have completed successfully; corrected 2C/2E/2G/2H remain in progress. The earlier Phase 2 synthesis and S2/S4 operational comparison are explicitly superseded.
+The repository protocols, Phase 2 engine and affected post-Phase-2 extensions were corrected. All corrected Phase 2A/2C/2D/2E/2F/2G/2H reruns completed successfully and were validated. The corrected common recurring-contribution baseline is approximately 27.87%-28.47% CAGR with -29.22% to -25.52% max drawdown across S1-S4. Phase 2E bootstrap pairwise probabilities remain near 50%, so the robustness gate does not establish statistically robust separation. Phase 2G and 2H confirm that recurring-contribution CAGR cannot be reused for first-year-only or lump-sum capital deployment. The earlier Phase 2 synthesis and S2/S4 operational comparison remain historical and superseded for decision purposes.
