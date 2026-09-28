@@ -29,3 +29,7 @@ INTERPRETATION
 Compare 0% against the already validated 5% baseline on CAGR/TWR-style return, maximum drawdown, Sharpe, Sortino, cash utilization, trades and trigger events. The purpose is to identify sensitivity, not select a winner.
 
 No strategy is promoted from this test alone. Results must pass subsequent walk-forward, universe, cost, holdout and statistical robustness checks.
+
+
+Revalidation note — 2026-09-28
+The Stage 2D run must be repeated after the S3 fallback correction because S3 is a tested Phase 2 candidate. The prior Stage 2D results remain available in Git history as the pre-correction baseline.
