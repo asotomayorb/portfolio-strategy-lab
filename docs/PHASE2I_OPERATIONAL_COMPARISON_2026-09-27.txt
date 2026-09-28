@@ -70,18 +70,15 @@ COMMON-HISTORY EVIDENCE
 Contribution-only baseline, 2020-09-30 to 2026-09-24:
 
 S2:
-- CAGR: 28.01%
-- Maximum drawdown: -25.20%
-- Sharpe: 1.110
+- Prior figures: 28.01% CAGR / -25.20% max drawdown / 1.110 Sharpe.
+- These figures are SUPERSEDED because the original S2 implementation omitted the required S1 fallback when no ATR8 was active.
 
 S4:
 - CAGR: 28.13%
 - Maximum drawdown: -27.85%
 - Sharpe: 1.091
 
-The observed CAGR difference is 0.12 percentage points in favor of S4.
-The observed maximum-drawdown difference is 2.65 percentage points, with S2
-having the smaller drawdown.
+The prior S2/S4 differences are no longer valid for comparison. A corrected S2 rerun is required before drawing an operational comparison.
 
 Phase 2E bootstrap uncertainty did not establish robust separation among S1-S4.
 Therefore these common-history differences are descriptive and must not be
@@ -109,17 +106,17 @@ historical outcomes.
 
 Phase 2G:
 - USD 1,000/month for 12 months, then zero contributions.
-- S2 median post-contribution CAGR: 42.42%.
+- S2 median post-contribution CAGR: 59.40% (corrected rerun).
 - S4 median post-contribution CAGR: 59.40%.
-- S2 median final-equity multiple: 25.21x.
+- S2 median final-equity multiple: 88.29x (corrected rerun).
 - S4 median final-equity multiple: 88.30x.
 - These are 18 historical cohorts and descriptive, not forecasts.
 
 Phase 2H:
 - USD 12,000 initially, then zero contributions.
-- S2 median CAGR: 51.09%.
+- S2 median CAGR: pending corrected Phase 2H rerun; the prior 51.09% figure is superseded.
 - S4 median CAGR: 67.50%.
-- S2 median final-equity multiple: 62.88x.
+- S2 median final-equity multiple: pending corrected Phase 2H rerun; the prior 62.88x figure is superseded.
 - S4 median final-equity multiple: 175.39x.
 - These are 18 historical cohorts and descriptive, not forecasts.
 
@@ -167,3 +164,10 @@ Phase 3 remains blocked until the human freezes:
 4. the final cash-floor and execution assumptions already frozen by research.
 
 No Phase 2 definitions are reopened by this document.
+
+
+REVALIDATION NOTE — 2026-09-28
+--------------------------------
+The S2 definition was corrected after discovering that the original implementation treated S2 as ATR8-only even when no ATR8 opportunity was active. Correct behavior is: 50% DCA + 50% ATR8 when ATR8 is active; otherwise exactly S1 (50% DCA + 50% Dip).
+
+The repository engine and affected extension scripts were corrected. Corrected Phase 2A, 2D, 2F and 2G runs have completed successfully. Their results supersede the corresponding pre-correction S2 figures. Corrected 2C, 2E and 2H runs remain in progress as of this update; the operational comparison should remain provisional until those runs and artifacts are validated.
