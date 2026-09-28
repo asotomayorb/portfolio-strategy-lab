@@ -14,7 +14,7 @@ the factual differences that matter for implementation.
 
 CANDIDATES
 ----------
-S2 = 50% DCA + 50% ATR8.
+S2 = 50% DCA + 50% ATR8 when ATR8 is active; otherwise S1 (50% DCA + 50% Dip).
 S4 = 100% ATR8 when ATR8 is active; otherwise S1
      (50% DCA + 50% Dip).
 
@@ -42,8 +42,8 @@ OPERATIONAL DIFFERENCE
 S2:
 1. Half of the monthly contribution is the DCA sleeve.
 2. The other half is reserved for ATR8 opportunities.
-3. When an ATR8 trigger occurs, eligible capital is allocated under D3.
-4. The strategy does not switch to the broader four-level Dip mechanism.
+3. When an ATR8 trigger occurs, eligible capital is allocated under D3. When no ATR8 is active, the opportunity sleeve follows S1's four-level Dip behavior.
+4. When ATR8 is active, the strategy does not switch to the broader four-level Dip mechanism; when no ATR8 is active, it behaves exactly as S1.
 
 S4:
 1. When at least one ATR8 opportunity is active, the full strategy allocation
