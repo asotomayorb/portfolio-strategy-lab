@@ -68,3 +68,8 @@ NEXT IMPLEMENTATION GATE
 Do not wire a live vendor into the strategy or order path yet. First perform the authenticated symbol/endpoint coverage test and a short data-quality soak test. If Tiingo passes, implement it behind a vendor-neutral MarketDataProvider interface with mocked unit tests, then add a read-only Streamlit market-data diagnostics screen. Do not alter Phase 1/Phase 2 engines or generate/send live orders in this step.
 
 Phase 3 remains blocked pending the user's explicit freeze of the operating rule set and all protocol safety gates.
+
+
+ADDITIONAL CRYPTO DATA CAVEAT
+-----------------------------
+Tiingo's Crypto Top-of-Book endpoint documentation now carries a deprecation warning because cross-exchange bid/ask construction has been unreliable. The proof of concept must use the Crypto Prices endpoint for last-price/reference and OHLC data only; do not rely on Tiingo for a consolidated BTC bid/ask. IBKR must provide the executable BTC quote/order validation if the selected IBKR instrument supports it. If IBKR cannot provide a suitable executable quote for the chosen BTC instrument, BTC order proposals remain disabled until a separately validated execution-price source is selected.
