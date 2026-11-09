@@ -44,15 +44,15 @@ Official documentation:
 
 WHY IT IS THE FIRST CANDIDATE
 -----------------------------
-It appears to cover the portfolio's two market-data needs with one vendor family: US-listed equity/ETF reference prices and BTCUSD crypto prices. Its current self-serve pricing and limits make a personal-use proof of concept inexpensive. Five years of history is sufficient in principle to warm up the 20-week ATR and 52-week swing-high calculations, but actual endpoint entitlements and symbol coverage must be tested.
+It appears to cover the portfolio's two market-data needs with one vendor family: US-listed equity/ETF reference prices and BTCUSD crypto prices. Its current self-serve pricing and limits make a personal-use proof of concept inexpensive. Production data-provider eligibility is based on current reference-price coverage, not on an instrument having 52 weeks of listing/history. Historical data is optional in production; the legacy historical files remain the source for experimental backtests. Any available history may be displayed, including a short history for a newly listed instrument.
 
 UNRESOLVED / MUST PASS BEFORE ADOPTION
 --------------------------------------
-1. Authenticate and request each of the 12 US-listed symbols individually; record exact symbol, venue/asset type, returned fields and entitlement status.
+1. Authenticate and request each of the 12 US-listed symbols individually; record exact symbol, venue/asset type, returned fields and entitlement status. Current reference-price coverage is the gate; do not reject a newly listed instrument because it has less than 52 weeks of history.
 2. Authenticate BTCUSD crypto REST and WebSocket requests; confirm pair metadata, quote currency USD, OHLC interval support and timestamp semantics.
 3. Verify the 24x5 US equity REST and WebSocket endpoints return usable reference prices for every holding, including ETFs.
 4. Measure actual update latency, missing/stale periods, reconnect behavior, rate limits and market-closed behavior over a representative observation period.
-5. Confirm daily historical OHLC coverage and corporate-action/adjustment semantics are suitable for the weekly Wilder ATR and confirmed HH52 calculation. Do not silently mix adjusted and unadjusted series.
+5. Historical OHLC is optional for production price display. When history is available, report its actual start/end dates and observation count; do not impose a 52-week minimum on symbol coverage. Strategy indicators requiring 52 weeks (HH52 / ATR20W) must remain unavailable until sufficient valid observations exist. Do not silently mix adjusted and unadjusted series.
 6. Compare selected provider prices with IBKR quotes during overlapping market hours; define instrument-specific discrepancy tolerances before enabling order proposals.
 7. Verify the current Tiingo terms and exact plan entitlements before deployment. No public display, redistribution or multi-user use is assumed.
 8. Keep provider tokens outside GitHub, source files, logs and browser code. Use environment secrets and redact credentials from errors.
@@ -81,9 +81,9 @@ A credential-safe diagnostic has been added at scripts/validate_tiingo_coverage.
 
   TIINGO_API_KEY=... python scripts/validate_tiingo_coverage.py
 
-The probe does not test WebSocket continuity/latency, does not validate executable prices, and does not authorize order generation. Its pure helper functions have unit tests in tests/test_tiingo_coverage.py. Live REST validation remains pending until a user-owned API key is configured in the execution environment.
+The probe does not require 250 daily rows or any minimum history length. It does not test WebSocket continuity/latency, does not validate executable prices, and does not authorize order generation. Its pure helper functions have unit tests in tests/test_tiingo_coverage.py. Live REST validation remains pending until a user-owned API key is configured in the execution environment.
 
 
 GITHUB ACTIONS VALIDATION
 -------------------------
-A manual workflow is available at .github/workflows/tiingo-coverage.yml. Before dispatching it, add the API token as a repository Actions secret named TIINGO_API_KEY (GitHub repository Settings -> Secrets and variables -> Actions -> New repository secret). Do not commit the token or place it in workflow inputs. Then run Actions -> Tiingo market-data coverage -> Run workflow. The workflow checks the same current portfolio universe and prints only the sanitized diagnostic summary. If the secret is absent, it exits before making requests.
+A manual workflow is available at .github/workflows/tiingo-coverage.yml. Before dispatching it, add the API token as a repository Actions secret named TIINGO_API_KEY (GitHub repository Settings -> Secrets and variables -> Actions -> New repository secret). Do not commit the token or place it in workflow inputs. Then run Actions -> Tiingo market-data coverage -> Run workflow. The workflow checks the same current portfolio universe and prints only the sanitized diagnostic summary. Current-price coverage is the pass/fail gate; history length is informational. If the secret is absent, it exits before making requests.
