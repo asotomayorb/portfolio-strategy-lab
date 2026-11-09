@@ -1,4 +1,9 @@
-from scripts.validate_tiingo_coverage import _first_record, _positive, _valid_ohlc_rows, load_market_symbols
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+
+from validate_tiingo_coverage import _first_record, _positive, _valid_ohlc_rows, load_market_symbols
 
 
 def test_first_record_handles_list_and_dict():
