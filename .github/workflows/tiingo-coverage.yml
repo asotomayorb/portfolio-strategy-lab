@@ -1,0 +1,28 @@
+name: Tiingo market-data coverage
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "Start date for daily OHLC history validation (YYYY-MM-DD)"
+        required: true
+        default: "2024-01-01"
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    env:
+      TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check API secret
+        run: |
+          if [ -z "$TIINGO_API_KEY" ]; then
+            echo "::error::Repository secret TIINGO_API_KEY is not configured."
+            exit 2
+          fi
+      - name: Validate portfolio symbol and history coverage
+        run: python scripts/validate_tiingo_coverage.py --start-date "${{ inputs.start_date }}"
