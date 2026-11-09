@@ -6,7 +6,7 @@ import csv
 import json
 import os
 import sys
-from datetime import date
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -55,10 +55,11 @@ def _first_record(payload: Any) -> dict[str, Any]:
 
 
 def _valid_ohlc_rows(payload: Any) -> int:
-    if not isinstance(payload, list):
-        return 0
+    if isinstance(payload, dict) and "priceData" in payload:
+        payload = payload["priceData"]
+    rows = payload if isinstance(payload, list) else [payload] if isinstance(payload, dict) else []
     valid = 0
-    for row in payload:
+    for row in rows:
         if not isinstance(row, dict):
             continue
         try:
@@ -134,6 +135,7 @@ def check_crypto(pair: str, token: str, start_date: str) -> dict[str, Any]:
         result["error"] = f"{type(exc).__name__}: {exc}"
     result["coverage_pass"] = (
         result.get("pair_metadata_pass") is True
+        and result.get("reference_price_available") is True
         and result.get("history_endpoint") == "ok"
     )
     return result
@@ -157,7 +159,7 @@ def main() -> int:
 
     summary = {
         "provider": "Tiingo",
-        "checked_at_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        "checked_at_utc": datetime.now(timezone.utc).isoformat(),
         "history_start_date": args.start_date,
         "results": results,
         "coverage_passed": sum(bool(row.get("coverage_pass")) for row in results),
