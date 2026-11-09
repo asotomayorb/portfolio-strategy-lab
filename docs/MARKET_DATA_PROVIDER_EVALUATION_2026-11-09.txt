@@ -73,3 +73,12 @@ Phase 3 remains blocked pending the user's explicit freeze of the operating rule
 ADDITIONAL CRYPTO DATA CAVEAT
 -----------------------------
 Tiingo's Crypto Top-of-Book endpoint documentation now carries a deprecation warning because cross-exchange bid/ask construction has been unreliable. The proof of concept must use the Crypto Prices endpoint for last-price/reference and OHLC data only; do not rely on Tiingo for a consolidated BTC bid/ask. IBKR must provide the executable BTC quote/order validation if the selected IBKR instrument supports it. If IBKR cannot provide a suitable executable quote for the chosen BTC instrument, BTC order proposals remain disabled until a separately validated execution-price source is selected.
+
+
+READ-ONLY REST COVERAGE PROBE
+-----------------------------
+A credential-safe diagnostic has been added at scripts/validate_tiingo_coverage.py. It reads the current portfolio_allocation.csv, checks the 12 US-listed symbols against the 24x5 reference-price REST endpoint and daily OHLC history endpoint, and checks BTCUSD via the Crypto Prices endpoint plus daily OHLC history. It prints a sanitized JSON summary and never prints or stores the token. Run it locally with TIINGO_API_KEY set in the environment:
+
+  TIINGO_API_KEY=... python scripts/validate_tiingo_coverage.py
+
+The probe does not test WebSocket continuity/latency, does not validate executable prices, and does not authorize order generation. Its pure helper functions have unit tests in tests/test_tiingo_coverage.py. Live REST validation remains pending until a user-owned API key is configured in the execution environment.
