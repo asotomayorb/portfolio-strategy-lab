@@ -52,7 +52,7 @@ UNRESOLVED / MUST PASS BEFORE ADOPTION
 2. Authenticate BTCUSD crypto REST and WebSocket requests; confirm pair metadata, quote currency USD, OHLC interval support and timestamp semantics.
 3. Verify the 24x5 US equity REST and WebSocket endpoints return usable reference prices for every holding, including ETFs.
 4. Measure actual update latency, missing/stale periods, reconnect behavior, rate limits and market-closed behavior over a representative observation period.
-5. Historical OHLC is optional for production price display. When history is available, report its actual start/end dates and observation count; do not impose a 52-week minimum on symbol coverage. Strategy indicators requiring 52 weeks (HH52 / ATR20W) must remain unavailable until sufficient valid observations exist. Do not silently mix adjusted and unadjusted series.
+5. Historical OHLC is optional for production price display. When history is available, report its actual start/end dates and observation count; do not impose a 52-week minimum on symbol coverage. HH52 must remain unavailable until 52 weeks of valid observations exist; ATR20W must remain unavailable until 20 valid weekly observations exist. Any combined ATR%-to-HH52 signal remains unavailable until both inputs are valid. Do not silently mix adjusted and unadjusted series.
 6. Compare selected provider prices with IBKR quotes during overlapping market hours; define instrument-specific discrepancy tolerances before enabling order proposals.
 7. Verify the current Tiingo terms and exact plan entitlements before deployment. No public display, redistribution or multi-user use is assumed.
 8. Keep provider tokens outside GitHub, source files, logs and browser code. Use environment secrets and redact credentials from errors.
