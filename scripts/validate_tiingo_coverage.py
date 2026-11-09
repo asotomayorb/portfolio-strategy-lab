@@ -83,22 +83,30 @@ def check_equity(ticker: str, token: str, start_date: str) -> dict[str, Any]:
     result: dict[str, Any] = {"symbol": ticker, "asset_type": "US equity/ETF"}
     try:
         quote = _first_record(_get_json(f"/tiingo/equity/intraday/{ticker}", token))
-        result["quote_endpoint"] = "ok" if quote.get("ticker", "").upper() == ticker else "unexpected_payload"
+        result["quote_endpoint"] = "ok" if str(quote.get("ticker", "")).upper() == ticker else "unexpected_payload"
         result["reference_price_available"] = _positive(quote.get("tngoLast"))
         result["quote_timestamp"] = quote.get("timestamp")
+    except Exception as exc:
+        result["quote_endpoint"] = "error"
+        result["quote_error"] = f"{type(exc).__name__}: {exc}"
+
+    # History is diagnostic only: a newly listed asset remains eligible for price display.
+    try:
         history = _get_json(
             f"/tiingo/daily/{ticker}/prices?{urlencode({'startDate': start_date})}",
             token,
         )
-        result["valid_daily_ohlc_rows"] = _valid_ohlc_rows(history)
-        result["history_endpoint"] = "ok" if result["valid_daily_ohlc_rows"] >= 250 else "insufficient_history"
-    except (HTTPError, URLError, TimeoutError, ValueError, KeyError, AttributeError) as exc:
-        result["error"] = f"{type(exc).__name__}: {exc}"
-    except Exception as exc:  # keep the probe diagnostic rather than crashing on provider payload changes
-        result["error"] = f"{type(exc).__name__}: {exc}"
+        rows = _valid_ohlc_rows(history)
+        result["valid_daily_ohlc_rows"] = rows
+        result["history_status"] = "available" if rows else "no_history_in_requested_window"
+    except Exception as exc:
+        result["valid_daily_ohlc_rows"] = 0
+        result["history_status"] = "unavailable"
+        result["history_error"] = f"{type(exc).__name__}: {exc}"
+
     result["coverage_pass"] = (
         result.get("quote_endpoint") == "ok"
-        and result.get("history_endpoint") == "ok"
+        and result.get("reference_price_available") is True
     )
     return result
 
@@ -118,6 +126,13 @@ def check_crypto(pair: str, token: str, start_date: str) -> dict[str, Any]:
             price_data.get("close") if isinstance(price_data, dict) else None
         )
         result["quote_timestamp"] = price_data.get("date") if isinstance(price_data, dict) else None
+    except Exception as exc:
+        result["pair_metadata_pass"] = False
+        result["reference_price_available"] = False
+        result["quote_error"] = f"{type(exc).__name__}: {exc}"
+
+    # History is diagnostic only and does not gate current-price coverage.
+    try:
         hist_query = urlencode({
             "tickers": pair,
             "startDate": start_date,
@@ -125,18 +140,19 @@ def check_crypto(pair: str, token: str, start_date: str) -> dict[str, Any]:
         })
         history = _get_json(f"/tiingo/crypto/prices?{hist_query}", token)
         history_record = _first_record(history)
-        result["valid_daily_ohlc_rows"] = _valid_ohlc_rows(
+        rows = _valid_ohlc_rows(
             history_record.get("priceData") if isinstance(history_record, dict) else None
         )
-        result["history_endpoint"] = "ok" if result["valid_daily_ohlc_rows"] >= 250 else "insufficient_history"
-    except (HTTPError, URLError, TimeoutError, ValueError, KeyError, AttributeError) as exc:
-        result["error"] = f"{type(exc).__name__}: {exc}"
+        result["valid_daily_ohlc_rows"] = rows
+        result["history_status"] = "available" if rows else "no_history_in_requested_window"
     except Exception as exc:
-        result["error"] = f"{type(exc).__name__}: {exc}"
+        result["valid_daily_ohlc_rows"] = 0
+        result["history_status"] = "unavailable"
+        result["history_error"] = f"{type(exc).__name__}: {exc}"
+
     result["coverage_pass"] = (
         result.get("pair_metadata_pass") is True
         and result.get("reference_price_available") is True
-        and result.get("history_endpoint") == "ok"
     )
     return result
 
@@ -166,8 +182,9 @@ def main() -> int:
         "coverage_total": len(results),
         "all_passed": bool(results) and all(row.get("coverage_pass") for row in results),
         "notes": [
-            "REST coverage probe only; WebSocket delivery/latency soak test remains separate.",
-            "A missing live reference price outside an active feed window is reported but does not alone fail historical/symbol coverage.",
+            "REST current-price coverage probe only; WebSocket delivery/latency soak test remains separate.",
+            "Current reference-price availability gates symbol coverage; history length is informational and never a minimum eligibility requirement.",
+            "Newly listed assets are reported with the history actually returned; 52-week indicators remain unavailable until sufficient observations exist.",
             "Crypto Top-of-Book is intentionally not queried; Tiingo documents that endpoint as deprecated.",
             "This probe does not authorize trading or validate executable prices.",
         ],
