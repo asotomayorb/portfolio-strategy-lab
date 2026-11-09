@@ -82,3 +82,8 @@ A credential-safe diagnostic has been added at scripts/validate_tiingo_coverage.
   TIINGO_API_KEY=... python scripts/validate_tiingo_coverage.py
 
 The probe does not test WebSocket continuity/latency, does not validate executable prices, and does not authorize order generation. Its pure helper functions have unit tests in tests/test_tiingo_coverage.py. Live REST validation remains pending until a user-owned API key is configured in the execution environment.
+
+
+GITHUB ACTIONS VALIDATION
+-------------------------
+A manual workflow is available at .github/workflows/tiingo-coverage.yml. Before dispatching it, add the API token as a repository Actions secret named TIINGO_API_KEY (GitHub repository Settings -> Secrets and variables -> Actions -> New repository secret). Do not commit the token or place it in workflow inputs. Then run Actions -> Tiingo market-data coverage -> Run workflow. The workflow checks the same current portfolio universe and prints only the sanitized diagnostic summary. If the secret is absent, it exits before making requests.
