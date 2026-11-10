@@ -25,4 +25,4 @@ jobs:
             exit 2
           fi
       - name: Validate current-price coverage (history is informational)
-        run: python scripts/validate_tiingo_coverage.py --start-date "${{ inputs.start_date }}"
+        run: python scripts/validate_tiingo_coverage.py
