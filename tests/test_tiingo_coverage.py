@@ -47,7 +47,7 @@ def test_new_equity_with_no_history_still_passes_current_price_coverage(monkeypa
         return []
 
     monkeypatch.setattr(probe, "_get_json", fake_get_json)
-    result = probe.check_equity("SPCX", "test-token", "2024-01-01")
+    result = probe.check_equity("SPCX", "test-token", "2024-01-01", include_history=True)
     assert result["coverage_pass"] is True
     assert result["reference_price_available"] is True
     assert result["valid_daily_ohlc_rows"] == 0
@@ -80,7 +80,33 @@ def test_new_crypto_pair_with_current_price_does_not_require_history(monkeypatch
         return [{"ticker": "btcusd", "priceData": []}]
 
     monkeypatch.setattr(probe, "_get_json", fake_get_json)
-    result = probe.check_crypto("btcusd", "test-token", "2024-01-01")
+    result = probe.check_crypto("btcusd", "test-token", "2024-01-01", include_history=True)
     assert result["coverage_pass"] is True
     assert result["valid_daily_ohlc_rows"] == 0
     assert result["history_status"] == "no_history_in_requested_window"
+
+
+def test_equity_uses_liquidity_reference_price_if_tngo_last_is_null(monkeypatch):
+    monkeypatch.setattr(
+        probe,
+        "_get_json",
+        lambda path, token: [{"ticker": "SPCX", "tngoLast": None, "lqRefPrice": 42.5}],
+    )
+    result = probe.check_equity("SPCX", "test-token", "2024-01-01")
+    assert result["coverage_pass"] is True
+    assert result["reference_price_field"] == "lqRefPrice"
+
+
+def test_history_is_not_requested_by_default(monkeypatch):
+    requested = []
+
+    def fake_get_json(path, token):
+        requested.append(path)
+        return [{"ticker": "SPCX", "tngoLast": 42.5}]
+
+    monkeypatch.setattr(probe, "_get_json", fake_get_json)
+    result = probe.check_equity("SPCX", "test-token", "2024-01-01")
+    assert result["coverage_pass"] is True
+    assert len(requested) == 1
+    assert "/intraday/" in requested[0]
+    assert "history_status" not in result
