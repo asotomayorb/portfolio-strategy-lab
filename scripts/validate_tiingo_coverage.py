@@ -79,30 +79,32 @@ def _positive(value: Any) -> bool:
         return False
 
 
-def check_equity(ticker: str, token: str, start_date: str) -> dict[str, Any]:
+def check_equity(ticker: str, token: str, start_date: str, include_history: bool = False) -> dict[str, Any]:
     result: dict[str, Any] = {"symbol": ticker, "asset_type": "US equity/ETF"}
     try:
         quote = _first_record(_get_json(f"/tiingo/equity/intraday/{ticker}", token))
         result["quote_endpoint"] = "ok" if str(quote.get("ticker", "")).upper() == ticker else "unexpected_payload"
-        result["reference_price_available"] = _positive(quote.get("tngoLast"))
+        result["reference_price_available"] = _positive(quote.get("tngoLast")) or _positive(quote.get("lqRefPrice"))
+        result["reference_price_field"] = "tngoLast" if _positive(quote.get("tngoLast")) else ("lqRefPrice" if _positive(quote.get("lqRefPrice")) else None)
         result["quote_timestamp"] = quote.get("timestamp")
     except Exception as exc:
         result["quote_endpoint"] = "error"
         result["quote_error"] = f"{type(exc).__name__}: {exc}"
 
-    # History is diagnostic only: a newly listed asset remains eligible for price display.
-    try:
-        history = _get_json(
-            f"/tiingo/daily/{ticker}/prices?{urlencode({'startDate': start_date})}",
-            token,
-        )
-        rows = _valid_ohlc_rows(history)
-        result["valid_daily_ohlc_rows"] = rows
-        result["history_status"] = "available" if rows else "no_history_in_requested_window"
-    except Exception as exc:
-        result["valid_daily_ohlc_rows"] = 0
-        result["history_status"] = "unavailable"
-        result["history_error"] = f"{type(exc).__name__}: {exc}"
+    # Historical OHLC is optional and is not queried by default.
+    if include_history:
+        try:
+            history = _get_json(
+                f"/tiingo/daily/{ticker}/prices?{urlencode({'startDate': start_date})}",
+                token,
+            )
+            rows = _valid_ohlc_rows(history)
+            result["valid_daily_ohlc_rows"] = rows
+            result["history_status"] = "available" if rows else "no_history_in_requested_window"
+        except Exception as exc:
+            result["valid_daily_ohlc_rows"] = 0
+            result["history_status"] = "unavailable"
+            result["history_error"] = f"{type(exc).__name__}: {exc}"
 
     result["coverage_pass"] = (
         result.get("quote_endpoint") == "ok"
@@ -111,7 +113,7 @@ def check_equity(ticker: str, token: str, start_date: str) -> dict[str, Any]:
     return result
 
 
-def check_crypto(pair: str, token: str, start_date: str) -> dict[str, Any]:
+def check_crypto(pair: str, token: str, start_date: str, include_history: bool = False) -> dict[str, Any]:
     result: dict[str, Any] = {"symbol": pair, "asset_type": "crypto"}
     try:
         query = urlencode({"tickers": pair})
@@ -131,24 +133,25 @@ def check_crypto(pair: str, token: str, start_date: str) -> dict[str, Any]:
         result["reference_price_available"] = False
         result["quote_error"] = f"{type(exc).__name__}: {exc}"
 
-    # History is diagnostic only and does not gate current-price coverage.
-    try:
-        hist_query = urlencode({
-            "tickers": pair,
-            "startDate": start_date,
-            "resampleFreq": "1day",
-        })
-        history = _get_json(f"/tiingo/crypto/prices?{hist_query}", token)
-        history_record = _first_record(history)
-        rows = _valid_ohlc_rows(
-            history_record.get("priceData") if isinstance(history_record, dict) else None
-        )
-        result["valid_daily_ohlc_rows"] = rows
-        result["history_status"] = "available" if rows else "no_history_in_requested_window"
-    except Exception as exc:
-        result["valid_daily_ohlc_rows"] = 0
-        result["history_status"] = "unavailable"
-        result["history_error"] = f"{type(exc).__name__}: {exc}"
+    # Historical OHLC is optional and is not queried by default.
+    if include_history:
+        try:
+            hist_query = urlencode({
+                "tickers": pair,
+                "startDate": start_date,
+                "resampleFreq": "1day",
+            })
+            history = _get_json(f"/tiingo/crypto/prices?{hist_query}", token)
+            history_record = _first_record(history)
+            rows = _valid_ohlc_rows(
+                history_record.get("priceData") if isinstance(history_record, dict) else None
+            )
+            result["valid_daily_ohlc_rows"] = rows
+            result["history_status"] = "available" if rows else "no_history_in_requested_window"
+        except Exception as exc:
+            result["valid_daily_ohlc_rows"] = 0
+            result["history_status"] = "unavailable"
+            result["history_error"] = f"{type(exc).__name__}: {exc}"
 
     result["coverage_pass"] = (
         result.get("pair_metadata_pass") is True
@@ -161,6 +164,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate Tiingo REST coverage for the current portfolio.")
     parser.add_argument("--allocation", type=Path, default=DEFAULT_ALLOCATION)
     parser.add_argument("--start-date", default="2024-01-01")
+    parser.add_argument("--include-history", action="store_true", help="Query optional daily OHLC diagnostics; does not affect current-price coverage.")
     args = parser.parse_args()
 
     token = os.environ.get("TIINGO_API_KEY", "").strip()
@@ -169,9 +173,9 @@ def main() -> int:
         return 2
 
     equities, crypto_pair = load_market_symbols(args.allocation)
-    results = [check_equity(symbol, token, args.start_date) for symbol in equities]
+    results = [check_equity(symbol, token, args.start_date, include_history=args.include_history) for symbol in equities]
     if crypto_pair:
-        results.append(check_crypto(crypto_pair, token, args.start_date))
+        results.append(check_crypto(crypto_pair, token, args.start_date, include_history=args.include_history))
 
     summary = {
         "provider": "Tiingo",
@@ -183,6 +187,7 @@ def main() -> int:
         "all_passed": bool(results) and all(row.get("coverage_pass") for row in results),
         "notes": [
             "REST current-price coverage probe only; WebSocket delivery/latency soak test remains separate.",
+            "Historical OHLC requests are disabled by default; pass --include-history only when explicitly needed.",
             "Current reference-price availability gates symbol coverage; history length is informational and never a minimum eligibility requirement.",
             "Newly listed assets are reported with the history actually returned; 52-week indicators remain unavailable until sufficient observations exist.",
             "Crypto Top-of-Book is intentionally not queried; Tiingo documents that endpoint as deprecated.",
