@@ -2,11 +2,6 @@ name: Tiingo market-data coverage
 
 on:
   workflow_dispatch:
-    inputs:
-      start_date:
-        description: "Optional start date for informational daily OHLC history diagnostics (YYYY-MM-DD)"
-        required: false
-        default: "2024-01-01"
 
 jobs:
   coverage:
@@ -24,5 +19,5 @@ jobs:
             echo "::error::Repository secret TIINGO_API_KEY is not configured."
             exit 2
           fi
-      - name: Validate current-price coverage (history is informational)
+      - name: Validate current-price coverage (history is not requested)
         run: python scripts/validate_tiingo_coverage.py
