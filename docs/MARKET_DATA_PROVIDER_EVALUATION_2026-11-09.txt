@@ -77,16 +77,20 @@ Tiingo's Crypto Top-of-Book endpoint documentation now carries a deprecation war
 
 READ-ONLY REST COVERAGE PROBE
 -----------------------------
-A credential-safe diagnostic has been added at scripts/validate_tiingo_coverage.py. It reads the current portfolio_allocation.csv, checks the 12 US-listed symbols against the 24x5 reference-price REST endpoint and daily OHLC history endpoint, and checks BTCUSD via the Crypto Prices endpoint plus daily OHLC history. It prints a sanitized JSON summary and never prints or stores the token. Run it locally with TIINGO_API_KEY set in the environment:
+A credential-safe diagnostic has been added at scripts/validate_tiingo_coverage.py. By default it reads portfolio_allocation.csv and checks only current reference-price availability for the 12 US-listed symbols and BTCUSD (13 instruments, one REST request per instrument). It does not query historical data unless explicitly invoked with --include-history. It prints a sanitized JSON summary and never prints or stores the token. Run it locally with TIINGO_API_KEY set in the environment:
 
   TIINGO_API_KEY=... python scripts/validate_tiingo_coverage.py
+
+Optional history diagnostics:
+
+  TIINGO_API_KEY=... python scripts/validate_tiingo_coverage.py --include-history --start-date 2024-01-01
 
 The probe does not require 250 daily rows or any minimum history length. It does not test WebSocket continuity/latency, does not validate executable prices, and does not authorize order generation. Its pure helper functions have unit tests in tests/test_tiingo_coverage.py. Live REST validation remains pending until a user-owned API key is configured in the execution environment.
 
 
 GITHUB ACTIONS VALIDATION
 -------------------------
-A manual workflow is available at .github/workflows/tiingo-coverage.yml. Before dispatching it, add the API token as a repository Actions secret named TIINGO_API_KEY (GitHub repository Settings -> Secrets and variables -> Actions -> New repository secret). Do not commit the token or place it in workflow inputs. Then run Actions -> Tiingo market-data coverage -> Run workflow. The workflow checks the same current portfolio universe and prints only the sanitized diagnostic summary. Current-price coverage is the pass/fail gate; history length is informational. If the secret is absent, it exits before making requests.
+A manual workflow is available at .github/workflows/tiingo-coverage.yml. Before dispatching it, add the API token as a repository Actions secret named TIINGO_API_KEY (GitHub repository Settings -> Secrets and variables -> Actions -> New repository secret). Do not commit the token or place it in workflow inputs. Then run Actions -> Tiingo market-data coverage -> Run workflow. The workflow checks current-price coverage only for the current portfolio universe and prints only the sanitized diagnostic summary. Historical data is not requested. If the secret is absent, it exits before making requests.
 
 
 PROVIDER FIT CONCLUSION — 2026-11-10
