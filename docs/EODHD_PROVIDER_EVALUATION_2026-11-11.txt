@@ -1,0 +1,101 @@
+EODHD PROVIDER EVALUATION — 2026-11-11
+======================================
+
+STATUS
+------
+EODHD is a promising candidate for daily historical OHLC and reference close data, but it is NOT approved for production. This document records a technical assessment and a credential-safe authenticated coverage test. No strategy engine or order path is modified.
+
+ARCHITECTURE FIT
+----------------
+Proposed split:
+1. EODHD: daily EOD OHLCV history, corporate-action reference data and daily close for research/indicators.
+2. IBKR: account positions, cash/buying power, pending orders, contract identifiers, intraday bid/ask or quote validation, order submission and fills.
+3. Strategy/Order Engine: vendor-neutral normalized data interface; no direct dependency on EODHD or IBKR.
+
+EODHD EOD data is not an intraday executable quote. The latest daily bar is a regular-session EOD observation and can be stale during the next session. IBKR remains authoritative for execution conditions. IBKR API market data for most securities requires the relevant Level 1 subscription; Forex and cryptocurrencies are documented exceptions. Delayed data must be explicitly identified and must not pass a live execution gate.
+
+PORTFOLIO SYMBOL MAPPING
+------------------------
+Current portfolio allocation is tested as:
+- US-listed tickers: TICKER.US
+- BTCUSD: BTC-USD.CC
+
+These are documented EODHD formats, not proof of authenticated coverage. The Exchange Symbol List endpoint remains the authoritative live catalog. New US-listed instruments can be tested with --extra-symbol SPCX or --extra-symbol SPCX.US.
+
+DATA AND ADJUSTMENT SEMANTICS
+-----------------------------
+The EOD endpoint returns one instrument per request and daily rows with raw Open, High, Low, Close, adjusted_close and Volume. EODHD states:
+- Open/High/Low/Close are raw and are not adjusted for splits or dividends.
+- adjusted_close is adjusted for both splits and dividends.
+- Volume is split-adjusted.
+- Split-adjusted OHLC (without dividend adjustment) is available through Technical API function=splitadjusted, which is part of the All World Extended / All-In-One package.
+- Fully adjusted OHLC can be derived using adjusted_close / close as a factor for each date, but this includes dividends and is NOT appropriate for true-range/ATR price-range calculations.
+- US EOD prices are consolidated across US exchanges for the regular session; pre/post-market is excluded.
+- Historical bars and adjusted values may be corrected/recalculated later; EODHD does not provide point-in-time data vintages.
+
+Implication for this project:
+- Do not calculate ATR20W or swing HH from adjusted_close.
+- Prefer split-adjusted OHLC for structural price indicators. Either validate the Technical API entitlement/semantics or independently apply corporate-action split factors with tests.
+- Keep raw OHLC for audit and price comparison. Preserve dividend-adjusted close separately for total-return analysis only.
+- Snapshot fetched data with retrieval timestamp/source/version so later vendor corrections do not silently rewrite a prior research result.
+- Never silently mix adjusted and unadjusted series.
+
+COVERAGE TEST IMPLEMENTED
+-------------------------
+scripts/validate_eodhd_coverage.py checks one EOD endpoint per current portfolio instrument. It reports returned rows, valid OHLC rows, adjusted-close presence, first/latest bar dates, duplicate dates and per-symbol errors. It does not impose a minimum history length: a new listing with at least one valid daily OHLC row passes basic symbol/history coverage, while HH52 and ATR20W remain unavailable until their own weekly observation requirements are satisfied.
+
+Run locally:
+  EODHD_API_KEY=... python scripts/validate_eodhd_coverage.py --start-date 2023-01-01
+
+Optional new listing:
+  EODHD_API_KEY=... python scripts/validate_eodhd_coverage.py --start-date 2023-01-01 --extra-symbol SPCX
+
+Or configure a repository Actions secret named EODHD_API_KEY and run:
+  Actions -> EODHD daily-history coverage -> Run workflow
+
+The token is supplied only through an environment variable/Actions secret. EODHD requires api_token in the request query string; the probe sanitizes request errors and never prints the URL or token. Do not paste the token into chat or commit it. The probe is read-only and does not authorize trades.
+
+PLAN / LICENSING
+----------------
+The current personal-plan comparison lists:
+- Free: 20 API calls/day and one year of EOD history.
+- EOD Historical Data — All World: full EOD history for stocks, ETFs, funds, indices, forex and crypto, plus delisted tickers, splits/dividends and bulk EOD.
+- EOD+Intraday — All World Extended: EOD package plus intraday history, real-time WebSockets, Technical API and trading hours/holidays.
+Current personal plan prices must be reconfirmed at checkout; published prices are not a commercial quote.
+
+Personal plans are restricted to personal/private use. EODHD defines commercial use broadly: use in a business activity, on behalf of clients/others, by several people, or displaying/distributing data to others in an app, website or product. Commercial licensing is required before making the product available to others; revenue is not the trigger. Ask sales for a quote covering the exact datasets, derived outputs, audience, display/download/redistribution and business model. A personal subscription is not a monetization licence.
+
+ADVANTAGES
+----------
+- Broad EOD asset-class coverage: equities, ETFs, funds, indices, FX and crypto.
+- Long historical coverage on many major markets.
+- Clear EOD API and symbol/exchange conventions.
+- Daily EOD data fits the low-frequency daily signal calculation, while IBKR handles intraday validation.
+- One endpoint per ticker keeps the 13-instrument portfolio test simple.
+
+RISKS / OPEN GATES
+------------------
+1. Authenticated symbol coverage for all 13 current portfolio instruments, including exact BTC-USD.CC mapping.
+2. Compare latest EOD bars and historical samples against a second source and IBKR during overlapping sessions; define per-instrument tolerances.
+3. Validate split-adjusted OHLC availability/entitlement and corporate-action treatment, especially NVDA's split history and ETFs.
+4. Measure missing dates, duplicate bars, late corrections, timestamp/session semantics and update delay over a representative period.
+5. Verify the exact commercial licence for a future multi-user monetized app, including display and derived indicators.
+6. Confirm whether the required data plan and API quotas cover the eventual universe and refresh cadence.
+7. Validate IBKR live market-data subscriptions and market-data availability codes. If IBKR data is delayed, frozen, unsubscribed or unavailable, block order proposals/submission.
+8. Test SPCX/new listings with whatever history exists; current EOD bar availability and indicator readiness are separate states.
+
+DECISION
+--------
+EODHD is a STRONG CANDIDATE for the daily historical-data role, not a universal or execution-price provider. The combination EODHD (daily history) + IBKR (intraday/account/execution validation) is architecturally preferable to forcing one vendor to cover every role.
+
+Do not purchase or integrate into strategy/order execution until authenticated coverage, split-adjusted OHLC, data-quality comparison and commercial licensing gates pass. Do not alter Phase 1/Phase 2 research definitions or unblock Phase 3 as part of this evaluation.
+
+OFFICIAL SOURCES
+----------------
+- EOD Historical Data API: https://eodhd.com/financial-apis/api-for-historical-data-and-volumes
+- EODHD methodology: https://eodhd.com/help/methodology
+- EODHD plans: https://eodhd.com/help/plans
+- EODHD commercial use: https://eodhd.com/help/commercial
+- EODHD crypto symbols: https://eodhd.com/financial-apis/list-supported-crypto-currencies
+- IBKR API market data: https://www.interactivebrokers.com/docs/tws-api/doc/md/introduction
+- IBKR subscriptions: https://www.interactivebrokers.com/docs/general/market-data-subscriptions/introduction
