@@ -1,0 +1,23 @@
+name: EODHD daily-history coverage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    env:
+      EODHD_API_KEY: ${{ secrets.EODHD_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check API secret
+        run: |
+          if [ -z "$EODHD_API_KEY" ]; then
+            echo "::error::Repository secret EODHD_API_KEY is not configured."
+            exit 2
+          fi
+      - name: Validate portfolio daily OHLC coverage
+        run: python scripts/validate_eodhd_coverage.py --start-date 2023-01-01
