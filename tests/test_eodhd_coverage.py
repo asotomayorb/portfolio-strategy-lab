@@ -99,3 +99,17 @@ def test_provider_http_error_is_sanitized(monkeypatch):
     assert result["coverage_pass"] is False
     assert result["error"] == "HTTP 401"
     assert "secret-token" not in str(result)
+
+
+def test_request_errors_do_not_leak_query_token(monkeypatch):
+    from urllib.error import HTTPError
+    import pytest
+
+    def fail(request, timeout):
+        raise HTTPError(request.full_url, 401, "Unauthorized", hdrs=None, fp=None)
+
+    monkeypatch.setattr(probe, "urlopen", fail)
+    with pytest.raises(ProviderRequestError) as exc:
+        probe._get_json("QQQ.US", "very-secret-token", "2023-01-01")
+    assert str(exc.value) == "HTTP 401"
+    assert "very-secret-token" not in str(exc.value)
