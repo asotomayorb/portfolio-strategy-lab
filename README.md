@@ -5,6 +5,12 @@ Reproducible research comparing investment strategy families before any user-spe
 ## START HERE
 Read docs/README_RESEARCH_MAP.txt, docs/PHASE1_PROTOCOL.txt, docs/PHASE1B_PROTOCOL.txt, and docs/PHASE2_PROTOCOL.txt before continuing. For Stage 2E execution read docs/PHASE2E_PROTOCOL.txt. For the post-Phase-2 rebalancing extension read docs/PHASE2F_REBALANCE_PROTOCOL.txt.
 
+## Separate application workstream — 2026-11-11
+
+The investment application is being simplified and separated from this research repository. Its frozen V1 scope is documented in [docs/INVESTMENT_PORTFOLIO_APP_V1_SPEC.md](docs/INVESTMENT_PORTFOLIO_APP_V1_SPEC.md). The first implementation slice is a private, local Streamlit portfolio monitor with demo data, editable holdings, local persistence and CSV import/export. It requires no API keys or broker connection. Market-data integration, indicators and read-only IBKR access are later gated stages. Order generation and execution are explicitly excluded until the user separately freezes operating rules.
+
+This repository remains the research record for Phase 1/Phase 2 and provider evaluations. Application source code is intended for a separate GitHub repository; do not add application code or dependencies to the backtest/research engine.
+
 ## Current status — 2026-09-28
 Phase 1 is COMPLETE. Phase 1B fixed-ensemble extension is CLOSED. Phase 2 has completed the full corrected revalidation after the S2/S3 definition errors discovered on 2026-09-28. Corrected rules: S2 uses 50% DCA + 50% ATR8 when ATR8 is active and otherwise exactly S1; S3 uses 50% DCA + 25% Dip + 25% ATR8 when ATR8 is active and otherwise exactly S1. All corrected Phase 2A/2C/2D/2E/2F/2G/2H runs completed successfully and passed validation. The prior Phase 2 state is preserved in Git history and reports/PHASE2_PRE_S3_CORRECTION_ARCHIVE_2026-09-28.txt. The corrected robustness gate does not establish statistically robust separation among S1-S4. The final corrected synthesis is reports/PHASE2_FINAL_SYNTHESIS_2026-09-28.txt. Phase 3 remains blocked until a human explicitly freezes an operating rule set.
 
