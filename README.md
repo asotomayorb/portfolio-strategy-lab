@@ -232,3 +232,13 @@ Tiingo is a **conditional fit**, not yet approved: it is a strong low-cost candi
 Tiingo should not be called a provider for "almost any asset" in real time: global catalog/EOD coverage does not establish real-time quotes for all global venues or asset classes. Twelve Data has broader published global asset-class coverage but Grow is USD 79/month and its US real-time stock feed represents about 5% of US volume. Massive has broad US stocks/indices/currencies/futures coverage, but real-time stocks require a materially more expensive tier. A vendor-neutral, multi-provider architecture is preferable if the universe expands.
 
 The REST coverage probe now checks current reference prices by default (13 current portfolio instruments) and does not request historical data unless explicitly invoked with --include-history. A live verdict still requires a user-owned TIINGO_API_KEY configured as an Actions secret or local environment variable, plus WebSocket soak testing and IBKR price comparison. Do not paste the token into chat or commit it.
+
+
+## EODHD daily-data evaluation — 2026-11-11
+EODHD is a strong candidate for daily historical OHLC/close data, while IBKR remains responsible for intraday quotes, account state and executable-order validation. This is a separate data-provider evaluation; it does not modify Phase 1/Phase 2 research or unblock Phase 3. See docs/EODHD_PROVIDER_EVALUATION_2026-11-11.txt.
+
+The portfolio's current 12 US-listed instruments are mapped to SYMBOL.US and BTCUSD to BTC-USD.CC. An offline-tested, read-only coverage probe is available at scripts/validate_eodhd_coverage.py with tests/test_eodhd_coverage.py and manual workflow .github/workflows/eodhd-coverage.yml. It checks daily OHLC availability and reports actual date coverage; a new listing passes basic coverage with any valid bar and is not required to have 52 weeks of history. Live validation remains pending until the user configures EODHD_API_KEY as a GitHub Actions secret or local environment variable.
+
+Important adjustment caveat: EODHD's EOD endpoint returns raw OHLC, while adjusted_close reflects both splits and dividends. ATR20W and weekly swing highs must not be calculated from adjusted_close. Split-adjusted OHLC requires the Technical API or a separately validated corporate-action adjustment. Data corrections can revise historical records and adjusted_close; persist dated snapshots for reproducible analysis.
+
+Personal EODHD plans do not permit business use, multi-user access or displaying/distributing data through an app/product. A commercial licence must be arranged before making the product available to others, even before revenue is earned. EODHD has not been approved for production and no provider key is stored in the repository.
