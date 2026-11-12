@@ -1,6 +1,11 @@
 name: EODHD split-adjusted OHLC validation
 
 on:
+  push:
+    paths:
+      - "scripts/validate_eodhd_split_adjustment.py"
+      - "tests/test_eodhd_split_adjustment.py"
+      - ".github/workflows/eodhd-split-adjustment.yml"
   workflow_dispatch:
 
 jobs:
