@@ -99,3 +99,22 @@ OFFICIAL SOURCES
 - EODHD crypto symbols: https://eodhd.com/financial-apis/list-supported-crypto-currencies
 - IBKR API market data: https://www.interactivebrokers.com/docs/tws-api/doc/md/introduction
 - IBKR subscriptions: https://www.interactivebrokers.com/docs/general/market-data-subscriptions/introduction
+
+SPLIT-ADJUSTED OHLC VALIDATION — 2026-11-12
+------------------------------------------
+Official EODHD methodology confirms that split-only adjusted OHLC is provided by the Technical API using function=splitadjusted; the EOD endpoint remains raw OHLC and adjusted_close includes both splits and dividends. The Technical API is included in EOD+Intraday — All World Extended and All-In-One personal packages, and each Technical API request consumes five API calls.
+
+A credential-safe, read-only probe has been added:
+- scripts/validate_eodhd_split_adjustment.py
+- tests/test_eodhd_split_adjustment.py
+- .github/workflows/eodhd-split-adjustment.yml
+
+The probe compares raw EOD bars against split-adjusted bars for NVDA.US (known 2024 10-for-1 split) and QQQ.US (comparison series), checking valid OHLC, overlapping dates and whether the historical NVDA OHLC changes after split adjustment. It does not use adjusted_close, modify strategy calculations, access IBKR or submit orders. It is deliberately separate from the successful 13-symbol EOD coverage workflow because Technical API entitlement is a separate plan gate.
+
+MANUAL ACTION REQUIRED: run Actions -> EODHD split-adjusted OHLC validation -> Run workflow. The existing EODHD_API_KEY secret is reused; do not add or paste the token again. A 401/403 or plan-entitlement response means the current subscription does not expose Technical API; confirm the plan in the EODHD dashboard before upgrading. A successful two-symbol probe validates only the sampled endpoint/semantics, not every asset or production suitability.
+
+OFFICIAL REFERENCES:
+- https://eodhd.com/help/methodology
+- https://eodhd.com/financial-apis/technical-indicators-api
+- https://eodhd.com/financial-academy/technical-analysis-examples/how-to-use-the-splitadjusted-function-of-the-technical-indicators-api-with-python
+- https://eodhd.com/help/plans
