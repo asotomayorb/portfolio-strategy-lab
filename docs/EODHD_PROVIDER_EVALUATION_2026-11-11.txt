@@ -111,7 +111,7 @@ A credential-safe, read-only probe has been added:
 
 The probe compares raw EOD bars against split-adjusted bars for NVDA.US (known 2024 10-for-1 split) and QQQ.US (comparison series), checking valid OHLC, overlapping dates and whether the historical NVDA OHLC changes after split adjustment. It does not use adjusted_close, modify strategy calculations, access IBKR or submit orders. It is deliberately separate from the successful 13-symbol EOD coverage workflow because Technical API entitlement is a separate plan gate.
 
-MANUAL ACTION REQUIRED: run Actions -> EODHD split-adjusted OHLC validation -> Run workflow. The existing EODHD_API_KEY secret is reused; do not add or paste the token again. A 401/403 or plan-entitlement response means the current subscription does not expose Technical API; confirm the plan in the EODHD dashboard before upgrading. A successful two-symbol probe validates only the sampled endpoint/semantics, not every asset or production suitability.
+The workflow runs automatically when its probe, tests or workflow definition change, and can also be dispatched manually from Actions -> EODHD split-adjusted OHLC validation -> Run workflow. It reuses the existing EODHD_API_KEY secret; do not add or paste the token again. A 401/403 or plan-entitlement response means the current subscription does not expose Technical API; confirm the plan in the EODHD dashboard before upgrading. A successful two-symbol probe validates only the sampled endpoint/semantics, not every asset or production suitability.
 
 OFFICIAL REFERENCES:
 - https://eodhd.com/help/methodology
