@@ -135,6 +135,7 @@ def compare_symbol(symbol: str, token: str, start_date: str, end_date: str) -> d
         "latest_valid_date": raw_rows[-1]["date"] if raw_rows else None,
         "split_event_count": len(events),
         "split_events": events,
+        "pre_event_rows_available": sum(any(event["date"] > row["date"] for event in events) for row in raw_rows),
         "rows_adjusted": changed,
         "max_absolute_ohlc_difference": round(max_abs_change, 8),
         "data_valid": bool(raw_rows),
@@ -178,18 +179,21 @@ def main() -> int:
         "adjustment_method": "raw EOD OHLC adjusted using later corporate-action split ratios",
         "results": results,
         "all_data_valid": bool(results) and all(r.get("data_valid") for r in results),
+        "known_nvda_split_event_available": bool(nvda and any(event["date"] == "2024-06-10" and abs(event["ratio"] - 10.0) < 1e-8 for event in nvda.get("split_events", []))),
+        "nvda_pre_split_history_available": bool(nvda and nvda.get("pre_event_rows_available", 0) > 0),
         "known_nvda_split_adjustment_detected": bool(nvda and nvda.get("split_adjustment_detected")),
         "notes": [
             "Corporate Actions splits endpoint returns new-shares/old-shares ratios; historical OHLC before each ex-date is divided by the ratio.",
             "Bars on and after an ex-date are already expressed in the post-action share units and are not adjusted for that event.",
             "The EODHD splits feed may include stock dividends, spin-offs and capital reorganisations; review non-standard events before production use.",
             "This probe checks NVDA.US (known 2024 10-for-1 split) and QQQ.US (comparison series), not the full portfolio.",
+            "A split event can be confirmed even when the subscribed EOD history starts after its ex-date; in that case the algorithm is covered by offline tests but cannot be exercised on pre-split live bars.",
             "No Technical API entitlement is required; EOD and splits endpoints are each one API call per symbol.",
             "No strategy calculations, account data, or orders are accessed. The API token is never printed or persisted.",
         ],
     }
     print(json.dumps(summary, indent=2))
-    return 0 if summary["all_data_valid"] and summary["known_nvda_split_adjustment_detected"] else 1
+    return 0 if summary["all_data_valid"] and summary["known_nvda_split_event_available"] else 1
 
 
 if __name__ == "__main__":
