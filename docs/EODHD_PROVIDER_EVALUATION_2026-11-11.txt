@@ -118,3 +118,20 @@ OFFICIAL REFERENCES:
 - https://eodhd.com/financial-apis/technical-indicators-api
 - https://eodhd.com/financial-academy/technical-analysis-examples/how-to-use-the-splitadjusted-function-of-the-technical-indicators-api-with-python
 - https://eodhd.com/help/plans
+
+CORPORATE-ACTION FALLBACK AND HISTORY LIMIT — 2026-11-12
+--------------------------------------------------------
+The Technical API test returned HTTP 403 for both sample symbols. The credential itself is valid: the EOD EODHD coverage workflow succeeded, and the Corporate Actions splits endpoint also returned data. The lower-cost route is therefore to reconstruct split-adjusted OHLC locally:
+- Fetch raw EOD OHLC and the historical /splits/{SYMBOL} endpoint (one API call each).
+- Parse the split ratio as new shares / old shares, including fractional and reverse ratios.
+- For each bar strictly before an event's ex-date, divide OHLC by that event ratio; compound ratios when multiple later events exist.
+- Do not adjust the ex-date bar or later bars for that event.
+- Keep raw OHLC and event records as audit inputs; never substitute adjusted_close, which includes dividends.
+
+The implementation and offline tests are in scripts/validate_eodhd_split_adjustment.py and tests/test_eodhd_split_adjustment.py. Tests cover forward, reverse, fractional, multiple-event and no-event cases. The authenticated probe confirmed the NVDA.US 10-for-1 event on 2024-06-10 and no QQQ.US split event in the requested period.
+
+IMPORTANT HISTORY LIMIT: although the probe requested data from 2023-01-01, the active EOD subscription returned only 251 valid daily bars per symbol, from 2025-11-12 to 2026-11-11. This is consistent with EODHD Free's one-year EOD history allowance. As a result, no NVDA bars preceding its June 2024 split were returned, so the live OHLC adjustment could not be observed; only the event and the offline algorithm were validated. The current history may also be too short to guarantee 52 complete weekly bars plus the three-week confirmation delay required by the strategy's HH52 rule.
+
+The EOD Historical Data — All World personal plan is the lower published tier that includes full EOD history and splits/dividends; current pricing shown by EODHD is USD 19.99 monthly or USD 199 annually. This is not a recommendation to purchase: the user must approve any subscription. Personal plans remain restricted to private/personal use. A commercial licence is separately required before distributing data or derived outputs in a multi-user app/product.
+
+The workflow passes when authenticated data and the known split event are present. Its output explicitly reports whether pre-event bars exist and whether any live bars were adjusted. A green workflow alone must not be interpreted as proof of live historical split adjustment when the requested history begins after the split.
