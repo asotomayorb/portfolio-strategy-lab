@@ -18,7 +18,7 @@ jobs:
           python-version: "3.12"
       - name: Install test runner
         run: python -m pip install pytest
-      - name: Run split-adjustment tests
+      - name: Run corporate-action split-adjustment tests
         run: pytest -q tests/test_eodhd_split_adjustment.py
 
   authenticated-split-adjustment:
@@ -36,5 +36,5 @@ jobs:
             echo "::error::Repository secret EODHD_API_KEY is not configured."
             exit 2
           fi
-      - name: Validate split-adjusted OHLC
+      - name: Validate split-adjusted OHLC from corporate-action events
         run: python scripts/validate_eodhd_split_adjustment.py --start-date 2023-01-01
