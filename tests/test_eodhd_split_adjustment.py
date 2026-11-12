@@ -84,3 +84,21 @@ def test_compare_symbol_uses_eod_and_splits_endpoints(monkeypatch):
     assert result["split_event_count"] == 1
     assert result["rows_adjusted"] == 1
     assert result["split_adjustment_detected"] is True
+
+
+
+def test_post_split_only_history_reports_event_but_no_adjustment(monkeypatch):
+    raw = [
+        {"date": "2025-01-02", "open": 100, "high": 105, "low": 98, "close": 102}
+    ]
+    responses = iter([
+        raw,
+        [{"date": "2024-06-10", "split": "10/1"}],
+    ])
+    monkeypatch.setattr(probe, "_get_json", lambda *args, **kwargs: next(responses))
+    result = probe.compare_symbol("NVDA.US", "test-token", "2023-01-01", "2026-11-12")
+    assert result["data_valid"] is True
+    assert result["split_event_count"] == 1
+    assert result["pre_event_rows_available"] == 0
+    assert result["rows_adjusted"] == 0
+    assert result["split_adjustment_detected"] is False
