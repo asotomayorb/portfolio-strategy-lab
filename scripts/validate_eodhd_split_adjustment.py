@@ -1,4 +1,4 @@
-"""Read-only validation of EODHD split-adjusted daily OHLC against raw EOD bars."""
+"""Read-only split-adjustment validation using EODHD's Corporate Actions API."""
 from __future__ import annotations
 
 import argparse
@@ -6,12 +6,12 @@ import json
 import os
 import sys
 from datetime import date, datetime, timezone
+from math import isfinite
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 API_ROOT = "https://eodhd.com/api"
-# NVDA has a known 10-for-1 split in June 2024; QQQ is a comparison instrument.
 DEFAULT_SYMBOLS = ("NVDA.US", "QQQ.US")
 OHLC_KEYS = ("open", "high", "low", "close")
 
@@ -40,7 +40,7 @@ def _get_json(endpoint: str, params: dict[str, str], token: str, timeout: int = 
         raise ProviderRequestError("request timed out") from None
 
 
-def _valid_rows(payload) -> list[dict]:
+def _valid_ohlc_rows(payload) -> list[dict]:
     if not isinstance(payload, list):
         return []
     rows = []
@@ -54,7 +54,7 @@ def _valid_rows(payload) -> list[dict]:
             continue
         open_, high, low, close = values
         if (
-            all(v > 0 for v in values)
+            all(isfinite(v) and v > 0 for v in values)
             and high >= max(open_, low, close)
             and low <= min(open_, high, close)
         ):
@@ -62,58 +62,89 @@ def _valid_rows(payload) -> list[dict]:
     return rows
 
 
+def parse_split_events(payload) -> list[dict]:
+    """Parse EODHD new-shares/old-shares ratios without assuming integer ratios."""
+    if not isinstance(payload, list):
+        raise ProviderRequestError("unexpected splits response shape")
+    events = []
+    for row in payload:
+        if not isinstance(row, dict) or not row.get("date") or not row.get("split"):
+            raise ProviderRequestError("malformed split event")
+        try:
+            event_date = str(row["date"])
+            datetime.strptime(event_date, "%Y-%m-%d")
+            numerator, denominator = (float(part) for part in str(row["split"]).split("/", 1))
+        except (ValueError, TypeError):
+            raise ProviderRequestError("malformed split ratio") from None
+        if not isfinite(numerator) or not isfinite(denominator) or numerator <= 0 or denominator <= 0:
+            raise ProviderRequestError("invalid split ratio")
+        events.append({
+            "date": event_date,
+            "ratio": numerator / denominator,
+            "source_ratio": str(row["split"]),
+        })
+    return sorted(events, key=lambda event: event["date"])
+
+
+def apply_split_adjustments(rows: list[dict], events: list[dict]) -> list[dict]:
+    """Express historical OHLC in the latest share units using later event ratios."""
+    adjusted = []
+    for row in rows:
+        factor = 1.0
+        for event in events:
+            if event["date"] > row["date"]:
+                factor *= event["ratio"]
+        if not isfinite(factor) or factor <= 0:
+            raise ProviderRequestError("invalid cumulative corporate-action factor")
+        adjusted.append({
+            **row,
+            **{key: row[key] / factor for key in OHLC_KEYS},
+            "split_adjustment_factor": factor,
+        })
+    return adjusted
+
+
 def compare_symbol(symbol: str, token: str, start_date: str, end_date: str) -> dict:
     raw_payload = _get_json(
         f"eod/{symbol}", {"from": start_date, "to": end_date, "order": "a"}, token
     )
-    split_payload = _get_json(
-        f"technical/{symbol}",
-        {
-            "function": "splitadjusted",
-            "agg_period": "d",
-            "from": start_date,
-            "to": end_date,
-            "order": "a",
-        },
-        token,
+    splits_payload = _get_json(
+        f"splits/{symbol}", {"from": start_date, "to": end_date}, token
     )
-    if not isinstance(raw_payload, list) or not isinstance(split_payload, list):
-        raise ProviderRequestError("unexpected response shape")
+    raw_rows = _valid_ohlc_rows(raw_payload)
+    events = parse_split_events(splits_payload)
+    adjusted_rows = apply_split_adjustments(raw_rows, events)
 
-    raw_rows = _valid_rows(raw_payload)
-    split_rows = _valid_rows(split_payload)
-    raw_by_date = {row["date"]: row for row in raw_rows}
-    split_by_date = {row["date"]: row for row in split_rows}
-    overlap = sorted(raw_by_date.keys() & split_by_date.keys())
-    changed = 0
-    max_abs_change = 0.0
-    for day in overlap:
-        for key in OHLC_KEYS:
-            raw_value = raw_by_date[day][key]
-            split_value = split_by_date[day][key]
-            difference = abs(split_value - raw_value)
-            max_abs_change = max(max_abs_change, difference)
-            if difference > max(1e-8, abs(raw_value) * 1e-8):
-                changed += 1
-                break
-
+    changed = sum(
+        any(abs(adjusted[key] - raw[key]) > max(1e-8, abs(raw[key]) * 1e-8) for key in OHLC_KEYS)
+        for raw, adjusted in zip(raw_rows, adjusted_rows)
+    )
+    max_abs_change = max(
+        (
+            abs(adjusted[key] - raw[key])
+            for raw, adjusted in zip(raw_rows, adjusted_rows)
+            for key in OHLC_KEYS
+        ),
+        default=0.0,
+    )
     return {
         "symbol": symbol,
         "raw_valid_rows": len(raw_rows),
-        "split_adjusted_valid_rows": len(split_rows),
-        "overlapping_dates": len(overlap),
-        "first_overlap": overlap[0] if overlap else None,
-        "latest_overlap": overlap[-1] if overlap else None,
-        "rows_with_split_adjustment": changed,
+        "split_adjusted_valid_rows": len(adjusted_rows),
+        "first_valid_date": raw_rows[0]["date"] if raw_rows else None,
+        "latest_valid_date": raw_rows[-1]["date"] if raw_rows else None,
+        "split_event_count": len(events),
+        "split_events": events,
+        "rows_adjusted": changed,
         "max_absolute_ohlc_difference": round(max_abs_change, 8),
-        "data_valid": bool(overlap) and len(overlap) == len(split_rows),
+        "data_valid": bool(raw_rows),
         "split_adjustment_detected": changed > 0,
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Compare EODHD raw EOD OHLC with Technical API split-adjusted OHLC."
+        description="Validate split-adjusted OHLC reconstructed from EODHD EOD and splits endpoints."
     )
     parser.add_argument("--start-date", default="2023-01-01")
     parser.add_argument("--symbols", nargs="+", default=list(DEFAULT_SYMBOLS))
@@ -144,21 +175,21 @@ def main() -> int:
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
         "requested_from": args.start_date,
         "requested_to": end_date,
-        "endpoint": "Technical API function=splitadjusted, agg_period=d",
+        "adjustment_method": "raw EOD OHLC adjusted using later corporate-action split ratios",
         "results": results,
         "all_data_valid": bool(results) and all(r.get("data_valid") for r in results),
-        "known_split_adjustment_detected": bool(nvda and nvda.get("split_adjustment_detected")),
+        "known_nvda_split_adjustment_detected": bool(nvda and nvda.get("split_adjustment_detected")),
         "notes": [
-            "Technical API splitadjusted returns OHLC adjusted for splits, not dividends.",
-            "Raw EOD OHLC is retained as the audit baseline; adjusted_close is not used.",
-            "Technical API requests consume five API calls each according to EODHD documentation.",
-            "This is a two-symbol entitlement and semantics probe, not approval for all portfolio symbols or production use.",
-            "No strategy calculations, account data, or orders are accessed.",
-            "The API token is never printed or persisted by this script.",
+            "Corporate Actions splits endpoint returns new-shares/old-shares ratios; historical OHLC before each ex-date is divided by the ratio.",
+            "Bars on and after an ex-date are already expressed in the post-action share units and are not adjusted for that event.",
+            "The EODHD splits feed may include stock dividends, spin-offs and capital reorganisations; review non-standard events before production use.",
+            "This probe checks NVDA.US (known 2024 10-for-1 split) and QQQ.US (comparison series), not the full portfolio.",
+            "No Technical API entitlement is required; EOD and splits endpoints are each one API call per symbol.",
+            "No strategy calculations, account data, or orders are accessed. The API token is never printed or persisted.",
         ],
     }
     print(json.dumps(summary, indent=2))
-    return 0 if summary["all_data_valid"] and summary["known_split_adjustment_detected"] else 1
+    return 0 if summary["all_data_valid"] and summary["known_nvda_split_adjustment_detected"] else 1
 
 
 if __name__ == "__main__":
