@@ -137,3 +137,24 @@ def test_history_is_not_requested_by_default(monkeypatch):
     assert len(requested) == 1
     assert "/intraday/" in requested[0]
     assert "history_status" not in result
+
+
+def test_crypto_current_request_uses_documented_five_minute_interval(monkeypatch):
+    requested = []
+
+    def fake_get_json(path, token):
+        requested.append(path)
+        return [{
+            "ticker": "btcusd",
+            "baseCurrency": "btc",
+            "quoteCurrency": "usd",
+            "priceData": {"close": 65000, "date": "2026-11-13T15:00:00Z"},
+        }]
+
+    monkeypatch.setattr(probe, "_get_json", fake_get_json)
+    result = probe.check_crypto("btcusd", "test-token", "2024-01-01")
+    assert result["coverage_pass"] is True
+    assert result["requested_resample_frequency"] == "5min"
+    assert len(requested) == 1
+    assert "tickers=btcusd" in requested[0]
+    assert "resampleFreq=5min" in requested[0]
