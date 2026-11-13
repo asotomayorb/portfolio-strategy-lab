@@ -258,3 +258,8 @@ This two-symbol probe is not a complete portfolio-wide validation. A successful 
 
 
 EODHD subscription checkpoint (2026-11-12): the authenticated EOD requests returned 251 daily bars per instrument, beginning 2025-11-12, despite a 2023-01-01 request. This matches the Free plan's one-year history limit. The splits endpoint did return NVDA's 2024-06-10 10-for-1 event. The algorithm is covered by offline tests, but live pre/post-split OHLC comparison remains unverified until historical EOD coverage includes bars before that event. The paid EOD Historical Data — All World plan is the lower-tier published package that includes full EOD history and corporate actions; Technical API is not required for the corporate-action adjustment method. Do not upgrade until the user approves the cost and the exact intended licence/use case is settled.
+
+
+## Tiingo authenticated coverage checkpoint — 2026-11-13
+
+GitHub Actions run [43458093869](https://github.com/asotomayorb/portfolio-strategy-lab/actions/runs/43458093869) confirmed the `TIINGO_API_KEY` secret is configured. All 12 US-listed equity/ETF instruments returned a valid `tngoLast` reference price and timestamp. BTCUSD metadata resolved correctly (`btcusd`, base `btc`, quote `usd`), but the response contained no usable `priceData.close` or timestamp; total coverage was 12/13. This isolates the failure to the Crypto Prices payload/field response rather than general authentication. The probe now emits sanitized response-shape diagnostics and accepts object- or list-shaped `priceData`. Tiingo remains conditional and not approved until BTCUSD reference pricing passes. Do not use the deprecated Crypto Top-of-Book endpoint or weaken the coverage gate. See `docs/MARKET_DATA_PROVIDER_EVALUATION_2026-11-09.txt`.
