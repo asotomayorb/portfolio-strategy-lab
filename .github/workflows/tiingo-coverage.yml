@@ -2,6 +2,13 @@ name: Tiingo market-data coverage
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/validate_tiingo_coverage.py"
+      - "tests/test_tiingo_coverage.py"
+      - "docs/MARKET_DATA_PROVIDER_EVALUATION_2026-11-09.txt"
+      - "README.md"
+      - ".github/workflows/tiingo-coverage.yml"
 
 jobs:
   coverage:
@@ -13,6 +20,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Run Tiingo coverage unit tests
+        run: python -m pytest -q tests/test_tiingo_coverage.py
       - name: Check API secret
         run: |
           if [ -z "$TIINGO_API_KEY" ]; then
