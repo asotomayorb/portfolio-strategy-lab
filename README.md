@@ -267,3 +267,7 @@ GitHub Actions run [43458093869](https://github.com/asotomayorb/portfolio-strate
 
 ## Tiingo crypto interval diagnostic — 2026-11-13
 The BTCUSD REST probe now explicitly requests the documented `5min` Crypto Prices resampling interval. The previous authenticated run (43458093869) passed 12/13 instruments; BTCUSD metadata resolved but no usable `priceData.close`/timestamp was returned. This change tests whether relying on the endpoint's implicit interval caused the missing latest bar. The positive-price and timestamp gate remains unchanged; BTC is still uncovered and Tiingo remains conditional until the next authenticated Actions run confirms otherwise. The probe remains read-only and does not authorize trading.
+
+
+## Tiingo coverage timestamp gate — 2026-11-13
+The coverage probe now requires a positive reference price **and** a parseable timezone-aware ISO timestamp for each instrument. Earlier diagnostics recorded timestamps but did not include them in the pass/fail boolean. Unit tests now cover missing/malformed timestamps for equities and BTCUSD. The 5-minute BTCUSD request remains an authenticated diagnostic; no provider approval is implied until Actions confirms all 13 instruments.
