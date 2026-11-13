@@ -79,6 +79,17 @@ def _positive(value: Any) -> bool:
         return False
 
 
+def _valid_timestamp(value: Any) -> bool:
+    """Require a parseable ISO timestamp with an explicit timezone."""
+    if not isinstance(value, str) or not value.strip():
+        return False
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+
+
 def _crypto_price_record(quote: dict[str, Any]) -> dict[str, Any]:
     """Normalize Tiingo's documented priceData object and list-shaped variants."""
     price_data = quote.get("priceData")
@@ -97,6 +108,7 @@ def check_equity(ticker: str, token: str, start_date: str, include_history: bool
         result["reference_price_available"] = _positive(quote.get("tngoLast")) or _positive(quote.get("lqRefPrice"))
         result["reference_price_field"] = "tngoLast" if _positive(quote.get("tngoLast")) else ("lqRefPrice" if _positive(quote.get("lqRefPrice")) else None)
         result["quote_timestamp"] = quote.get("timestamp")
+        result["timestamp_available"] = _valid_timestamp(result["quote_timestamp"])
     except Exception as exc:
         result["quote_endpoint"] = "error"
         result["quote_error"] = f"{type(exc).__name__}: {exc}"
@@ -118,6 +130,7 @@ def check_equity(ticker: str, token: str, start_date: str, include_history: bool
     result["coverage_pass"] = (
         result.get("quote_endpoint") == "ok"
         and result.get("reference_price_available") is True
+        and result.get("timestamp_available") is True
     )
     return result
 
@@ -150,6 +163,7 @@ def check_crypto(pair: str, token: str, start_date: str, include_history: bool =
         result["reference_price_available"] = _positive(price_data.get("close"))
         result["reference_price_field"] = "priceData.close" if result["reference_price_available"] else None
         result["quote_timestamp"] = price_data.get("date")
+        result["timestamp_available"] = _valid_timestamp(result["quote_timestamp"])
     except Exception as exc:
         result["pair_metadata_pass"] = False
         result["reference_price_available"] = False
@@ -177,6 +191,7 @@ def check_crypto(pair: str, token: str, start_date: str, include_history: bool =
     result["coverage_pass"] = (
         result.get("pair_metadata_pass") is True
         and result.get("reference_price_available") is True
+        and result.get("timestamp_available") is True
     )
     return result
 
