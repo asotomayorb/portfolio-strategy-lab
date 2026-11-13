@@ -79,6 +79,16 @@ def _positive(value: Any) -> bool:
         return False
 
 
+def _crypto_price_record(quote: dict[str, Any]) -> dict[str, Any]:
+    """Normalize Tiingo's documented priceData object and list-shaped variants."""
+    price_data = quote.get("priceData")
+    if isinstance(price_data, dict):
+        return price_data
+    if isinstance(price_data, list):
+        return _first_record(price_data)
+    return {}
+
+
 def check_equity(ticker: str, token: str, start_date: str, include_history: bool = False) -> dict[str, Any]:
     result: dict[str, Any] = {"symbol": ticker, "asset_type": "US equity/ETF"}
     try:
@@ -91,7 +101,6 @@ def check_equity(ticker: str, token: str, start_date: str, include_history: bool
         result["quote_endpoint"] = "error"
         result["quote_error"] = f"{type(exc).__name__}: {exc}"
 
-    # Historical OHLC is optional and is not queried by default.
     if include_history:
         try:
             history = _get_json(
@@ -117,23 +126,32 @@ def check_crypto(pair: str, token: str, start_date: str, include_history: bool =
     result: dict[str, Any] = {"symbol": pair, "asset_type": "crypto"}
     try:
         query = urlencode({"tickers": pair})
-        quote = _first_record(_get_json(f"/tiingo/crypto/prices?{query}", token))
+        raw_quote = _get_json(f"/tiingo/crypto/prices?{query}", token)
+        quote = _first_record(raw_quote)
+        result["response_shape"] = "list" if isinstance(raw_quote, list) else type(raw_quote).__name__
+        result["response_fields"] = sorted(quote.keys())
         result["pair_metadata_pass"] = (
             str(quote.get("ticker", "")).lower() == pair
             and str(quote.get("baseCurrency", "")).lower() == "btc"
             and str(quote.get("quoteCurrency", "")).lower() == "usd"
         )
-        price_data = quote.get("priceData") or {}
-        result["reference_price_available"] = _positive(
-            price_data.get("close") if isinstance(price_data, dict) else None
+        raw_price_data = quote.get("priceData")
+        price_data = _crypto_price_record(quote)
+        result["price_data_shape"] = (
+            "list" if isinstance(raw_price_data, list)
+            else "object" if isinstance(raw_price_data, dict)
+            else "missing_or_null" if raw_price_data is None
+            else type(raw_price_data).__name__
         )
-        result["quote_timestamp"] = price_data.get("date") if isinstance(price_data, dict) else None
+        result["price_data_fields"] = sorted(price_data.keys())
+        result["reference_price_available"] = _positive(price_data.get("close"))
+        result["reference_price_field"] = "priceData.close" if result["reference_price_available"] else None
+        result["quote_timestamp"] = price_data.get("date")
     except Exception as exc:
         result["pair_metadata_pass"] = False
         result["reference_price_available"] = False
         result["quote_error"] = f"{type(exc).__name__}: {exc}"
 
-    # Historical OHLC is optional and is not queried by default.
     if include_history:
         try:
             hist_query = urlencode({
@@ -190,7 +208,8 @@ def main() -> int:
             "Historical OHLC requests are disabled by default; pass --include-history only when explicitly needed.",
             "Current reference-price availability gates symbol coverage; history length is informational and never a minimum eligibility requirement.",
             "Newly listed assets are reported with the history actually returned; 52-week indicators remain unavailable until sufficient observations exist.",
-            "Crypto Top-of-Book is intentionally not queried; Tiingo documents that endpoint as deprecated.",
+            "Crypto Top-of-Book is intentionally not queried; Crypto Prices is used for BTC reference/last price.",
+            "Crypto diagnostics report response and priceData shapes/field names only; credentials and raw exchange payloads are never printed.",
             "This probe does not authorize trading or validate executable prices.",
         ],
     }
