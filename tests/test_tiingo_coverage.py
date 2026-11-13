@@ -137,7 +137,7 @@ def test_history_is_not_requested_by_default(monkeypatch):
 
     def fake_get_json(path, token):
         requested.append(path)
-        return [{"ticker": "SPCX", "tngoLast": 42.5}]
+        return [{"ticker": "SPCX", "tngoLast": 42.5, "timestamp": "2026-11-13T15:00:00Z"}]
 
     monkeypatch.setattr(probe, "_get_json", fake_get_json)
     result = probe.check_equity("SPCX", "test-token", "2024-01-01")
