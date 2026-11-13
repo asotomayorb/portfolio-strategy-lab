@@ -20,6 +20,14 @@ def test_positive_rejects_missing_or_invalid_prices():
     assert not _positive(0)
 
 
+def test_timestamp_requires_iso_value_with_timezone():
+    assert probe._valid_timestamp("2026-11-13T15:00:00Z")
+    assert probe._valid_timestamp("2026-11-13T10:00:00-05:00")
+    assert not probe._valid_timestamp(None)
+    assert not probe._valid_timestamp("2026-11-13T10:00:00")
+    assert not probe._valid_timestamp("not-a-timestamp")
+
+
 def test_valid_ohlc_rows_accepts_daily_list_and_crypto_price_data():
     rows = [
         {"open": 10, "high": 12, "low": 9, "close": 11},
@@ -117,7 +125,7 @@ def test_equity_uses_liquidity_reference_price_if_tngo_last_is_null(monkeypatch)
     monkeypatch.setattr(
         probe,
         "_get_json",
-        lambda path, token: [{"ticker": "SPCX", "tngoLast": None, "lqRefPrice": 42.5}],
+        lambda path, token: [{"ticker": "SPCX", "tngoLast": None, "lqRefPrice": 42.5, "timestamp": "2026-11-13T15:00:00Z"}],
     )
     result = probe.check_equity("SPCX", "test-token", "2024-01-01")
     assert result["coverage_pass"] is True
@@ -158,3 +166,32 @@ def test_crypto_current_request_uses_documented_five_minute_interval(monkeypatch
     assert len(requested) == 1
     assert "tickers=btcusd" in requested[0]
     assert "resampleFreq=5min" in requested[0]
+
+
+def test_equity_without_timestamp_fails_coverage_even_with_price(monkeypatch):
+    monkeypatch.setattr(
+        probe,
+        "_get_json",
+        lambda path, token: [{"ticker": "SPCX", "tngoLast": 42.5}],
+    )
+    result = probe.check_equity("SPCX", "test-token", "2024-01-01")
+    assert result["reference_price_available"] is True
+    assert result["timestamp_available"] is False
+    assert result["coverage_pass"] is False
+
+
+def test_crypto_without_timestamp_fails_coverage_even_with_price(monkeypatch):
+    monkeypatch.setattr(
+        probe,
+        "_get_json",
+        lambda path, token: [{
+            "ticker": "btcusd",
+            "baseCurrency": "btc",
+            "quoteCurrency": "usd",
+            "priceData": {"close": 65000},
+        }],
+    )
+    result = probe.check_crypto("btcusd", "test-token", "2024-01-01")
+    assert result["reference_price_available"] is True
+    assert result["timestamp_available"] is False
+    assert result["coverage_pass"] is False
