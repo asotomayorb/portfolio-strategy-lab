@@ -135,3 +135,8 @@ The failure is isolated to the Crypto Prices response payload/priceData shape or
 TIINGO CRYPTO LATEST-BAR FOLLOW-UP — 2026-11-13
 ------------------------------------------------
 The official Crypto Prices documentation describes the latest/current-day endpoint and specifies that the `priceData.date` timestamp depends on `resampleFreq`; its examples explicitly use `5min`. The first authenticated probe omitted this parameter and received BTCUSD pair metadata without a usable close/timestamp. As a controlled diagnostic, the current-price probe now explicitly requests `resampleFreq=5min` and continues to require a positive `priceData.close` plus its timestamp. This does not relax the coverage gate, does not use the deprecated Top-of-Book endpoint, and does not establish BTC coverage until the authenticated GitHub Actions run passes. The diagnostic also reports the requested interval and sanitized response shape/field names. See the official Tiingo Crypto API documentation: https://www.tiingo.com/documentation/crypto.
+
+
+COVERAGE GATE HARDENING — 2026-11-13
+------------------------------------
+The probe now requires both a positive reference price and a parseable ISO timestamp with an explicit timezone for every instrument. Previously it recorded timestamps but the boolean coverage gate only required a positive price; this is now aligned with the provider evaluation's timestamp requirement. Unit tests cover missing, malformed and timezone-naive timestamps for both equities and BTCUSD. This is a data-quality gate only and does not change the Phase 1/Phase 2 research or authorize orders.
