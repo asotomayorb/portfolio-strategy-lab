@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import validate_tiingo_coverage as probe
-from validate_tiingo_coverage import _first_record, _positive, _valid_ohlc_rows, load_market_symbols
+from validate_tiingo_coverage import _crypto_price_record, _first_record, _positive, _valid_ohlc_rows, load_market_symbols
 
 
 def test_first_record_handles_list_and_dict():
@@ -29,6 +29,14 @@ def test_valid_ohlc_rows_accepts_daily_list_and_crypto_price_data():
     assert _valid_ohlc_rows(rows) == 1
     assert _valid_ohlc_rows({"priceData": rows}) == 1
     assert _valid_ohlc_rows(rows[0]) == 1
+
+
+def test_crypto_price_record_accepts_documented_object_and_list_variant():
+    record = {"close": 65000, "date": "2026-11-09T15:00:00Z"}
+    assert _crypto_price_record({"priceData": record}) == record
+    assert _crypto_price_record({"priceData": [record]}) == record
+    assert _crypto_price_record({"priceData": []}) == {}
+    assert _crypto_price_record({}) == {}
 
 
 def test_portfolio_symbols_are_loaded_from_allocation_file():
@@ -82,8 +90,27 @@ def test_new_crypto_pair_with_current_price_does_not_require_history(monkeypatch
     monkeypatch.setattr(probe, "_get_json", fake_get_json)
     result = probe.check_crypto("btcusd", "test-token", "2024-01-01", include_history=True)
     assert result["coverage_pass"] is True
+    assert result["reference_price_field"] == "priceData.close"
+    assert result["price_data_shape"] == "object"
     assert result["valid_daily_ohlc_rows"] == 0
     assert result["history_status"] == "no_history_in_requested_window"
+
+
+def test_crypto_list_shaped_price_data_is_supported(monkeypatch):
+    monkeypatch.setattr(
+        probe,
+        "_get_json",
+        lambda path, token: [{
+            "ticker": "btcusd",
+            "baseCurrency": "btc",
+            "quoteCurrency": "usd",
+            "priceData": [{"close": 65000, "date": "2026-11-09T15:00:00Z"}],
+        }],
+    )
+    result = probe.check_crypto("btcusd", "test-token", "2024-01-01")
+    assert result["coverage_pass"] is True
+    assert result["reference_price_field"] == "priceData.close"
+    assert result["price_data_shape"] == "list"
 
 
 def test_equity_uses_liquidity_reference_price_if_tngo_last_is_null(monkeypatch):
