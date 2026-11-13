@@ -125,7 +125,10 @@ def check_equity(ticker: str, token: str, start_date: str, include_history: bool
 def check_crypto(pair: str, token: str, start_date: str, include_history: bool = False) -> dict[str, Any]:
     result: dict[str, Any] = {"symbol": pair, "asset_type": "crypto"}
     try:
-        query = urlencode({"tickers": pair})
+        # Request a documented intraday interval so close represents a recent bar,
+        # rather than relying on the endpoint default interval.
+        query = urlencode({"tickers": pair, "resampleFreq": "5min"})
+        result["requested_resample_frequency"] = "5min"
         raw_quote = _get_json(f"/tiingo/crypto/prices?{query}", token)
         quote = _first_record(raw_quote)
         result["response_shape"] = "list" if isinstance(raw_quote, list) else type(raw_quote).__name__
